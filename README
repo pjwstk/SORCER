@@ -1,5 +1,5 @@
-Service-ORiented Computing EnviRonment - SORCER is a federated metacomputing system
-that has been built at the SORCER lab at SORCERsoft.org - http://sorcersoft.org
-It allows to create and provision service providers in heterogeneous service intergrid (iGrid) 
+Service-ORiented Computing EnviRonment - SORCER is a federated service-oriented system
+developed at the SORCER lab at SORCERsoft.org - http://sorcersoft.org
+It allows to create and provision service providers in heterogeneous service cloud 
 and execute service commands, called exertions, that in runtime create service 
-federation in the iGrid that are managed by the SORCER operating system on its iGrid.
+federation in the service cloud that is managed by the SORCER operating.
