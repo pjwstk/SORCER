@@ -1,6 +1,7 @@
 data
 logs
 classes
+reports
 docs
 tmp
 /.metadata
