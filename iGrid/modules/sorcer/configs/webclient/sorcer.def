@@ -1,0 +1,124 @@
+`# SORCER Server Default Properties
+#Mike Sobolewski/Sekhar Soorianarayanan
+
+launcher.appName=SORCER
+launcher.appPrefix=Sorcer
+launcher.dbPrefix=SOC
+launcher.fullAppName=Service-Oriented Computing Environment
+launcher.baseDir=/home/staff1/sorcer/projects/iGrid/appserver/webapps/sorcer/WEB-INF/classes/sorcer/lnch
+
+launcher.noPassword=true
+launcher.noDBC=false
+launcher.width=120
+launcher.height=450
+
+# Debugging setup
+launcher.isDebugged=true
+launcher.debugKey=TAADemoCmd
+launcher.isAsserted=true
+http.host=neem.cs.ttu.edu
+http.port=80
+
+
+launcher.isStandalone=false
+launcher.sorcer.standaloneURL=sorcerStandalone.html
+
+
+applicationServer.host=yew.cs.ttu.edu
+applicationServer.port=2030
+
+launcher.sqlDir=data/sql
+launcher.SQLUtil.url=sqlutil.html
+
+launcher.server.type=servlet
+#launcher.server.type=socket
+#launcher.server.type=http
+
+launcher.applicationServlet.url=http://neem.cs.ttu.edu:2030/sorcer/servlet/controller
+launcher.serviceServlet.url=http://neem.cs.ttu.edu:2030/sorcer/servlet/dispatcher
+launcher.servletProperties.url=http://neem.cs.ttu.edu:2030/sorcer/servlet/controller?cmd=501
+launcher.servletSession.url=http://neem.cs.ttu.edu:2030/sorcer/servlet/controller?cmd=502
+
+launcher.login.url=auth.html
+launcher.SSOlogin.url=SSOauth.html
+launcher.useSSO=false
+launcher.htmlTester.url=cmd.html
+launcher.text.url=text.html
+launcher.message.url=message.html
+launcher.tobe.url=tobe.html
+launcher.sorcer.url=sorcer.html
+
+# context
+launcher.contextEditor.url.class=sorcer.ui.context.ContextEditor
+launcher.contextEditor.url=contextEditor.html
+launcher.contextEditor.size=500,600
+launcher.contextFinder.url.class=sorcer.ui.context.ContextFinder
+launcher.contextFinder.url=contextFinder.html
+launcher.contextFinder.size=500,600
+launcher.contextBrowser.url.class=sorcer.ui.context.ContextBrowser
+launcher.contextBrowser.url=contextBrowser.html
+launcher.contextBrowser.size=500,600
+
+# jobs
+launcher.jobEditor.url.class=sorcer.ui.job.JobEditor
+launcher.jobEditor.url=jobEditor.html
+launcher.jobEditor.size=500,600
+launcher.jobFinder.url.class=sorcer.ui.job.JobFinder
+launcher.jobFinder.url=jobFinder.html
+launcher.jobFinder.size=500,600
+launcher.jobBrowser.url.class=sorcer.ui.job.JobBrowser
+launcher.jobBrowser.url=jobBrowser.html
+launcher.jobBrowser.size=500,600
+
+# notifier
+launcher.notificationBrowser.url.class=sorcer.ui.notifier.NotificationBrowserView
+launcher.notificationBrowser.url=notificationBrowser.html
+launcher.notificationBrowser.size=300,500
+launcher.isNotifiable=true
+
+#monitor
+launcher.jobMonitor.url = monitorFinder.html
+launcher.jobMonitor.url.class=sorcer.ui.job.monitor.MonitorFinder
+
+#UserWorksheet
+launcher.userWorksheet.url=userWorksheet.html
+launcher.userWorksheet=400,400
+
+#maxSize is in MB
+uploadedFile.maxSize=30
+fileUpload.isDebugged=true
+launcher.archiveDir=data
+launcher.fileUpload.url=http://neem.cs.ttu.edu:2030/sorcer/servlet/sorcerUpload
+
+launcher.data.url=http://neem.cs.ttu.edu/sorcer/data/
+launcher.sysAdmin=sooriana@cs.ttu.edu
+
+# tasks
+launcher.taskBrowser.url=taskBrowser.html
+launcher.taskBrowser.url.class=sorcer.ui.task.TaskBrowser
+launcher.taskFinder.url=taskFinder.html
+launcher.taskFinder.url.class=sorcer.ui.task.TaskFinder
+launcher.taskEditor.url=taskEditor.html
+launcher.taskEditor.url.class=sorcer.ui.task.TaskEditor
+
+
+#UserWorksheet
+launcher.userWorksheet.url=userWorksheet.html
+launcher.userWorksheet=400,400
+
+launcher.data.url=http://sorcer.cs.ttu.edu/sorcer/data/
+launcher.sysAdmin=ame@cs.ttu.edu
+
+
+
+ #GroupWorksheet
+launcher.groupWorksheet.url=groupWorksheet.html
+launcher.groupWorksheet=280,500
+
+#RoleWorksheet
+launcher.roleWorksheet.url=roleWorksheet.html
+launcher.roleWorksheet=280,400
+
+#PermissionWorksheet
+launcher.permissionWorksheet.url=permissionWorksheet.html
+launcher.permissionWorksheet=400,400

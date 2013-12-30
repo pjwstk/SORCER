@@ -1,0 +1,5 @@
+Booter maintains a webster port (getPort) for the following cases:
+1. if port < 0 then it uses SORCER configuration file sorcer.env, provider properties, or Java system properties
+provider.webster.port
+2. if port = 0 then anonymous available port is selected
+3. otherwise uses the provided argument port in related constructors in for service descriptors

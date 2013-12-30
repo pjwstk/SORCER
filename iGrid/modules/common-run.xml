@@ -1,0 +1,283 @@
+<?xml version="1.0"?>
+<!-- 
+ * Copyright 2010 the original author or authors.
+ * Copyright 2010 SorcerSoft.org.
+ *  
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+
+How to use the common-run.xml file in your project. 
+To include this file in your custom *-run-buld.xml have the import line:
+
+  <import file="../../common-run.xml" />
+
+If you want to start a service, add its description, similar to this:
+
+	<target name="simple">
+		<java jar="${jini.home}/lib/start.jar" fork="yes">
+			<sysproperty key="java.security.policy" value="../policy/policy.all" />
+			<sysproperty key="iGrid.home" value="${iGrid.home}" />
+			<sysproperty key="provider.webster.url" value="${provider.webster.url}" />
+			<sysproperty key="data.server.url" value="${data.server.url}" />
+			<sysproperty key="java.util.logging.config.file" value="${iGrid.home}/configs/sorcer.logging" />
+			<arg value="../configs/start-simple.config" />
+		</java>
+	</target>
+	
+(please see also the example silenus/configs/start-simple.config and silenus/configs/simple.config)
+
+To run a webserver:
+- define your class server port - httpd.port - as enivironmet variable IGRID_WEBSTER_PORT (recommended)
+  or in $IGRID_HOME/configs/sorcer.env file.
+- make sure that provider.webster.url is NOT set in sorcer.env
+
+See how to run your webster in iGrid/sorcer/README.
+To run both (webserver and service) use the XML Ant sysntax as follws:
+  <target name="simplew">
+		<parallel>
+			<daemons>
+				<ant target="webster" />
+			</daemons>
+		<sequential>
+			<sleep seconds="3"/>
+			<ant target="simple" />
+	    </sequential>
+		</parallel>
+	</target>
+
+-->
+
+<project name="" default="" basedir=".">
+	<tstamp />
+	<property name="dospawn" value="false" />
+
+	<property environment="env" />
+	<property name="iGrid.home" value="${env.IGRID_HOME}" />
+	<exec executable="hostname" outputproperty="hostname" />
+	<echo message="Hostname = ${hostname}" />
+	<echo message="env IGRID_HOME = ${iGrid.home}" />
+
+	<loadproperties srcfile="${iGrid.home}/configs/sorcer.env" />
+
+	<property name="java.home" value="${env.JAVA_HOME}" />
+	<property name="jini.home" value="${env.JINI_HOME}" />
+	<!--property name="rio.home" value="${env.RIO_HOME}" /-->
+	<property name="rio.home" value="${iGrid.home}/rio" />
+	<property name="ant.home" value="${env.ANT_HOME}" />
+
+	<property name="lib" value="${iGrid.home}/lib" />
+	<property name="jini.lib" value="${lib}/river/lib" />
+	<property name="jini-dl.lib" value="${lib}/river/lib-dl" />
+	<property name="jini-ext.lib" value="${lib}/river/lib-ext" />
+	<property name="rio.lib" value="${rio.home}/lib" />
+	<property name="rio-dl.lib" value="${rio.home}/lib-dl" />
+
+	<property name="blitz.lib" value="${lib}/common/blitz" />
+	<property name="eng.lib" value="${lib}/eng/lib" />
+	<property name="eng-dl.lib" value="${lib}/eng/lib-dl" />
+	<property name="eng-ext.lib" value="${lib}/eng" />
+	<property name="common.lib" value="${lib}/common" />
+	<property name="local.lib" value="${lib}/local" />
+	<property name="sorcer.lib" value="${lib}/sorcer/lib" />
+	<property name="sorcer-dl.lib" value="${lib}/sorcer/lib-dl" />
+	<property name="sorcer-ext.lib" value="${lib}/sorcer/lib-ext" />
+	<property name="support.lib" value="${common.lib}/buildsupport" />
+	<property name="classes" value="${iGrid.home}/classes" />
+	<property name="docs" value="${iGrid.home}/docs/${module.name}" />
+	<property name="junit" value="${common.lib}/junit" />
+	<property name="servlet.api" value="${common.lib}/servlet-api.jar" />
+	<property name="stax.home" value="${env.STAX_HOME}" />
+
+	<property name="iGrid.policy" value="${iGrid.home}/policy" />
+	<property name="iGrid.config" value="${iGrid.home}/configs" />
+
+	<!-- Declare versions as properties -->
+	<property name="rio.version" value="-5.0-M4" />
+	<property name="groovy.version" value="2.1.3" />
+	<property name="river.version" value="-2.2.1" />
+	<property name="slf4j.version" value="1.7.5" />
+
+	<!-- define boot classpath -->
+	<path id="boot.classpath">
+		<pathelement location="${iGrid.home}/lib/boot.jar" />
+		<pathelement location="${jini.lib}/start.jar" />
+		<pathelement location="${common.lib}/groovy/groovy-all-${groovy.version}.jar" />
+		<pathelement location="${rio.lib}/rio-platform${rio.version}.jar" />
+	</path>
+
+	<path id="sorcer.path">
+		<pathelement location="${lib}/boot.jar" />
+		<pathelement location="${lib}/sorcer/lib/sorcer-env.jar" />
+		<pathelement location="${lib}/common/groovy/groovy-all-${groovy.version}.jar" />
+		<pathelement location="${rio.home}/lib/rio-platform${rio.version}.jar" />
+		<pathelement location="${rio.home}/lib/rio-start${rio.version}.jar" />
+		<pathelement location="${rio.home}/lib/logging/slf4j-jdk14-${slf4j.version}.jar" />
+	</path>
+
+	<path id="jini.path">
+		<pathelement location="${jini.lib}/jsk-lib.jar" />
+		<pathelement location="${jini.lib}/jsk-platform.jar" />
+		<pathelement location="${jini.lib}/jsk-resources.jar" />
+		<pathelement location="${jini.lib}/serviceui.jar" />
+		<pathelement location="${jini.lib}/tools.jar" />
+		<pathelement location="${jini.lib}/start.jar" />
+		<pathelement location="${jini.lib}/outrigger.jar" />
+	</path>
+
+	<path id="rio.path">
+		<pathelement location="${rio.home}/lib/rio-lib${rio.version}.jar" />
+		<pathelement location="${rio.home}/lib-dl/rio-api${rio.version}.jar" />
+		<pathelement location="${rio.home}/lib/rio-platform${rio.version}.jar" />
+		<pathelement location="${common.lib}/groovy/groovy-all-${groovy.version}.jar" />
+	</path>
+
+	<path id="jna.path">
+		<pathelement location="${common.lib}/jna.jar" />
+	</path>
+
+	<path id="jep.path">
+		<pathelement location="${common.lib}/jep-2.4.1a.jar" />
+		<pathelement location="${common.lib}/ext-1.1.1a.jar" />
+	</path>
+
+	<path id="jfreechart.path">
+		<pathelement location="${common.lib}/jfreechart/jcommon-1.0.17.jar" />
+		<pathelement location="${common.lib}/jfreechart/jfreechart-1.0.14.jar" />
+	</path>
+
+	<path id="junit.path">
+		<pathelement location="${support.lib}/junit.jar" />
+		<pathelement location="${support.lib}/junit-addons-1.4.jar" />
+	</path>
+
+	<taskdef name="groovy" classname="org.codehaus.groovy.ant.Groovy" classpath="${common.lib}/groovy/groovy-all-${groovy.version}.jar" />
+
+	<!-- Properties are IMMUTABLE. Once set it cannot be changed. Here we specify that environment variables take precedence. -->
+
+	<condition property="localhost" value="${hostname}">
+		<equals arg1="${provider.webster.interface}" arg2="$${localhost}" />
+	</condition>
+
+	<condition property="local.interface" value="${hostname}">
+		<equals arg1="${provider.webster.interface}" arg2="$${localhost}" />
+	</condition>
+
+	<!--SAB -->
+	<condition property="provider.webster.interface.TMP" value="${provider.webster.interface}">
+		<not>
+			<equals arg1="${provider.webster.interface}" arg2="$${localhost}" />
+		</not>
+	</condition>
+	<condition property="provider.webster.interface.TMP" value="${hostname}">
+		<equals arg1="${provider.webster.interface}" arg2="$${localhost}" />
+	</condition>
+
+	<echo message="provider.webster.interface.TMP = ${provider.webster.interface.TMP}" />
+
+	<condition property="provider.webster.url" value="http://${env.IGRID_WEBSTER_INTERFACE}:${env.IGRID_WEBSTER_PORT}">
+		<and>
+			<isset property="env.IGRID_WEBSTER_INTERFACE" />
+			<isset property="env.IGRID_WEBSTER_PORT" />
+		</and>
+	</condition>
+
+	<condition property="provider.webster.url" value="http://${local.interface}:${provider.webster.port}" else="http://${provider.webster.interface}:${provider.webster.port}">
+		<isset property="local.interface" />
+	</condition>
+
+	<echo message="provider.webster.url = ${provider.webster.url}" />
+
+	<condition property="data.server.url" value="http://${env.DATA_SERVER_INTERFACE}:${env.DATA_SERVER_PORT}" else="http://${data.server.interface}:${data.server.port}">
+		<and>
+			<isset property="env.DATA_SERVER_INTERFACE" />
+			<isset property="env.DATA_SERVER_PORT" />
+		</and>
+	</condition>
+
+	<!-- define provider codebase -->
+	<url id="sorcer-dl" url="${provider.webster.url}/sorcer-prv-dl.jar" />
+	<url id="jini-dl" url="${provider.webster.url}/jsk-dl.jar" />
+	<url id="sui-dl" url="${provider.webster.url}/serviceui.jar" />
+	<url id="xui-dl" url="${provider.webster.url}/exertlet-ui.jar" />
+	<url id="rio-dl" url="${provider.webster.url}/rio-api.jar" />
+	<property name="sos-codebase" value="${ant.refid:sorcer-dl} ${ant.refid:jini-dl} ${ant.refid:rio-dl}" />
+	<property name="sos-ui" value="${ant.refid:sui-dl} ${ant.refid:xui-dl}" />
+
+	<target name="groovyRun">
+		<groovy src="${groovySrc}">
+			<classpath>
+				<pathelement location="${groovyDir}" />
+			</classpath>
+		</groovy>
+	</target>
+
+	<target name="set-hostname">
+		<condition property="hostname" value="${env.HOST}">
+			<os family="unix" />
+		</condition>
+		<condition property="hostname" value="${env.COMPUTERNAME}">
+			<os family="windows" />
+		</condition>
+		<echo message="host = ${hostname}" />
+	</target>
+
+	<target name="httpd">
+		<java jar="${jini.lib}/tools.jar" fork="yes">
+			<arg value="-verbose" />
+			<arg value="-port" />
+			<arg value="${httpd.port}" />
+			<arg value="-dir" />
+			<arg value="${lib}" />
+		</java>
+	</target>
+
+	<target name="webster">
+		<java jar="${common.lib}/rio3_2/webster.jar" fork="yes">
+			<sysproperty key="java.protocol.handler.pkgs" value="net.jini.url" />
+			<sysproperty key="com.sun.rio.tools.webster.debug" value="true" />
+			<sysproperty key="java.security.policy" value="${iGrid.policy}/policy.all" />
+			<sysproperty key="com.sun.rio.tools.webster.root" value="${lib};${common.lib};${jini.lib}" />
+			<sysproperty key="com.sun.rio.tools.webster.port" value="${httpd.port}" />
+		</java>
+	</target>
+
+	<target name="reggie">
+		<java jar="${jini.home}/lib/start.jar" fork="yes">
+			<sysproperty key="java.security.policy" value="${iGrid.policy}/policy.all" />
+			<sysproperty key="iGrid.config" value="${iGrid.config}" />
+			<sysproperty key="jini.home" value="${jini.home}" />
+			<sysproperty key="provider.webster.url" value="${provider.webster.url}" />
+			<arg value="${iGrid.config}/start-reggie.config" />
+		</java>
+	</target>
+
+	<target name="outrigger">
+		<java jar="${jini.home}/lib/start.jar" fork="yes">
+			<sysproperty key="java.security.policy" value="${iGrid.policy}/policy.all" />
+			<sysproperty key="iGrid.config" value="${iGrid.config}" />
+			<sysproperty key="jini.home" value="${jini.home}" />
+			<sysproperty key="provider.webster.url" value="${provider.webster.url}" />
+			<arg value="${iGrid.config}/start-outrigger.config" />
+		</java>
+	</target>
+
+	<target name="mahalo">
+		<java jar="${jini.home}/lib/start.jar" fork="yes">
+			<sysproperty key="java.security.policy" value="${iGrid.policy}/policy.all" />
+			<sysproperty key="iGrid.config" value="${iGrid.config}" />
+			<sysproperty key="jini.home" value="${jini.home}" />
+			<sysproperty key="provider.webster.url" value="${provider.webster.url}" />
+			<arg value="${iGrid.config}/start-mahalo.config" />
+		</java>
+	</target>
+
+</project>

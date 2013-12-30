@@ -1,0 +1,337 @@
+<html>
+<head>
+<title>FFP - Flat file parsing library</title>
+</head>
+<body bgcolor="white">
+<font face="helvetica" color="navy">
+<font size=+3>
+<b>FFP - Flat file parsing library</b>
+</font>
+<font size=-1>version 1.1</font>
+<br>
+<font size=-3><i>&copy; Copyright 2003,4 dr. Cristiano Sadun - This library is available under <a href="http://www.gnu.org/copyleft/lesser.html#SEC1">LGPL</a></i></font>
+<hr>
+<p>
+Javadoc is <a href="api/index.html">here</a>.
+<p>
+<font size=-1>
+<b>History</b>
+<p>
+<ul>
+<li>1.1 - added dispatching mechanism
+<li>1.0 - first release
+</ul>
+<p>
+</font>
+<font size=+1><b>1. Purpose</b></font>
+<p>
+This Java class library eases parsing of "flat files", i.e. text files where lines can be interpreted according to positional patterns. Even if more modern ways of representing data, as XML and related standards, exist today, flat files are still widesperead due to their portability, immediacy and ease of handling.
+<p>
+However, even if conceptually simple (or perhaps just for that ;-), parsing flat files in a robust and flexible way has some pitfalls - and is generally boring. This library reduces the work required to the bare minimum: declaring the formats to expect (with different degrees of validation and diagnostics dependent on the amount of work desired), then running the parser on a file stream and being notified of the results.
+<p>
+The library can handle both multi-line formats and files containing lines have different known formats ("mixed format" files).
+<p>
+<font size=+1><b>2. Usage</b></font>
+<p>
+Parsing always occurs in the following phases:
+<p>
+<ul>
+<li> Declaring the format of the line(s) to be parsed, by instantiating opportune <a href="api\org\sadun\text\ffp\LineFormat.html">LineFormat</a> objects.
+<li> Creating a <a href="api\org\sadun\text\ffp\FlatFileParser.html">FlatFileParser</a> and registering the <a href="api\org\sadun\text\ffp\LineFormat.html">LineFormat</a>s.
+<li> Creating and registering one or more <a href="api\org\sadun\text\ffp\FlatFileParser.Listener.html">FlatFileParser.Listener</a> objects, by using either <a href="api\org\sadun\text\ffp\FlatFileParser.html#addListener(org.sadun.text.ffp.FlatFileParser.Listener)">addListener</a> or <a href="api\org\sadun\text\ffp\FlatFileParser.html#addDispatch(org.sadun.text.ffp.LineFormat, org.sadun.text.ffp.FlatFileParser.Listener)">addDispatch</a>.
+<li> Running the <a href="api\org\sadun\text\ffp\FlatFileParser.html#parse(java.io.Reader)">parse()</a> method on
+a Reader reading the file contents.
+</ul>
+<p>
+In the simplest and most common case, where each line has the same format, here's a code example for parsing (the format consists of a length-5 numeric field followed by the constant 'XX' followed by a length-10 alphanumeric field):
+<p>
+<pre><b> <a href="api\org\sadun\text\ffp\FlatFileParser.html">FlatFileParser</a> parser = new <a href="api\org\sadun\text\ffp\FlatFileParser.html">FlatFileParser</a>(<a href="api\org\sadun\text\ffp\LineFormat.html">LineFormat</a>.<a href="api\org\sadun\text\ffp\LineFormat.html#fromImage(java.lang.String)">fromImage</a>("##### XX @@@@@@@@@@"));
+ parser.addListener(new EchoListener());
+ parser.<a href="api\org\sadun\text\ffp\FlatFileParser.html#parse(java.io.File)">parse</a>(new File("myfile.txt"));
+</b></pre>
+<p>
+<font size=-1><b>Note</b>: this code assumes that the line separator sequence in the file is the same as the platform's default. Otherwise, invoking
+<a href="api\org\sadun\text\ffp\FlatFileParser.html#setLineSeparator(java.lang.String)">setLineSeparator()</a> on the parser object allows to specify a different sequence (for example <b><tt>\n</tt></b> instead of <b><tt>\r\n</tt></b> for Un*x-like text files).</font>
+<p>
+There are, however, much more complex cases where different formats may occur depending on known conditions
+and records span over multiple lines.
+<p>
+<font size=+1><b>3. LineFormat objects</b></font>
+<p>
+<a href="api\org\sadun\text\ffp\LineFormat.html">LineFormat</a> objects are used to declare a line format. A line format is composed by positional <i>fields</i>. In certain cases, a single logical "line" spans several physical lines: <b>LineFormat always describes a <i>logical</i> line</b>. For example, a format like
+<pre>
+           <font color="red">0123456789012345678901234567890123456789</font>
+           1######@@TYPE1
+           2@@@##################
+</pre>
+(where <tt>#</tt> indicates a digit and <tt>@</tt> an alphanumeric character) spans 2 physical lines.
+<p>
+<font size=-1><b>Note</b>: for each of the methods discussed below, two overloads are provided: one having a physical line number as first parameter (<b>int physicalLine</b>) and one not. This latter speeds up the common case
+where a logical line always consists of a physical line.</font>
+<p>
+A LineFormat can have a <b>name</b> (declared at <a href="api\org\sadun\text\ffp\LineFormat.html#LineFormat(java.lang.String)">construction</a>). This is useful to identify the line type when when mixed formats need to be parsed.
+<p>
+<b>Declaring fields</b>
+<p>
+There are several ways to declare fields, and each can go with more or less information. The more information
+the parser has, the more validation it can perform when parsing. The minimum amount of information is, of course, the physical position of the field.
+<p>
+<b>1 Absolute definition</b>
+<p>
+The first way of declaring fields is the most obvious: declaring them one at the time, together with their position. For this, use the <a href="file:///C:/projects/ffp/doc/api/org/sadun/text/ffp/LineFormat.html#defineField(int, int, int, org.sadun.text.ffp.Type, java.lang.String)">defineField</a> overloads, where the <tt>start</tt> and <tt>end</tt>
+parameter indicate the start and end positions.
+<p>
+<font size=-1><b>Note</b>: the end position is considered <b>excluded</b> from the field (in a way similar to Java's <tt>substring</tt> method). So the first declaration below, for example, declares a field from postion 0 to position 4.
+</font>
+<p>
+For example,
+<pre>
+  LineFormat format = new LineFormat();
+  format.defineField(0, 5);  <font color=green>// declares a field from position 0 to 4 (length 5)</font>
+  format.defineField(5, 7);  <font color=green>// declares a field at positions 5 and 6 (length 2)</font>
+  format.defineField(7, 12); <font color=green>// declares a field from position 7 to 11 (length 5)</font>
+</pre>
+<p>
+Several overloads allow to declare also the <a href="#nti">name, type and image</a> of the fields (see below).
+In case only the positions need be declared, an alternative coding uses <a href="api/org/sadun/text/ffp/LineFormat.html#defineFields(int[][])">defineFields()</a> with an array of two-integers arrays:
+<pre>
+  LineFormat format = new LineFormat();
+  format.defineFields(new int[][] { {0, 5}, {5, 7}, {7, 12} });
+</pre>
+<p>
+<b>2 Relative definition</b>
+<p>
+Every time a field is declared, the LineFormat object keeps track of what is the end position (starting at 0). Therefore, it's possible to declare fields without specifying the start position - which is assumed being the
+previous' field end position; in order to do this, use the <a href="file:///C:/projects/ffp/doc/api/org/sadun/text/ffp/LineFormat.html#defineNextField(int, int, org.sadun.text.ffp.Type, java.lang.String)">defineNextField()</a> overloads.
+<p>
+For example,
+<pre>
+  LineFormat format = new LineFormat(); <font color=green>// "current" position starts at 0.</font>
+  format.defineNextField(5);  <font color=green>// declares a field to end==5 (excluded). Current position becomes 5.</font>
+  format.defineNextField(7);  <font color=green>// declares a field to end==6 (excluded). Current position becomes 7.</font>
+  format.defineNextField(12); <font color=green>// declares a field to end==11 (excluded)</font>
+</pre>
+<p>
+<p>
+Similarly to above, several overloads allow to declare also the <a href="#nti">name, type and image</a> of the fields (see below), and an alternative coding uses for specifiying just the positions uses <a href="api/org/sadun/text/ffp/LineFormat.html#defineNextFields(int[][])">defineNextFields()</a> with an array of integers:
+<pre>
+  LineFormat format = new LineFormat();
+  format.defineNextFields(new int[]{ 5, 7, 12 });
+</pre>
+<a name="nti">
+<p>
+<b>3 Names and types</b>
+<p>
+Each field may have a name and a type. <a href="api/org/sadun/text/ffp/LineFormat.html">LineFormat</a> provides a number of <tt>define..</tt> overloads with a <tt>String name</tt> parameter, which	 can be used to define a field's name. By default, a field's name is <tt>field_<i>p</i>_<i>n</i></tt>, where <i>p</i> is the physical line number index (starting from 1) and <i>n</i> the field number in the physical line (starting from 1).
+<p>
+A field can also be typed. The <a href="api/org/sadun/text/ffp/Type.html">Type</a> class exposes the available types, and the default is
+<a href="api/org/sadun/text/ffp/Type.html#UNDEFINED">UNDEFINED</a>. If the type is <a href="api/org/sadun/text/ffp/Type.html#NUMERIC">NUMERIC</a>
+when parsing, the parser will attempt to convert the field's value into a number (by using <tt>Double.parseDouble</tt>)- and if the conversion fails, the line will fail to parse.
+<a href="api/org/sadun/text/ffp/Type.html#ALFA">ALFA</a> corresponds to any character sequence, while <a href="api/org/sadun/text/ffp/Type.html#CONSTANT">CONSTANT</a> is used to declare that a certain field has always the same value.
+<p>
+<b>4 Field images</b>
+<p>
+In this latter case, it is possible to declare also <i>which</i> constant value is assumed by the line - by using one of the <tt>define..</tt> overloads with a <tt>String image</tt> parameter. For <a href="api/org/sadun/text/ffp/Type.html#CONSTANT">CONSTANT</a> types, a field's image is the value of the constant. For <a href="api/org/sadun/text/ffp/Type.html#NUMERIC">NUMERIC</a>, a field's image, if present, is used as a <tt>java.text.DecimalFormat</tt> template, and when a field is parsed, it will be validate against that format (and if the value
+is not parseable, the line will fail to parse).
+</a>
+<p>
+<b>5 Line image definition</b>
+<p>
+The third way to define line formats is by using an <b>image</b> - a pictorial denotation of the various fields in the line.
+<p><font size=-1><b>Note</b>:The specific image syntax depends on the parser installed in the line format. Check <a href="api/org/sadun/text/ffp/LineFormat.html">LineFormat</a>'s API class comment for the latest details on the syntax. </font>
+<p>
+The basic image syntax separates the fields by blanks, and a sequence of symbol with the same
+length as the field. The symbol '#' denotes Type.<a href="api/org/sadun/text/ffp/Type.html#NUMERIC">NUMERIC</a>, the symbol '@' denotes Type.<a href="api/org/sadun/text/ffp/Type.html#ALFA">ALFA</a> and forward slash sequences are used for these characters and the blank ( /# denotes #, /@ denotes @, /b denotes 'blank' and // denotes the forward slash itself).
+Any other character sequence denotes itself and assumes type <a href="api/org/sadun/text/ffp/Type.html#CONSTANT">CONSTANT</a>.
+<p>
+For example, "<tt>Hello/bWorld ### @@@@@</tt>" indicates that the first field is the constant "Hello World", followed by a numeric field of length 3 and an alphanumeric field of length 5. Note that the spaces between the field images are there only as separators and will not affect the parsing (the fields will be assumed consecutive).
+<p>
+<a href="api/org/sadun/text/ffp/LineFormat.html#fromImage(java.lang.String)">LineFormat.fromImage()</a>  can be used to create a line format object from an image string (there are two overloads, one with, one without a format name). The fields will have default names, but will have a valid type.
+<p>
+<font size=-1><b>Note</b>:The same net effect can be obtained by instantiating a <a href="api/org/sadun/text/ffp/LineFormat.html#">LineFormat</a> and then invoking
+<a href="api/org/sadun/text/ffp/LineFormat.html#declareLineImage(java.lang.String)">declareLineImage()</a>).</font>
+<p>
+A multi-line image can be created simply by inserting the proper line separator sequence: for example <tt>"#####\r\n##"</tt> will match two lines, each with one numeric field, the first of lenght 5, the second length 2.
+<p>
+The line separator at the end of the last (or only) line is implicit.
+<p>
+<b>6. Parsing</b>
+<p>
+The parsing process implemented by the <a href="api/org/sadun/text/ffp/LineFormat.html#parse(java.lang.String)">parse()</a> method is quite simple. The <a href="api/org/sadun/text/ffp/LineFormat.html">LineFormat</a> will try and read as many physical lines as defined, from the current position. If there are not lines enough, an exception will occur.
+<p>
+Then, the fields are separated according to their stated position, and type validation, if possible (that is, if enough information has been given to the <a href="api/org/sadun/text/ffp/LineFormat.html">LineFormat</a>), is performed. If the line has not enough characters, or the validation fails, an exception is raised.
+<p>
+Finally, the resulting <tt>String</tt> array is returned. A <a href="api/org/sadun/text/ffp/LineFormat.html#parse(java.lang.String, boolean)">version of the method</a> which may automatically <tt>trim()</tt>s the fields is also provided.
+<p>
+<p><font size=-1><b>Note</b>: <a href="api/org/sadun/text/ffp/LineFormat.html#parse(java.lang.String)">LineFormat.parse()</a> will seldom be called directly, but is rather invoked when necessary by <a href="api/org/sadun/text/ffp/FlatFileParser.html#parse(java.io.Reader)">FlatFileParser.parse()</a>.</font>
+<p>
+<font size=+1><b>4. FlatFileParser</b></font>
+<p>
+<a href="api/org/sadun/text/ffp/LineFormat.html">LineFormat</a> exposes a <a href="api/org/sadun/text/ffp/LineFormat.html#parse(java.lang.String)">parse()</a> method which can be used to parse Strings. However, the line format must match the contents of the parsed line, or an <a href="api/org/sadun/text/ffp/FFPParseException.html">FFPParseException</a> is raised and the line fails to parse.
+<p>
+The <a href="api/org/sadun/text/ffp/FlatFileParser.html">FlatFileParser</a> class offers services for
+<p>
+<ul>
+<li> Consuming characters from a File or a <tt>java.io.Reader</tt>
+<li> Applying the correct line format depending on whether certain <a href="api/org/sadun/text/ffp/FlatFileParser.Condition.html">conditions</a> hold
+<li> Registering/deregistering <a href="api/org/sadun/text/ffp/FlatFileParser.Listener.html">listeners</a> to parsing events, which are notified when a line is successfully parsed.
+</ul>
+<p>
+A flat file can contain different (logical) line types, recognizable depending on some criteria. Such files are treatable by <a href="api/org/sadun/text/ffp/FlatFileParser.html">FlatFileParser</a>, if it is possible to define a condition which <i>uniquely</i> identifies the line format to use, for each line.
+<p>
+In order to do that, FFP defines the <a href="api/org/sadun/text/ffp/FlatFileParser.Condition.html">FlatFileParser.Condition</a> interface and a number of implementations which cover common situations.
+<p>
+A <a href="api/org/sadun/text/ffp/FlatFileParser.Condition.html">condition</a> is an object which can be <i>associated</i> to a <a href="api/org/sadun/text/ffp/LineFormat.html">LineFormat</a> by using one of the
+<tt><a href="api/org/sadun/text/ffp/FlatFileParser.html#declare(org.sadun.text.ffp.FlatFileParser.Condition, org.sadun.text.ffp.LineFormat)">declare()</a></tt> overloads in a <a href="api/org/sadun/text/ffp/FlatFileParser.html">FlatFileParser</a> instance.
+<p>
+The instance stores the associations, and when its <a href="api/org/sadun/text/ffp/FlatFileParser.html#parse(java.io.Reader)">parse()</a> method is invoked, it will attempt to match one and only one condition to the next available (logical) line. If zero or more than one matches occur, an exception is raised (unless it is instructed to ignore the fact by a previous call to <a href="api/org/sadun/text/ffp/FlatFileParser.html#setFailOnLineParsingError(boolean)">setFailOnLineParsingError(false)</a>). Otherwise, the associated <a href="api/org/sadun/text/ffp/LineFormat.html">LineFormat</a> is used to parse the line.
+<p>
+A table of available conditions is presented at the <a href="#cond-table">end of the document</a>.
+<p>
+<b>Parsing events</b>
+<p>
+During parsing, if one condition holds and the associated <a href="api/org/sadun/text/ffp/LineFormat.html">LineFormat</a> applies correctly, the <a href="api/org/sadun/text/ffp/FlatFileParser.html">FlatFileParser</a> will fire parsing events to every registered <a href="api/org/sadun/text/ffp/FlatFileParser.Listener.html">FlatFileParser.Listener</a>.
+<p>
+The <a href="api/org/sadun/text/ffp/FlatFileParser.Listener.html#lineParsed(org.sadun.text.ffp.LineFormat, int, int, java.lang.String[])">lineParsed()</a> method is invoked - passing along the <a href="api/org/sadun/text/ffp/LineFormat.html">LineFormat</a> which has been successfully used for the parsing the line, the physical and logical line counts and an array of Strings containing the string denotation of the values in the line.
+<p>
+Note that typed fields (for example, numeric) have already been verified by the parser.
+<p>
+From version 1.1, it is possible to associate listeners directly to specific formats - rather than having them receive all the events and have
+to discern manually (by using multiple <b>if</b>s). This is accomplished using <a href="api\org\sadun\text\ffp\FlatFileParser.html#addDispatch(org.sadun.text.ffp.LineFormat, org.sadun.text.ffp.FlatFileParser.Listener)">addDispatch</a> rather than <tt>addListener</tt>, passing a format and a <tt>Listener</tt> object:
+<p>
+<pre> ffp.addDispatch(format1, listenerToFormat1);</pre>
+<p>
+In this case, the listener <tt>listenerToFormat1</tt> will receive <b>only</b> events related to successful parsing of the specific lineformat <b>format1</b>.
+<p>
+<b>Usage example</b>
+<p>
+Here's a general example of usage:
+<p>
+<pre>
+ <font color=green>// Declare and define the line format(s)</font>
+ LineFormat format = new LineFormat("test format"); <font color=green>// The format is named "test format"..</font>
+
+ <font color=green>// ..has one header of 40 characters..</font>
+ format.defineNextField("header", 40);
+ <font color=green>// ..has and a constant TEST0000</font>
+ format.defineNextField(
+  "transaction code",
+  48,
+  Type.CONSTANT,
+  "TEST0000");
+ <font color=green>// ... further definition of format ...</font>
+
+ <font color=green>// Create the parser and associate the format to the condition that a constant is found in the line..</font>
+ FlatFileParser ffp = new FlatFileParser();
+
+ <font color=green>// ..by using the constructor which just looks into a line format and finds out the first constant field</font>
+ ffp.declare( new ConstantFoundInLineCondition(format), format );
+
+ <font color=green>// Register a listener to parsing events which just prints out values</font>
+ <font color=green>// ( Alternatively, a dispatcher which listens <b><i>only</i></b> to events related to the specific LineFormat object ("format") </font>
+ <font color=green>//   might be registered by using</font>
+ <font color=green>// </font>
+ <font color=green>//    ffp.addDispatch(format, new FlatFileParserListnener() { ... }); </font>
+ <font color=green>// )</font>
+ <font color=green>// </font>
+ ffp.addListener(new ffp.addListener(new FlatFileParser.Listener() {
+  public void lineParsed(LineFormat format,int logicalLinecount,int physicalLineCount,String[] values) {
+    for(int i=0;i&lt;values.length;i++) System.out.println(values[i]);
+  }
+ });
+
+
+
+ <font color=green>// Finally, do the parsing </font>
+ ffp.parse(new BufferedReader(new FileReader("testfile.txt)));
+
+</pre>
+<p>
+<b>Building new condition classes</b>
+<p>
+Flat file parse discrimination is usually simple<a href="#n1"><sup>1</sup></a>, but if necessary new conditions can be easily defined by implementing the <a href="api/org/sadun/text/ffp/FlatFileParser.Condition.html">FlatFileParser.Condition</a> interface.
+<p>
+The method <a href="api/org/sadun/text/ffp/FlatFileParser.Condition.html#toString()">toString()</a> must return a description of the condition - this is what is used in error reporting or logging. The central method of the interface is <a href="api/org/sadun/text/ffp/FlatFileParser.Condition.html#holds(int, int, org.sadun.text.ffp.FlatFileParser.LineReader)">holds(logical line count, physical line count, reader)</a>. This method must be implemented so that it can check a specific condition on either the physical or logical line number (passed as parameters) or the line contents itself. During parsing, the parser will invoke it, providing the opportune parameter values. The invocation is synchronous, so if the method blocks, the parser will block.
+<p>
+Since most condition depend checking contents of the line, the <a jref="api/org/sadun/text/ffp/FlatFileParser.LineReader.html">FlatFileParser.LineReader</a> object is passed to the method - and its readLine() method invoked to retrieve the character stream. Of course, the work with this character stream may in itself be implemented as a (potentially complex) line-parsing operation (using perhaps <a href="api/org/sadun/text/ffp/LineFormat.html">LineFormat</a>) but the nature of conditions for discriminating line types in flat files is such that often quicker and more direct methods are suitable.
+<p>
+The built-in implementation of <a jref="api/org/sadun/text/ffp/FlatFileParser.LineReader.html">FlatFileParser.LineReader</a> ensures that the actual character stream is read only once from the file, so every Condition does not have to worry about the performance impact of disk I/O.
+<p>
+<a name="cond-table">
+<b>Pre-definined condition classes</b>
+<p>
+<table width=90% align=center border=1>
+<tr align=center bgcolor=lightblue><td width=30%><b>Condition class</b></td><td><b>Description</b></td></tr>
+
+<tr bgcolor=lightyellow><td align=center><tt><a href="api/org/sadun/text/ffp/ConstantFoundInLineCondition.html">org.sadun.text.ffp.ConstantFoundInLineCondition</a></tt></td><td><b>Checks the line for a constant value at a specific position.</b>
+<p>
+If a <a href="api/org/sadun/text/ffp/LineFormat.html">LineFormat</a> is available when creating an instance, it is possible to just specifiy which field in the <a href="api/org/sadun/text/ffp/LineFormat.html">LineFormat</a> is to be checked by using either <a href="api/org/sadun/text/ffp/ConstantFoundInLineCondition.html#ConstantFoundInLineCondition(org.sadun.text.ffp.LineFormat, int)"><tt>ConstantFoundInLineCondition(LineFormat format, int n)</tt></a> or <a href="api/org/sadun/text/ffp/ConstantFoundInLineCondition.html#ConstantFoundInLineCondition(org.sadun.text.ffp.LineFormat)"><tt>ConstantFoundInLineCondition(LineFormat format)</tt></a> constructor (the latter automatically locates the position of the first constant field in the <a href="api/org/sadun/text/ffp/LineFormat.html">LineFormat</a>).
+<p>
+Otherwise, constructors which require position and constant image can be used.
+</td></tr>
+<tr><td colspan=2 bgcolor=lightgrey>
+<pre>
+ <font color=green>// Declare a line format with two fields - the constant 'CC' followed by a 5 digit number field</font>
+ test00format = <a href="api/org/sadun/text/ffp/LineFormat.html#fromImage(java.lang.String)">LineFormat.fromImage</a>("CC #####");
+
+ <font color=green>// Associate the line format with a condition that use it only if the first field is 'CC'</font>
+ <a href="api/org/sadun/text/ffp/FlatFileParser.Condition.html">FlatFileParser.Condition</a> condition = new <a href="api/org/sadun/text/ffp/ConstantFoundInLineCondition.html#ConstantFoundInLineCondition(org.sadun.text.ffp.LineFormat)">ConstantFoundInLineCondition</a>(test00format);
+ ffp.<a href="api/org/sadun/text/ffp/FlatFileParser.html#declare(org.sadun.text.ffp.FlatFileParser.Condition, java.lang.String)">declare</a>(condition, test00format);
+</pre>
+</td></tr>
+
+<tr bgcolor=lightyellow><td align=center><tt><a href="api/org/sadun/text/ffp/ConstantLineCondition.html">org.sadun.text.ffp.ConstantLineCondition</a></tt></td><td><b>Checks for a constant line</b>
+<p>
+If the constant contains spaces, or other image-related characters, <a href="api/org/sadun/text/ffp/LineFormat.html#makeConstantImage(java.lang.String)">LineFormat.makeConstantImage()</a> can be used.
+</td></tr>
+<tr><td colspan=2 bgcolor=lightgrey>
+<pre>
+ <font color=green>// Declare a line format with two fields - the constant 'CC' followed by a 5 digit number field</font>
+ String constant = "END OF FILE";
+
+ <font color=green>// Associate the line format with a condition that use it only if the first field is 'CC'</font>
+ <a href="api/org/sadun/text/ffp/FlatFileParser.Condition.html">FlatFileParser.Condition</a> condition = new <a href="api/org/sadun/text/ffp/ConstantLineCondition.html#ConstantLineCondition(java.lang.String)">ConstantLineCondition</a>(constant);
+ ffp.<a href="api/org/sadun/text/ffp/FlatFileParser.html#declare(org.sadun.text.ffp.FlatFileParser.Condition, java.lang.String)">declare</a>(condition, <a href="api/org/sadun/text/ffp/LineFormat.html#fromImage(java.lang.String)">LineFormat.fromImage</a>(<a href="api/org/sadun/text/ffp/LineFormat.html#makeConstantImage(java.lang.String)">LineFormat.makeConstantImage</a>(constant));
+</pre>
+</td></tr>
+
+<tr bgcolor=lightyellow><td align=center><tt><a href="api/org/sadun/text/ffp/CountCondition.html">org.sadun.text.ffp.CountCondition</a></tt></td><td><b>Verifies a simple numeric relationship between the current logical line number and another number</b>.
+<p>
+If the constant contains spaces, or other image-related characters, <a href="api/org/sadun/text/ffp/LineFormat.html#makeConstantImage(java.lang.String)">LineFormat.makeConstantImage()</a> can be used.
+</td></tr>
+<tr><td colspan=2 bgcolor=lightgrey>
+<pre>
+ <font color=green>// Declare a line format with two fields - the constant 'CC' followed by a 5 digit number field</font>
+ String constant = "END OF FILE";
+
+ <font color=green>// Associate the line format with a condition that use it only if the first field is 'CC'</font>
+ <a href="api/org/sadun/text/ffp/FlatFileParser.Condition.html">FlatFileParser.Condition</a> condition = new CountCondition(constant);
+ ffp.<a href="api/org/sadun/text/ffp/FlatFileParser.html#declare(org.sadun.text.ffp.FlatFileParser.Condition, java.lang.String)">declare</a>(condition, <a href="api/org/sadun/text/ffp/LineFormat.html#fromImage(java.lang.String)">LineFormat.fromImage</a>(<a href="api/org/sadun/text/ffp/LineFormat.html#makeConstantImage(java.lang.String)">LineFormat.makeConstantImage</a>(constant));
+</pre>
+</td></tr>
+
+<tr bgcolor=lightyellow><td align=center><tt><a href="api/org/sadun/text/ffp/AndCondition.html">org.sadun.text.ffp.AndCondition</a></tt>, <tt><a href="api/org/sadun/text/ffp/NotCondition.html">org.sadun.text.ffp.NotCondition</a></tt>, <tt><a href="api/org/sadun/text/ffp/OrCondition.html">org.sadun.text.ffp.OrCondition</a></tt> </td><td><b>Logical conditions</b>
+<p>
+These condition classes allow to compose other conditions objects in logical expressions.
+</td></tr>
+<tr><td colspan=2 bgcolor=lightgrey>
+<pre>
+ <font color=green>// Declare a line format with two fields - the constant 'CC' followed by a 5 digit number field</font>
+ String constant1 = "END OF FILE";
+ String constant2 = "EOF";
+
+ <font color=green>// Associate the line format with a condition that use it only if the first field is 'CC'</font>
+ <a href="api/org/sadun/text/ffp/FlatFileParser.Condition.html">FlatFileParser.Condition</a> condition1 = new <a href="api/org/sadun/text/ffp/ConstantLineCondition.html#ConstantLineCondition(java.lang.String)">ConstantLineCondition</a>(constant1);
+ <a href="api/org/sadun/text/ffp/FlatFileParser.Condition.html">FlatFileParser.Condition</a> condition2 = new <a href="api/org/sadun/text/ffp/ConstantLineCondition.html#ConstantLineCondition(java.lang.String)">ConstantLineCondition<a>(constant2);
+ <a href="api/org/sadun/text/ffp/FlatFileParser.Condition.html">FlatFileParser.Condition</a> condition = new <a href="api/org/sadun/text/ffp/OrCondition.html#OrCondition(org.sadun.text.ffp.FlatFileParser.Condition, org.sadun.text.ffp.FlatFileParser.Condition)">OrCondition</a>(constant1, constant2);
+ ffp.<a href="api/org/sadun/text/ffp/FlatFileParser.html#declare(org.sadun.text.ffp.FlatFileParser.Condition, java.lang.String)">declare</a>(condition, <a href="api/org/sadun/text/ffp/LineFormat.html#fromImage(java.lang.String)">LineFormat.fromImage</a>(<a href="api/org/sadun/text/ffp/LineFormat.html#makeConstantImage(java.lang.String)">LineFormat.makeConstantImage</a>(constant));
+</pre>
+</td></tr>
+</table>
+</a>
+<p>
+<hr>
+<a name="n1"><font size=-1>1. (which is also the rationale for a design where logical expressions are realized as object combinations rather than an expression language to be interpreted at runtime).</font>
+</a>
+</body>
+</html>

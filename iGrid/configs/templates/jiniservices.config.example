@@ -1,0 +1,22 @@
+import net.jini.jrmp.*;
+
+root {
+  groups = new String[] {"sorcer.bla"}; // <--- Change here!
+}
+
+com.sun.jini.reggie {
+    serverExporter = new JrmpExporter();
+    initialMemberGroups = root.groups;
+    // set this if you don't have functioning DNS service
+    // unicastDiscoveryHost  = "192.168.1.15";
+}
+
+com.sun.jini.outrigger {
+    serverExporter = new JrmpExporter();
+    initialLookupGroups = root.groups;
+}
+
+com.sun.jini.mahalo {
+    serverExporter = new JrmpExporter();
+    initialLookupGroups = root.groups;
+}

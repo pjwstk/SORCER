@@ -1,0 +1,19 @@
+#DB Access Default Properties for FIPER Application Server
+
+sobol=root:acVFdu5DXhbR6
+servlet=root:ac9CcIGfYOa.Y
+public=public:ackO1kfcqKrwk
+
+role1.system=system:fiper:1fiper1:select:update:insert:delete
+role2.system=public:fiper:1fiper1:select
+role3.system=admin:fiper:1fiper1
+role4.system=root:fiper:1fiper1
+
+role6.fiper=originator:fiper:1fiper1:select:update:insert:delete
+role7.fiper=publisher:fiper:1fiper1:select:update:insert:delete
+role8.fiper=reviewer:fiper:1fiper1:select:update:insert:delete
+role9.fiper=approver:fiper:1fiper1:select:update:insert:delete
+role10.fiper=updater:fiper:1fiper1:select:update:insert:delete
+role11.fiper=viewer:fiper:1fiper1:select
+role12.fiper=looker:fiper:1fiper1:select
+

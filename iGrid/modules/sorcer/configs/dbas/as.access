@@ -1,0 +1,19 @@
+#DB Access Default Properties for SORCER Application Server
+
+sobol=root:acVFdu5DXhbR6
+servlet=root:ac9CcIGfYOa.Y
+public=public:ackO1kfcqKrwk
+
+role1.system=system:sorcer:sorcer20B:select:update:insert:delete
+role2.system=public:sorcer:sorcer20B:select
+role3.system=admin:sorcer:sorcer20B
+role4.system=root:sorcer:sorcer20B
+
+role6.sorcer=originator:sorcer:sorcer20B:select:update:insert:delete
+role7.sorcer=publisher:sorcer:sorcer20B:select:update:insert:delete
+role8.sorcer=reviewer:sorcer:sorcer20B:select:update:insert:delete
+role9.sorcer=approver:sorcer:sorcer20B:select:update:insert:delete
+role10.sorcer=updater:sorcer:sorcer20B:select:update:insert:delete
+role11.sorcer=viewer:sorcer:sorcer20B:select
+role12.sorcer=looker:sorcer:sorcer20B:select
+

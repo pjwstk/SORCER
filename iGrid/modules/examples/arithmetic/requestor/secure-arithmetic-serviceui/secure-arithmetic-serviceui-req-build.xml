@@ -1,0 +1,92 @@
+<?xml version='1.0' encoding='ISO-8859-1' standalone='yes'?>
+<!-- 
+ * Copyight (C) 2004 SORCER Lab, Texas Tech University. All rights reserved.
+ * Service-Oriented Computing Environmet: build configuration for SORCER Arithetic
+ * service provider testing.
+ * Make sure the following variables are changed to reflect your environment:
+ *    IGRID_HOME        	iGrid location
+ *    JAVA_HOME         	JDK Location
+ *	  IGRID_WEBSTER_PORT 	The class server (webster) port
+ *    ANT_HOME          	Jakarta Ant location
+ Please see also the ../common-build.xml for classpaths, definitions and targets
+-->
+<project name="SSL Arithmetic Service UI" default="all" basedir=".">
+	<property name="module.name" value="ssl-serviceui" />
+	<property name="module.run.dir" value="arithmetic" />
+	<!-- set global properties -->
+	<import file="../../../../common-build.xml" />
+	<property name="src" value="./src" />
+
+	<!-- The sources to compile -->
+	<patternset id="ant.java">
+		<include name="sorcer/requestor/**/*.java" />
+		<exclude name="**/SAVE/*.java" />
+		<exclude name="**/BAK/*.java" />
+	</patternset>
+
+	<patternset id="ant.classes">
+		<include name="sorcer/requestor/arithmetic/ssl/**/*.class" />
+	</patternset>
+
+	<path id="project.classpath">
+		<pathelement location="${classes}" />
+		<pathelement location="${sorcer.lib}/sorcer-prb.jar" />
+		<pathelement location="${sorcer.lib}/sorcer-lib.jar" />
+		<path refid="jaxp.path" />
+		<path refid="jini.path" />
+		<path refid="rio.path" />
+	</path>
+
+	<path id="javadocs.classpath">
+		<path refid="jini.path" />
+		<pathelement location="${common.lib}/buildsupport/ant-ext.jar" />
+		<pathelement location="${common.lib}/buildsupport/ant.jar" />
+	</path>
+
+	<target name="all" depends="prepare, jars" />
+	<target name="arithmetic" depends="secure-arithmetic-serviceui.jar" />
+	<target name="compile" depends="compileSources" />
+	<target name="jars" depends="compile, copy-service-ui-config-files, arithmetic" />
+
+	<target name="docs" depends="prepare, compile">
+		<javadoc packagenames="org.jini.rio.tools.ant.*" maxmemory="100M" sourcepath="${src}" destdir="${docs}/api" Author="true" Version="true" Use="true" windowtitle="Arithmetic Examples" doctitle="&lt;h1&gt;Arithmetic Examples;/h1&gt;" bottom="&lt;i&gt;Copyright (c) 2002-2006 Texas tech University, All Rights Reserved.&lt;/i&gt;">
+			<group title="Arithmetic Examples" packages="sorcer.arithmetic.*" />
+			<classpath refid="project.classpath" />
+		</javadoc>
+	</target>
+
+	<target name="secure-arithmetic-serviceui.jar">
+		<classdepandjar jarfile="${sorcer-dl.lib}/secure-arithmetic-serviceui.jar" files="true">
+			<classpath refid="project.classpath" />
+			<in name="sorcer" />
+			<in name="jgapp" />
+			<topclass name="sorcer.requestor.arithmetic.ssl.ui.SecureArithmeticUI" />
+			<topclass name="sorcer.security.ui.SecureContentPane" />
+			<topclass name="sorcer.security.jaas.PasswordLoginModule" />
+			<topclass name="sorcer.core.context.IndexedContext" />
+			<topclass name="sorcer.ui.serviceui.UIComponentFactory" />
+			<topclass name="com.artima.lookup.util.ConsistentSet" />
+			<fileset dir="${iGrid.home}/classes">
+				<include name="sorcer/requestor/arithmetic/ssl/ui/configs/service-ui.login" />
+				<include name="sorcer/requestor/arithmetic/ssl/ui/configs/service-ui.config" />
+				<include name="sorcer/requestor/arithmetic/ssl/ui/configs/ssl-jeri-arithmetic-req.keystore" />
+				<include name="sorcer/requestor/arithmetic/ssl/ui/configs/ssl-jeri-arithmetic-req.truststore" />
+				<include name="sorcer/requestor/arithmetic/ssl/ui/configs/ssl-jeri-arithmetic-req.passwd" />
+			</fileset>
+		</classdepandjar>
+	</target>
+
+	<target name="copy-service-ui-config-files">
+		<mkdir dir="${iGrid.home}/classes/sorcer/requestor/arithmetic/ssl/ui/configs" />
+		<copy todir="${iGrid.home}/classes/sorcer/requestor/arithmetic/ssl/ui/configs">
+			<fileset dir="./configs">
+				<include name="service-ui.login" />
+				<include name="service-ui.config" />
+				<include name="ssl-jeri-arithmetic-req.passwd" />
+				<include name="ssl-jeri-arithmetic-req.truststore" />
+				<include name="ssl-jeri-arithmetic-req.keystore" />
+			</fileset>
+		</copy>
+	</target>
+
+</project>

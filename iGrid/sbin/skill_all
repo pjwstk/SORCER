@@ -1,0 +1,12 @@
+#!/bin/bash
+
+#SBIN_HOME=`dirname \`readlink -f $0\``
+SBIN_HOME=`dirname $0`
+for pidfile in `ls $SBIN_HOME/.*.pid`; do
+    PID=`cat $pidfile`
+    SCRIPTNAME=`basename $pidfile`
+    echo "killing $SCRIPTNAME, PID = $PID..."
+    kill $PID
+    rm $pidfile
+done
+

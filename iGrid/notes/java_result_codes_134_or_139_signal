@@ -1,0 +1,24 @@
+Troubleshooting Java Result codes 134, 139, etc., w/ Native Code Invocations
+
+Problem: While accessing a shared library module wrapped via JNI, JNA (which
+abstracts JNI) or SWIG (provides JNI wrapped API), the JVM will stochastically
+return error codes 134, 139, or similar, which terminates the java application.
+
+Source: Native code processes a sequence of statements that call signal(), 
+sigset(), or sigaction(), calls an API library which calls one of the previously
+mentioned functions, or makes an OS calls which calls one of the previously
+mentioned functions. For example, a failed memory allocation call may involve
+signal-chaining call as part of its error resolution process. What should 
+happen is for the JVM to intercept these calls and handle them in such a manner
+that it precludes the java application for failing (important in a distributed 
+environment)
+
+Workaround/Solutions:
+1. Use libjsig w/ application creating or embedding a JVM
+   gcc -L$JAVA_HOME/bin -ljsig -L$JAVA_HOME/bin/j8vm -ljvm java_application.c
+   
+2. Use the LD_PRELOAD environment variable (WARNING: paths may vary, verify)
+   export LD_PRELOAD=$JAVA_HOME/jre/lib/amd64/libjsig.so 
+          java_application (bash/ksh)
+   setenv LD_PRELOAD=$JAVA_HOME/jre/lib/amd64/libjsig.so; 
+          java_application (csh)

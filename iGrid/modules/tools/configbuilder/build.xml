@@ -1,0 +1,127 @@
+<!--
+ * Copyright to the original author or authors.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * @author Dennis Reedy
+-->
+<project default="all">
+    <property environment="env" />
+    <property name="iGrid.home" value="${env.IGRID_HOME}" />
+    <property name="lib" value="${iGrid.home}/lib" />
+    <property name="common.lib" value="${lib}/common" />
+    <property name="classes" value="target/classes"/>
+    <property name="jini.lib" value="${lib}/river/lib" />
+    <property name="rio.home" value="${iGrid.home}/rio" />
+    <property name="rio.version" value="-5.0-M4"/>
+    <property name="slf4j.version" value="1.7.5"/>
+    <property name="support.lib" value="${common.lib}/buildsupport" />
+
+    <path id="groovy.classpath">
+        <fileset dir="${common.lib}/groovy"/>
+    </path>
+
+    <path id="river.classpath">
+        <pathelement location="${jini.lib}/jsk-lib.jar" />
+        <pathelement location="${jini.lib}/jsk-platform.jar" />
+    </path>
+
+    <path id="rio.classpath">
+        <pathelement location="${rio.home}/lib/rio-lib${rio.version}.jar" />
+        <pathelement location="${rio.home}/lib-dl/rio-api${rio.version}.jar" />
+        <pathelement location="${rio.home}/lib/rio-platform${rio.version}.jar" />
+        <path location="${rio.home}/lib/logging/slf4j-jdk14-${slf4j.version}.jar" />
+    </path>
+
+    <path id="junit.classpath">
+        <pathelement location="${support.lib}/junit.jar" />
+    </path>
+
+    <path id="project.classpath">
+        <pathelement location="${classes}" />
+        <pathelement location="${lib}/sorcer/lib/sorcer-prv.jar"/>
+        <path refid="groovy.classpath" />
+        <path refid="river.classpath" />
+        <path refid="rio.classpath" />
+    </path>
+
+    <path id="test.classpath">
+        <path refid="project.classpath" />
+        <pathelement location="target/test-classes" />
+        <path refid="junit.classpath" />
+    </path>
+
+    <taskdef name="groovyc" classname="org.codehaus.groovy.ant.Groovyc" classpathref="groovy.classpath"/>
+
+    <target name="all" depends="prepare, jar" />
+
+    <target name="prepare">
+        <mkdir dir="target/classes"/>
+        <mkdir dir="target/test-classes"/>
+        <mkdir dir="target/reports"/>
+    </target>
+
+    <target name="compile" description="Compile groovy source" depends="prepare">
+        <mkdir dir="target/classes"/>
+        <groovyc srcdir="src/main/groovy" destdir="target/classes" classpathref="project.classpath"/>
+    </target>
+
+    <target name="jar" depends="compile">
+        <jar destfile="target/configbuilder.jar" basedir="target/classes"/>
+    </target>
+
+    <target name="test-compile" description="Compile groovy test source" depends="prepare">
+        <javac srcdir="src/test/java"
+               destdir="target/test-classes"
+               debug="true" target="1.6"
+               source="1.6"
+               nowarn="on"
+               includeantruntime="true">
+            <classpath>
+                <path refid="test.classpath"/>
+            </classpath>
+        </javac>
+    </target>
+
+    <target name="clean">
+        <delete includeemptydirs="true" quiet="true">
+            <fileset dir="target" includes="**/*" />
+        </delete>
+    </target>
+
+    <target name="test" depends="jar, test-compile">
+        <junit fork="yes" showoutput="yes" outputtoformatters="true" haltonfailure="yes">
+            <formatter type="plain" usefile="no"/>
+            <classpath>
+                <path refid="test.classpath" />
+            </classpath>
+            <sysproperty key="RIO_HOME" value="${rio.home}" />
+            <batchtest>
+                <fileset dir="${iGrid.home}/modules/tools/configbuilder/src/test/java">
+                    <include name="**/*Test.java"/>
+                </fileset>
+            </batchtest>
+
+        </junit>
+    </target>
+
+    <target name="install" depends="jar">
+        <copy todir="${support.lib}">
+            <fileset dir="target">
+                <include name="configbuilder.jar" />
+            </fileset>
+        </copy>
+    </target>
+
+
+</project>

@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+
+<project name="Rosen-Suzuki Model Requestor" default="run.requestor" basedir=".">
+
+	<!-- loads system environment variables -->
+	<property environment="env" />
+	<import file="${env.IGRID_HOME}/modules/common-run.xml" />
+	<echo message="webster: ${provider.webster.url}" />
+	<property name="webster" value="${provider.webster.url}" />
+
+	<!-- set property values here -->
+	<property name="requestor.name" value="rs-model" />
+	<property name="requestor.class" value="sorcer.model.rs.RosenSuzukiModelRequestor" />
+
+	<path id="project.classpath">
+		<pathelement location="${sorcer.lib}/${requestor.name}.jar" />
+		<path refid="sorcer.path" />
+		<path refid="jini.path" />
+	</path>
+
+	<!-- provider codeabse jars -->
+	<property name="j1" value="${webster}/$sorcer-modeling-dl.jar" />
+	<property name="j2" value="${webster}/sorcer-prv-dl.jar" />
+	<property name="j3" value="${webster}/sorcer-lib.jar" />
+
+
+	<target name="run.requestor">
+		<java classname="${requestor.class}" fork="yes">
+			<classpath refid="project.classpath" />
+			<sysproperty key="java.util.logging.config.file" value="${iGrid.home}/configs/sorcer.logging" />
+			<sysproperty key="java.security.policy" value="../policy/${requestor.name}-req.policy" />
+			<sysproperty key="java.rmi.server.codebase" value="${j1} ${j2} ${j3}" />
+			<sysproperty key="sorcer.env.file" value="${iGrid.home}/configs/sorcer.env" />
+			<arg value="responses" />
+			<arg value="inter" />
+		</java>
+	</target>
+
+</project>
+
+
+

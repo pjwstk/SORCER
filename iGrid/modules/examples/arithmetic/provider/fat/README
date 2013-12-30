@@ -1,0 +1,11 @@
+In this examaple a plain SorcerProvider is used with an Arithmometer proxy. 
+Compare it with SmartArithmometer and SemismartArithmometer cases.
+
+The Arithmometer class is registered by a SorcerProvider as is 
+(no exporter is used) and all proxy functionality is avalabe locally 
+at the proxy requestor side. There is no any communication back to its 
+registering service provider (SorcerProvider).
+
+Note, that to deploy fat proxing it is sufficient to provide any object
+as a proxy in the SorcerProvider configuration file only. 
+No additional coding is required except for the proxy itself.

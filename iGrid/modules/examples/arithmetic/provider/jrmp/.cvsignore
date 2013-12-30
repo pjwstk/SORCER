@@ -1,0 +1,5 @@
+docs
+lib
+classes
+*.log*
+*.lck*

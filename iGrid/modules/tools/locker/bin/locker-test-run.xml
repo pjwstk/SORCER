@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+<!-- 
+Replace "variables" with your project name and specify property value for "requestor.class."
+Also you might need to adjust the classpath (project.classpath) for your requestors. 
+-->
+
+<project name="variables" default="run.requestor" basedir=".">
+
+	<!-- loads system environment variables -->
+	<property environment="env" />
+	<import file="${env.IGRID_HOME}/modules/common-run.xml" />
+
+	<!-- set property values here -->
+	<property name="requestor.class" value="org.dancres.blitz.jini.lockmgr.MutexTest" />
+
+	<path id="project.classpath">
+		<pathelement location="${blitz.lib}/lockmgr.jar" />
+		<pathelement location="../bulid" />
+		<pathelement location="${sorcer.lib}/sorcer-prv.jar" />
+		<pathelement location="${common.lib}/jep-2.4.1a.jar" />
+		<pathelement location="${jini.lib}/jsk-lib.jar" />
+		<pathelement location="${jini.lib}/jsk-platform.jar" />
+		<pathelement location="${rio.lib}/rio.jar" />
+		<pathelement location="${jini.lib}/common/serviceui.jar" />
+		<pathelement location="${common.lib}/je-4.1.10.jar" />
+	</path>
+
+	<target name="run.requestor">
+		<java classname="${requestor.class}" fork="yes">
+			<classpath refid="project.classpath" />
+			<sysproperty key="java.util.logging.config.file" value="${iGrid.home}/configs/sorcer.logging" />
+			<sysproperty key="java.security.policy" value="../policy/policy.all" />
+			<sysproperty key="java.rmi.server.codebase" value="${provider.webster.url}/lockmgr-dl.jar ${provider.webster.url}/jsk-dl.jar" />
+			<sysproperty key="sorcer.env.file" value="${iGrid.home}/configs/sorcer.env" />
+			<sysproperty key="provider.webster.interface" value="${provider.webster.interface}" />
+			<sysproperty key="provider.webster.port" value="${provider.webster.port}" />
+			<sysproperty key="provider.webster.url" value="${provider.webster.url}" />
+			<sysproperty key="data.server.url" value="${data.server.url}" />
+			<sysproperty key="iGrid.home" value="${iGrid.home}" />
+		</java>
+	</target>
+
+</project>

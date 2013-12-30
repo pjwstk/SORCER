@@ -1,0 +1,9 @@
+docs
+logs
+jars
+classes
+*.log*
+*.lck*
+tmp
+
+

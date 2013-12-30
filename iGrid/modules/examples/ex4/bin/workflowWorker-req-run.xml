@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+
+<project name="Worker Requestor" default="run.requestor" basedir=".">
+
+	<!-- loads system environment variables -->
+	<property environment="env" />
+	<import file="${env.IGRID_HOME}/modules/common-run.xml" />
+	<echo message="webster: ${provider.webster.url}" />
+
+	<!-- set property values here -->
+	<property name="requestor.name" value="worker-run" />
+	<property name="requestor.class" value="sorcer.core.requestor.ExertionRunner" />
+
+	<path id="project.classpath">
+		<pathelement location="${iGrid.home}/lib/${requestor.name}.jar" />
+		<pathelement location="${iGrid.home}/lib/jgapp.jar" />
+		<pathelement location="${iGrid.home}/common/jini-ext.jar" />
+		<pathelement location="${iGrid.home}/common/sun-util.jar" />
+		<pathelement location="${iGrid.home}/common/serviceui-1.1.jar" />
+	</path>
+
+	<target name="run.requestor">
+		<java classname="${requestor.class}" fork="yes">
+			<arg value="sorcer.ex3.runner.WorkerRunner" />
+			<classpath refid="project.classpath" />
+			<sysproperty key="java.util.logging.config.file" value="${iGrid.home}/configs/sorcer.logging" />
+			<sysproperty key="java.security.policy" value="../policy/${requestor.name}.policy" />
+			<sysproperty key="java.rmi.server.codebase" value="${provider.webster.url}/worker-dl.jar" />
+			<sysproperty key="sorcer.env.file" value="${iGrid.home}/configs/sorcer.env" />
+			<sysproperty key="requestor.properties" value="../configs/worker-run.properties" />
+		</java>
+	</target>
+
+</project>
+
+
+

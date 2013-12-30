@@ -1,0 +1,202 @@
+<?xml version='1.0' encoding='ISO-8859-1' standalone='yes'?>
+
+<project name="SORCER" default="install" basedir=".">
+
+	<property environment="env" />
+	<property name="iGrid.home" value="${env.IGRID_HOME}" />
+	<property name="lib" value="${iGrid.home}/lib" />
+	<property name="common.lib" value="${lib}/common" />
+	<property name="support.lib" value="${common.lib}/buildsupport" />
+	<property name="CODEBASE" value="${env.APP_CODEBASE}" />
+	<property name="CURRDIR" value="sorcer/provider/grid/dispatcher" />
+	<property name="DISTRIBUTION" value="${env.IGRID_HOME}/modules/sorcer/bin/${CURRDIR}" />
+	<property name="CONFIG" value="${env.IGRID_HOME}/modules/sorcer/configs/services" />
+
+	<path id="project.classpath">
+		<pathelement path="${env.CLASSPATH}" />
+		<pathelement path="${CODEBASE}" />
+	</path>
+
+	<fileset dir=".">
+		<patternset id="java.source">
+			<include name="benchmarks/**/*.java" />
+			<include name="**/*.java" />
+			<exclude name="**/SAVE/*.java" />
+			<exclude name="**/BAK/*.java" />
+		</patternset>
+	</fileset>
+
+	<fileset dir="${CODEBASE}">
+		<patternset id="java.classes">
+			<include name="${CURRDIR}/**/*.class" />
+			<exclude name="${CURRDIR}/**/SAVE/*.class" />
+			<exclude name="${CURRDIR}/**/BAK/*.class" />
+		</patternset>
+	</fileset>
+
+	<target name="install" depends="clean, cleanjar, compile, copy_files, dispatcher.jar, dispatcher-dl.jar, dispatcher-ui.jar" />
+
+	<target name="clean">
+		<delete verbose="false" failonerror="false">
+			<fileset dir="${CODEBASE}/${CURRDIR}">
+				<patternset refid="java.classes" />
+			</fileset>
+			<fileset dir="${DISTRIBUTION}/config">
+				<include name="provider.properties" />
+				<include name="server.config" />
+				<include name="start-server.config" />
+				<include name="jaas.config" />
+				<include name="dispatcher.xml" />
+			</fileset>
+		</delete>
+	</target>
+
+	<target name="cleanjar">
+		<delete file="${CODEBASE}/dispatcher-ui.jar" />
+		<delete file="${CODEBASE}/dispatcher-dl.jar" />
+		<delete file="${DISTRIBUTION}/lib/dispatcher.jar" />
+	</target>
+
+	<target name="compile">
+		<javac srcdir="." destdir="${CODEBASE}" deprecation="no">
+			<classpath refid="project.classpath" />
+			<patternset refid="java.source" />
+		</javac>
+	</target>
+
+
+	<target name="dispatcher.jar">
+		<classdepandjar jarfile="${DISTRIBUTION}/lib/dispatcher.jar" files="true">
+			<classpath refid="project.classpath" />
+
+			<in name="sorcer" />
+			<in name="net.jini" />
+			<in name="com.sun" />
+			<in name="com.artima" />
+			<topclass name="sorcer.provider.grid.dispatcher.GridDispatcherProviderImpl" />
+			<topclass name="sorcer.provider.grid.dispatcher.GridDispatcherProviderImpl_Stub" />
+
+			<topclass name="net.jini.admin.Administrable" />
+			<topclass name="com.artima.lookup.util.ConsistentSet" />
+			<topclass name="sorcer.security.permission.MethodPermission" />
+			<fileset dir="${CODEBASE}" includes="sorcer/util/sorcer.env" />
+		</classdepandjar>
+	</target>
+
+	<target name="dispatcher-dl.jar">
+		<classdepandjar jarfile="${env.APP_CODEBASE}/dispatcher-dl.jar" files="true">
+			<classpath refid="project.classpath" />
+			<in name="sorcer" />
+			<in name="net.jini" />
+			<in name="com.sun" />
+			<topclass name="sorcer.core.serviceui.UIFrameFactory" />
+			<topclass name="sorcer.provider.grid.dispatcher.GridDispatcherRemote" />
+			<topclass name="sorcer.provider.grid.dispatcher.GridDispatcherProviderImpl_Stub" />
+			<topclass name="sorcer.core.SorcerServiceType" />
+			<topclass name="net.jini.lookup.entry.ServiceInfo" />
+			<topclass name="net.jini.admin.Administrable" />
+			<topclass name="sorcer.core.AdministratableProvider" />
+			<topclass name="sorcer.core.RemoteServiceTask" />
+			<topclass name="sorcer.security.permission.MethodPermission" />
+		</classdepandjar>
+	</target>
+
+	<target name="dispatcher-ui.jar">
+		<classdepandjar jarfile="${env.APP_CODEBASE}/dispatcher-ui.jar" files="true">
+			<classpath refid="project.classpath" />
+			<in name="sorcer" />
+			<in name="net.jini" />
+			<in name="com.artima" />
+			<in name="fi" />
+			<topclass name="sorcer.jaas.PsswdLoginModule" />
+			<topclass name="sorcer.provider.grid.dispatcher.GridDispatcherUI" />
+			<topclass name="com.artima.lookup.util.ConsistentSet" />
+			<fileset dir="${env.APP_CODEBASE}" includes="sorcer/provider/grid/dispatcher/config/jaas.config" />
+			<fileset dir="${env.APP_CODEBASE}" includes="sorcer/provider/grid/dispatcher/config/keystore.client" />
+			<fileset dir="${env.APP_CODEBASE}" includes="sorcer/provider/grid/dispatcher/config/truststore.client" />
+			<fileset dir="${env.APP_CODEBASE}" includes="sorcer/provider/grid/dispatcher/config/password.client" />
+			<fileset dir="${env.APP_CODEBASE}" includes="sorcer/provider/grid/dispatcher/config/preparer-minimal.config" />
+		</classdepandjar>
+	</target>
+
+	<target name="copy_files">
+		<copy todir="${DISTRIBUTION}/bin">
+			<fileset dir=".">
+				<include name="dispatcher.prv" />
+				<include name="dispatcherlogging.properties" />
+				<include name="provider.properties" />
+			</fileset>
+		</copy>
+		<copy todir="${DISTRIBUTION}/policy">
+			<fileset dir="./policy">
+				<include name="server.policy" />
+			</fileset>
+		</copy>
+		<copy todir="${DISTRIBUTION}/config">
+			<fileset dir="./config">
+				<include name="jaas.config" />
+				<include name="serverjaas.config" />
+				<include name="truststore.server" />
+				<include name="keystore.server" />
+				<include name="password.server" />
+				<include name="truststore.client" />
+				<include name="keystore.client" />
+				<include name="server.config" />
+				<include name="start-server.config" />
+				<include name="dispatcher.xml" />
+			</fileset>
+		</copy>
+		<copy todir="${CODEBASE}/sorcer/util">
+			<fileset dir="${CONFIG}/.">
+				<include name="sorcer.env" />
+			</fileset>
+		</copy>
+		<copy todir="${CODEBASE}/sorcer/provider/grid/dispatcher">
+			<fileset dir=".">
+				<include name="jaas.config" />
+			</fileset>
+		</copy>
+		<copy todir="${CODEBASE}/sorcer/provider/grid/dispatcher/config">
+			<fileset dir="./config">
+				<include name="preparer-minimal.config" />
+				<include name="jaas.config" />
+				<include name="serverjaas.config" />
+				<include name="truststore.server" />
+				<include name="keystore.server" />
+				<include name="password.server" />
+				<include name="truststore.client" />
+				<include name="keystore.client" />
+				<include name="server.config" />
+				<include name="start-server.config" />
+				<include name="dispatcher.xml" />
+			</fileset>
+		</copy>
+
+		<chmod dir="${DISTRIBUTION}/bin" perm="755" includes="dispatcher.prv" />
+	</target>
+
+
+	<!--target name="copy_files" >
+    <copy todir="${CODEBASE}/${CURRDIR}" >
+      <fileset dir="." >
+ 	<include name="**/provider.properties" />
+      </fileset>
+    </copy>
+    <copy todir="${DISTRIBUTION}/config" >
+       <fileset dir="." >
+         <include name="**/provider.properties" />
+       </fileset>
+    </copy>
+  </target-->
+
+	<taskdef name="classdep" classname="org.jini.rio.tools.ant.ClassDepTask">
+		<!-- Should be included by ant anyways -->
+		<!--<classpath location="${ant.home}/lib/ant.jar" />-->
+		<classpath location="${support.lib}/ant-ext.jar" />
+	</taskdef>
+
+	<taskdef name="classdepandjar" classname="org.jini.rio.tools.ant.ClassDepAndJarTask">
+		<classpath location="${support.lib}/classdepandjar.jar" />
+	</taskdef>
+
+</project>

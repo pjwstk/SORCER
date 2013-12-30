@@ -1,0 +1,17 @@
+Build the Rosen-Suzuki tutorial
+
+1. run ex10/rs-all-build.xml
+	ex8 - Rosen-Suzuki Model
+	ex9 - Rosen-Suzuki Dispatcher
+	ex10a - Rosen-Suzuk Explorer
+2. run iGrid/bin/iGrid-min-boot.xml
+3. run webster iGrid/bin/webster/bin/webster-run.xml
+4. run model service iGrid/examples/ex8/bin/rs-model-prv.run.xml
+5. run optimizer service iGrid/examples/ex9/bin/rs-opti-prv.run.xml
+6. run explorer service iGrid/examples/ex10/bin/rs-explorer-prv.run.xml
+
+7. run the Explorer requestor
+iGrid/examples/ex10a/bin/rs-explorer-req.run.xml
+
+if <arg value="intra" /> then it is a local process,
+otherwise it's service-oriented application/

@@ -1,0 +1,43 @@
+This example contains Java sources for four examples:
+	ex1boot-bean
+	ex1boot=prv
+	ex1run-bean
+	ex1run-prv
+	
+boot - in the name of the example directory indicates that 
+service providers and requestors are bootstrapped with their own code servers.
+
+run - in the name of the example directory indicates that both
+service providers and requestors require to have a code server (webster) 
+already running.
+
+To start the SORCER environment for these examples run the Ant script
+${IGRID_HOME}/bin/iGrid-boot-http.xml
+
+To start a service browser run the Ant script
+${IGRID_HOME}/bin/browser/bin/service-browser-run.xml
+
+To run an Ant script:
+	a) in Eclipse IDE select an Ant script, then from a popup menu select "Run As/Ant Build"
+	b) on a command line call "ant -f <script filename>"
+
+
+SPECIAL CASES
+Batch task
+	Build examples: examples-build.xml in the 'examples' directory
+	in examples/ex1run-prv/bin
+		provider: whoIsIt2-prv-run.xml
+		requestor: whoIsItBatchTask-req-run.xml
+
+Monitored Task
+	Build examples: examples-build.xml in the 'examples' directory
+	in examples/ex6/bin
+		provider: adder-prv-run.xml
+		not monitored task/requestor: f5a-req-run.xml
+		monitored task/requestor: f5a-req-run.xml
+
+Space-computing Tasks
+	Build examples: examples-build.xml in the 'examples' directory
+	in examples/ex6/bin
+	Adder and Multiplier are space enabled
+	

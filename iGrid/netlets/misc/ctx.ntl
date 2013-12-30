@@ -1,0 +1,5 @@
+#!/usr/bin/env nsh -f
+
+context("multiply", 
+     input(path("arg/x1"), 20.0d), 
+     input(path("arg/x2"), 50.0d))

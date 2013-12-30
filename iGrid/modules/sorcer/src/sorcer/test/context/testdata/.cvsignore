@@ -1,0 +1,8 @@
+tmp
+docs
+lib
+classes
+*.log*
+*.lck*
+data
+*.dn

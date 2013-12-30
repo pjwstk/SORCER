@@ -1,0 +1,37 @@
+JobMediatorClient '<?xml version ="1.0" encoding="UTF-8"?>
+
+
+<!DOCTYPE ServiceJob SYSTEM "http://hippolyta.cs.ttu.edu/sorcer/data/xml/ServiceJob.dtd">
+
+
+<ServiceJob name="autoshank job">
+
+  <ServiceContext name="shank">
+    <DataNode path="GEOM/SHANK/MESH/DATA" ioType="IN_TYPE" sorcerType="SORCER_DATA_MESH" 
+      data="http://hippolyta.cs.ttu.edu/sorcer/data/Shank_Tet_Mesh.dat">  TET </DataNode>
+    <DataNode path="GEOM/SHANK/SHANK_PRT" ioType="IN_TYPE" NodeType="SORCER_AUTOSHANK_SEED" 
+      data="http://hippolyta.cs.ttu.edu/sorcer/data/AS_Shank_Prt.prt"> SEEDPART </DataNode>
+    <DataNode path="GEOM/SHANK/SHANK_INP" ioType="IN_TYPE" NodeType="SORCER_AUTOSHANK_PARAMETERS" 
+      data="http://hippolyta.cs.ttu.edu/sorcer/data/AS_Inp.dat"> INP </DataNode>
+  </ServiceContext>
+
+  <ServiceContext name="System Context">
+    <TextNode path="is master"> true </TextNode>
+    <TextNode path="job/strategy"> sequential </TextNode>
+    <TextNode path="job/strategy/access"> catalog </TextNode>
+    <TextNode path="notify/execution/to:/Kao"> kao@cs.ttu.edu </TextNode>
+    <TextNode path="no wait"> false </TextNode>
+    <TextNode path="in/task/id"> kao-task-autoshank-1 </TextNode>
+    <TextNode path="out/task/id"> id </TextNode>
+  </ServiceContext>
+
+  <ServiceTask name="Generate Solid Shank"
+    description="Generate a solid shank from\na parametric data file and a seed part"
+    method="autoshank"
+    provider="AUTOSHANK">
+    <TaskContext root="shank"> GEOM/SHANK </TaskContext>   
+    <TaskContext root="System Context"> </TaskContext>
+	</ServiceTask>
+</ServiceJob>
+'
+

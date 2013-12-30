@@ -1,0 +1,27 @@
+sorcer-ci
+iGrid
+svn+ssh://10.131.7.138/home/svn/sorcer/iGrid/trunk
+
+H H(0-6) * * *
+H 0-16/2 * * 0,7
+
+#!/bin/bash
+
+export IGRID_HOME=${WORKSPACE}/iGrid
+export RIO_HOME=${WORKSPACE}/iGrid/rio
+rm -rf ${WORKSPACE}/iGrid/data/*
+rm -rf ${WORKSPACE}/iGrid/databases
+cp ${IGRID_HOME}/configs/ci/sorcer-ci/sorcer.env ${IGRID_HOME}/configs
+
+#!/bin/bash
+
+export IGRID_HOME=${WORKSPACE}/iGrid
+export RIO_HOME=${WORKSPACE}/iGrid/rio
+rm -rf ${WORKSPACE}/iGrid/data/*
+rm -rf ${WORKSPACE}/iGrid/databases
+cp ${IGRID_HOME}/configs/ci/sorcer-ci/sorcer.env ${IGRID_HOME}/configs
+
+ant -f ${WORKSPACE}/iGrid/iGrid-clean.xml
+ant -f ${WORKSPACE}/iGrid/modules/sorcer/sorcer-build.xml
+ant -f ${WORKSPACE}/iGrid/bin/iGrid-boot-http-spawn.xml
+ant -f ${WORKSPACE}/iGrid/modules/sorcer/sorcer-test.xml

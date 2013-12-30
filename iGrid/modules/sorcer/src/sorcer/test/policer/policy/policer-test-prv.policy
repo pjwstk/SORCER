@@ -1,0 +1,78 @@
+//grant {
+	// Allow everything for now
+//	permission java.security.AllPermission;
+//};
+
+grant {
+	permission java.lang.RuntimePermission "createSecurityManager";
+	permission java.lang.RuntimePermission "getProtectionDomain";
+	permission java.lang.RuntimePermission "createClassLoader";
+	permission java.lang.RuntimePermission "getClassLoader";
+	permission java.lang.RuntimePermission "setContextClassLoader";
+	permission java.lang.RuntimePermission "accessClassInPackage.sun.security.provider";
+	permission java.lang.RuntimePermission "accessClassInPackage.sun.security.util";
+	permission java.lang.RuntimePermission "accessClassInPackage.sun.net.www";
+	permission java.lang.RuntimePermission "accessClassInPackage.sun.net.www.protocol.d";
+	permission java.lang.RuntimePermission "accessClassInPackage.sun.reflect";
+	permission java.lang.RuntimePermission "accessClassInPackage.sorcer.core.provider.policer";
+	permission java.lang.RuntimePermission "setIO";
+	permission java.lang.RuntimePermission "exitVM";
+	permission java.lang.RuntimePermission "modifyThreadGroup";
+	permission java.lang.RuntimePermission "modifyThread";
+	permission java.lang.RuntimePermission "accessDeclaredMembers";
+	
+	permission java.security.SecurityPermission "getDomainCombiner";
+	permission java.security.SecurityPermission "createAccessControlContext";
+	permission java.security.SecurityPermission "getPolicy";
+	permission java.security.SecurityPermission "setPolicy";
+	permission java.security.SecurityPermission "getProperty.net.jini.security.policy.PolicyFileProvider.basePolicyClass";
+	permission java.security.SecurityPermission "setProperty.net.jini.security.policy.PolicyFileProvider.basePolicyClass";
+	permission java.security.SecurityPermission "getProperty.sorcer.core.provider.policer.PolicyFileProvider.basePolicyClass";
+	permission java.security.SecurityPermission "getProperty.policy.expandProperties";
+	permission java.security.SecurityPermission "getProperty.policy.ignoreIdentityScope";
+	permission java.security.SecurityPermission "getProperty.policy.allowSystemProperty";
+	permission java.security.SecurityPermission "getProperty.com.sun.jini.start.servicePolicyProvider";
+	permission java.security.SecurityPermission "getProperty.com.sun.jini.start.AggregatePolicyProvider";
+	permission java.security.SecurityPermission "getProperty.com.sun.jini.start.AggregatePolicyProvider.mainPolicyClass";
+	permission java.security.SecurityPermission "getProperty.net.jini.security.policy.DynamicPolicyProvider.basePolicyClass";
+	permission java.security.SecurityPermission "getProperty.policy.url.1";
+	permission java.security.SecurityPermission "getProperty.policy.url.2";
+	permission java.security.SecurityPermission "getProperty.policy.url.3";
+	permission java.security.SecurityPermission "getProperty.auth.policy.url.1";
+	
+	//permission java.io.FilePermission "D:\\dincleza\\test\\input.txt", "read";
+	permission java.io.FilePermission "D:\\dincleza\\workspace\\iGrid\\-", "read,write";
+	permission java.io.FilePermission "D:\\dincleza\\Java\\-", "read";
+	permission java.io.FilePermission "D:\\dincleza\\policyDB\\-", "read,write,delete";
+	permission java.io.FilePermission "<<ALL FILES>>", "execute";
+		
+	permission java.util.PropertyPermission "*", "read,write";
+	
+	permission java.net.SocketPermission "yielddb.cs.ttu.edu:1024-", "listen,connect,resolve,accept";
+	permission java.net.SocketPermission "yucca.cs.ttu.edu:1024-", "listen,connect,resolve,accept";
+	permission java.net.SocketPermission "localhost:1024-", "listen,connect,accept,resolve";
+	permission java.net.SocketPermission "127.0.0.1", "listen,connect,accept,resolve";
+	permission java.net.SocketPermission "224.0.1.84", "listen,connect,accept,resolve";
+	permission java.net.SocketPermission "224.0.1.85", "listen,connect,accept,resolve";
+	permission java.net.SocketPermission "129.118.162.27:1024-", "listen,connect,accept,resolve";
+	permission java.net.SocketPermission "129.118.162.21:1024-", "listen,connect,accept,resolve";
+	
+	permission net.jini.security.GrantPermission "java.security.AllPermission \"all permissions\", \"all actions\"";
+	
+	permission net.jini.security.AccessPermission "notify";
+	permission net.jini.security.AccessPermission "getProxyVerifier";
+	
+	permission net.jini.discovery.DiscoveryPermission "*";
+	permission net.jini.discovery.DiscoveryPermission "sorcer.DEV";
+	
+	permission com.sun.jini.reggie.RegistrarPermission "register";
+	permission com.sun.jini.reggie.RegistrarPermission "lookup";
+	permission com.sun.jini.reggie.RegistrarPermission "notify";
+	
+	permission com.sun.jini.thread.ThreadPoolPermission "getSystemThreadPool";
+	permission com.sun.jini.thread.ThreadPoolPermission "getUserThreadPool";
+	
+	permission javax.security.auth.AuthPermission "getSubject";
+	
+	permission java.util.logging.LoggingPermission "control";
+};

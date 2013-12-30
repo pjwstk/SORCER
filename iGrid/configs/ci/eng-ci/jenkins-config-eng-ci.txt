@@ -1,0 +1,23 @@
+eng-ci
+iGrid
+svn+ssh://10.131.7.138/home/svn/sorcer/iGrid/trunk
+Library
+svn+ssh://sobolemw@10.131.7.138/home/svn/sorcer/Library/trunk
+
+H H(0-6) * * *
+H 0-16/2 * * 0,7
+
+#!/bin/bash
+
+export IGRID_HOME=${WORKSPACE}/iGrid
+export RIO_HOME=${IGRID_HOME}/rio
+rm -rf ${IGRID_HOME}/data/*
+cp ${IGRID_HOME}/configs/ci/eng-ci/sorcer.env ${IGRID_HOME}/configs
+export ANT_OPTS="${ANT_OPTS} -Djava.awt.headless=true"
+
+ant -f ${WORKSPACE}/iGrid/iGrid-clean.xml
+ant -f ${WORKSPACE}/iGrid/iGrid-install.xml
+ant -f ${WORKSPACE}/iGrid/bin/iGrid-boot-http-spawn.xml
+ant -f ${WORKSPACE}/iGrid/modules/engineering/engineering-test.xml
+
+**/engineering/**/reports/*.xml

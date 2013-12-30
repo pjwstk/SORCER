@@ -1,0 +1,149 @@
+<?xml version='1.0' encoding='ISO-8859-1' standalone='yes'?>
+
+<project name="PROVIDER_NAME_HERE Project" default="all" basedir=".">
+	<property environment="env" />
+	<property name="module.name" value="PROVIDER_NAME_HERE" />
+
+	<!-- set global properties 
+	     WARNING: YOU MAY HAVE TO MODIFY THE IMPORT STATEMENT DEPENDING
+	              ON WHERE PROJECT IS PLACED UNDER MODULES -->
+	<import file="${env.IGRID_HOME}/modules/common-build.xml" />
+	<property name="src" value="./src" />
+	<property name="resources" value="${iGrid.home}/modules/sorcer/resources" />
+
+	<!-- The sources to compile -->
+	<patternset id="ant.java">
+		<include name="PATH/TO/JAVA/FILES/HERE/**/*.java" />
+		<exclude name="**/SAVE/*.java" />
+		<exclude name="**/BAK/*.java" />
+	</patternset>
+
+	<patternset id="ant.classes">
+		<include name="${PATH/TO/CLASSES/FILES/HERE}/MODULE_TYPE/provider/**/*.class" />
+	</patternset>
+
+	<fileset dir="${resources}" id="icons">
+		<include name="sorcer.jpg" />
+	</fileset>
+	
+	<patternset id="ant.jars">
+	      <include name="${module.name}.jar" />
+	      <include name="${module.name}-dl.jar" />
+	</patternset>
+
+	<path id="project.classpath">
+		<pathelement location="${classes}" />
+		<pathelement location="${sorcer.lib}/sorcer-prv.jar" />
+		<path refid="jaxp.path" />
+		<path refid="jini.path" />
+		<path refid="rio.path" />
+	</path>
+
+	<path id="javadocs.classpath">
+		<path refid="jini.path" />
+		<pathelement location="${common.lib}/buildsupport/ant-ext.jar" />
+		<pathelement location="${common.lib}/buildsupport/ant.jar" />
+	</path>
+
+	<!-- No RMI stubs are required for JERI type of providers -->
+	<target name="compile" depends="compileSources" />
+	<target name="jars" depends="model, copy-run-prv-files" />
+	<target name="model" depends="PROVIDER_NAME_HERE.jar, PROVIDER_NAME_HERE-dl.jar" />
+	<target name="all" depends="prepare, compile, jars, copy-run-prv-files" />
+
+	<!-- No RMI stubs are required for JERI type of providers 
+	     
+	     classdepandjar, a jini technology, does a few things...
+	     1. Searches and extracts class from jars in the project's classpath
+	     2. Creates a new jar with all these classes bundled together
+	     3. Additional elements can be incldued with the <includes> 
+	        element
+	     
+	     Use the elements <in name="PACKAGE_NAME"> 
+	     and <topclass name="fully_qualified_class_name" to resolve needed 
+	     dependencies in your provider. 
+	     
+	     <in name="PACKAGE_NAME"> places classes
+	     into a dependency graph from which you can use class to pick the 
+	     needed ones. Use <out name="prefix-name"/> to exclude a range of 
+	     classes from the dependency graph. 
+	     <skip name="fully_qualified_class_name"/> will not placed the 
+	     specified class from the dependency graph into the resulting jar. 
+	     Use <show name="prefix-name"/> to show classes from a package that your 
+	     application depends on. <tell name="fully_qualified_class_name/> does 
+	     something similar on the class level.
+	     
+	     Classdepandjar also supports use of fileset and other core and optional
+	     ANT types.    
+	     
+	     Limitations with classdepandjar:
+	     1. classdepandjar does not derive from the ANT jar task, so not all
+	        the attributes in the ANT jar task are available here.
+	     2. Jars are always created, never updated with this task, hence
+	        slower than ANT jar task.
+	        
+	     If ANT cannot find the classdepandjar task, make sure tools.jar 
+	     is in ANT's classpath.
+	     
+	     For more information on classdepandjar, visit 
+	     http://classdepandjar.dev.java.net/
+	     -->
+	<target name="PROVIDER_NAME_HERE.jar" depends="compile">
+		<classdepandjar jarfile="${PATH/TO/PROVIDER}/PROVIDER_NAME_HERE.jar" 
+			            files="true" 
+			            debug="false">
+			<classpath refid="project.classpath" />
+			
+	         <in name="sorcer"/>
+	         <in name="MODULE_TYPE"/>
+	            
+	        <topclass name="MODULE_TYPE.provider.PROVIDER_NAME_HERE.PROVIDER_NAME_HEREImplementation" />
+			
+			<fileset refid="icons" />
+		</classdepandjar>
+	</target>
+	
+    <target name="PROVIDER_NAME_HERE-dl.jar" depends="compile">
+        <classdepandjar jarfile="${DOWNLOAD/JAR/FROM/HERE}/PROVIDER_NAME_HERE-dl.jar" 
+                        files="true" 
+                        debug="false">
+            <classpath refid="project.classpath" />
+        	
+            <in name="sorcer"/>
+            <in name="MODULE_TYPE"/>
+            
+            <topclass name="MODULE_TYPE.provider.PROVIDER_NAME_HERE.PROVIDER_NAME_HEREInterface" />
+            
+            <fileset dir="${classes}" 
+                 includes="MODULE_TYPE/provider/PROVIDER_NAME_HERE/PROVIDER_NAME_HEREInterface.class" />
+            
+            <fileset refid="icons" />
+        </classdepandjar>
+    </target>	
+
+	<target name="copy-run-prv-files">
+		<mkdir dir="${iGrid.home}/bin/MODULE_TYPE/${module.name}/provider/configs" />
+		<mkdir dir="${iGrid.home}/bin/MODULE_TYPE/${module.name}/provider/bin" />
+		<mkdir dir="${iGrid.home}/bin/MODULE_TYPE/${module.name}/provider/policy" />
+		<mkdir dir="${iGrid.home}/bin/MODULE_TYPE/${module.name}/provider/logs" />
+		<copy todir="${iGrid.home}/bin/MODULE_TYPE/${module.name}/provider/configs">
+			<fileset dir="configs">
+				<include name="*" />
+			</fileset>
+		</copy>
+		<copy todir="${iGrid.home}/bin/MODULE_TYPE/${module.name}/provider/bin">
+			<fileset dir="bin">
+				<include name="*" />
+			</fileset>
+		</copy>
+		<copy todir="${iGrid.home}/bin/MODULE_TYPE/${module.name}/provider/policy">
+			<fileset dir="policy">
+				<include name="*" />
+			</fileset>
+		</copy>
+		<chmod dir="${iGrid.home}/bin/MODULE_TYPE/${module.name}/provider/bin" 
+			   perm="755" 
+			   includes="*.sh" />
+	</target>
+
+</project>

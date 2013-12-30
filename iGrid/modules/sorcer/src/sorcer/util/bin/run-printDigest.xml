@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+
+<project name="print-digest" default="run" basedir=".">
+
+	<!-- loads system environment variables -->
+	<property environment="env" />
+
+	<import file="${env.IGRID_HOME}/modules/common-run.xml" />
+
+	<echo message="IGRID_HOME: ${iGrid.home}" />
+	<echo message="WESTER: ${provider.webster.url}" />
+	
+	<path id="project.classpath">
+		<pathelement location="${iGrid.home}/classes/" />
+		<pathelement location="${iGrid.home}/lib/jgapp.jar" />
+		<pathelement location="${iGrid.home}/common/jini-core.jar" />
+		<pathelement location="${iGrid.home}/common/jini-ext.jar" />
+		<pathelement location="${iGrid.home}/common/sun-util.jar" />
+		<pathelement location="${iGrid.home}/common/serviceui-1.1.jar" />
+	</path>
+
+	<target name="run">
+		<java classname="sorcer.util.PrintDigest" inputstring="${provider.webster.url}/sorcer-prv.jar" fork="yes">
+			<classpath refid="project.classpath" />
+			<sysproperty key="iGrid.home" value="${iGrid.home}" />
+		</java>
+	</target>
+
+</project>

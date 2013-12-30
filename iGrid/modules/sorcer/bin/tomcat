@@ -1,0 +1,31 @@
+#!/bin/sh
+#
+# Startup script for the Tomcat in the SORCER environment
+# Mike Sobolewski, sobol@crd.ge.com
+#
+# config: ${SORCER_HOME}/tomcat/conf
+# config: ${SORCER_HOME}/web/WEB-INF/web.xml
+
+# See how we were called.
+case "$1" in
+  start)
+	echo "Starting tomcat in SORCER: "
+	echo ${SORCER_HOME}/appserver/runserv
+	${SORCER_HOME}/appserver/runserv
+	echo
+	;;
+  stop)
+	echo "Shutting down tomcat in SORCER: "
+	${SORCER_HOME}/appserver/killserv
+	echo
+	;;
+  restart)
+	$0 stop
+	$0 start
+	;;
+  *)
+	echo "Usage: $0 {start|stop|restart}"
+	exit 1
+esac
+
+exit 0

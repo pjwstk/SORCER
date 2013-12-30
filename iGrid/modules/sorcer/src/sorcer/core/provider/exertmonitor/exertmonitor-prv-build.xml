@@ -1,0 +1,108 @@
+<?xml version='1.0' encoding='ISO-8859-1' standalone='yes'?>
+<!-- 
+ * Copyight (C) 2012 SORCER Lab, Texas Tech University. All rights reserved.
+ * Service-Oriented Computing Environmet: SORCER Cataloger build configuration
+ * Make sure the following variables are changed to reflect your environment:
+ *    IGRID_HOME        	iGrid location
+ *    JAVA_HOME         	JDK Location
+ *	  IGRID_WEBSTER 		The class server (webster) 
+ *	  IGRID_WEBSTER_PORT 	The webster port
+ *    ANT_HOME          	Jakarta Ant location
+ Please see also the ../common-build.xml for classpaths, definitions and targets
+-->
+
+<project name="SORCER ExertMonitor" default="all" basedir=".">
+	<property name="module.name" value="exertmonitor" />
+	<!-- set global properties -->
+	<import file="../../../../../../common-build.xml" />
+	<property name="src" value="../../../../" />
+	<property name="resources" value="${iGrid.home}/modules/sorcer/resources" />
+
+	<!-- The sources to compile -->
+	<patternset id="ant.java">
+		<include name="sorcer/core/provider/exertmonitor/**/*.java" />
+	</patternset>
+
+	<path id="project.classpath">
+		<pathelement location="${classes}/" />
+		<pathelement location="${common.lib}/je-4.1.21.jar" />
+		<path refid="jini.path" />
+		<path refid="rio.path" />
+		<path refid="jaxp.path" />
+	</path>
+
+	<patternset id="ant.classes">
+		<include name="sorcer/core/provider/exertmonitor/**/*.class" />
+	</patternset>
+
+	<fileset dir="${resources}" id="icons">
+		<include name="sorcer-ico.png" />
+	</fileset>
+
+	<target name="compile" depends="compileSources" />
+	<target name="jars" depends="exertmonitor, copy-run-prv-files" />
+	<target name="exertmonitor" depends="exertmonitor.jar, exertmonitor-dl.jar" />
+	<target name="all" depends="prepare, compile, jars, copy-run-prv-files" />
+
+	<target name="exertmonitor.jar">
+		<classdepandjar jarfile="${sorcer.lib}/exertmonitor.jar" files="true">
+			<classpath refid="project.classpath" />
+			<!-- Put the full package as much as possible for a smaller jar file -->
+			<in name="sorcer.service" />
+			<in name="sorcer.core.provider.exertmonitor" />
+			<in name="sorcer.core.monitor" />
+			<in name="sorcer.util" />
+			<in name="sorcer.core.context" />
+			<!-- Add all provider classes here -->
+			<topclass name="sorcer.core.provider.exertmonitor.ExertMonitor" />
+			<topclass name="sorcer.core.provider.exertmonitor.MonitorSession" />
+			<topclass name="sorcer.core.provider.exertmonitor.db.SessionDatabaseViews" />
+			<topclass name="sorcer.core.provider.exertmonitor.db.SessionDatabase" />
+			<topclass name="sorcer.util.bdb.objects.UuidKey" />
+		</classdepandjar>
+	</target>
+
+	<target name="exertmonitor-dl.jar">
+		<classdepandjar jarfile="${sorcer-dl.lib}/exertmonitor-dl.jar" files="true">
+			<manifest>
+				<attribute name="Implementation-Title" value="${product.title}" />
+				<attribute name="Implementation-Version" value="${product.name}" />
+				<attribute name="SORCER-Version" value="${product.version}" />
+				<attribute name="SORCER-Build" value="${DSTAMP}" />
+			</manifest>
+			<classpath refid="project.classpath" />
+			<!-- Put the full package as much as possible for a smaller jar file -->
+			<in name="sorcer.core.monitor" />
+			<topclass name="sorcer.core.monitor.MonitoringManagement" />
+			<fileset refid="icons" />
+		</classdepandjar>
+	</target>
+
+	<target name="copy-run-prv-files">
+		<mkdir dir="${iGrid.home}/bin/sorcer/${module.name}/configs" />
+		<mkdir dir="${iGrid.home}/bin/sorcer/${module.name}/bin" />
+		<mkdir dir="${iGrid.home}/bin/sorcer/${module.name}/policy" />
+		<mkdir dir="${iGrid.home}/bin/sorcer/${module.name}/logs" />
+
+		<copy todir="${iGrid.home}/bin/sorcer/${module.name}/configs">
+			<fileset dir="configs">
+				<include name="*" />
+			</fileset>
+		</copy>
+
+		<copy todir="${iGrid.home}/bin/sorcer/${module.name}/bin">
+			<fileset dir="bin">
+				<include name="*" />
+			</fileset>
+		</copy>
+
+		<copy todir="${iGrid.home}/bin/sorcer/${module.name}/policy">
+			<fileset dir="policy">
+				<include name="*" />
+			</fileset>
+		</copy>
+
+		<chmod dir="${iGrid.home}/bin/sorcer/${module.name}/bin" perm="755" includes="*.sh" />
+	</target>
+
+</project>

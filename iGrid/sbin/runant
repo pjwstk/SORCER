@@ -1,0 +1,66 @@
+#!/bin/bash
+
+#echo "runant: IGRID_HOME=$IGRID_HOME"
+
+source $IGRID_HOME/configs/shellEnv
+
+
+# args
+#
+CALLING_SCRIPT_NAME=$1
+ANT_FILE=$2
+WINDOW_OPTION=$3
+
+echo "CALLING_SCRIPT_NAME=$CALLING_SCRIPT_NAME"
+
+# set IGRID_HOME
+#
+#export IGRID_HOME=$IGRID_HOME_SBIN
+
+
+# check ANT_HOME
+#
+if [ "x$ANT_HOME" == "x" ]; then
+	echo "*** error: ANT_HOME is not set; exiting in 5 seconds."
+	sleep 5
+	exit 1
+fi
+
+
+# vars
+#
+ANT_FILENAME=`basename $ANT_FILE`
+ANT_FILE_DIR=`dirname $ANT_FILE`
+ANT_CMD="$ANT_HOME/bin/ant -f $ANT_FILENAME"
+#SBIN_HOME=`dirname \`readlink -f $0\``
+#SBIN_HOME=`dirname $0`
+SBIN_HOME=$IGRID_HOME/sbin
+
+
+# check ant file
+#
+if [ ! -r $ANT_FILE ]; then
+    echo "***error: $ANT_FILE not readable."
+    exit 1;
+fi
+
+
+# run ant file
+#
+THIS_DIR=${PWD}
+PID_FILE=$CALLING_SCRIPT_NAME
+PID_DIR=$SBIN_HOME
+PID_FILE="$PID_DIR/.$PID_FILE.pid"
+
+#echo "SBIN_HOME=$SBIN_HOME"
+#echo "ANT_CMD=$ANT_CMD"
+
+cd $ANT_FILE_DIR
+if [ "$WINDOW_OPTION" == "-w" ]; then
+    $SBIN_HOME/rantback "$PID_FILE" "$ANT_CMD" "$ANT_FILENAME"
+else
+    echo $$ > $PID_FILE
+    echo "ANT_CMD = $ANT_CMD"
+    $ANT_CMD
+fi
+cd $THIS_DIR

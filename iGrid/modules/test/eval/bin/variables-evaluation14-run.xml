@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<!-- 
+Replace "variables" with your project name and specify property value for "requestor.class."
+Also you might need to adjust the classpath (project.classpath) for your requestors. 
+-->
+
+<project name="variables" default="run.requestor" basedir=".">
+
+	<!-- loads system environment variables -->
+	<property environment="env" />
+	<import file="${env.IGRID_HOME}/modules/common-run.xml" />
+
+	<!-- set property values here -->
+	<property name="requestor.name" value="variable-eval" />
+	<property name="requestor.class" value="sorcer.test.eval.VariableEvaluation14" />
+
+	<path id="project.classpath">
+		<pathelement location="${iGrid.home}/lib/${requestor.name}.jar" />
+		<pathelement location="${iGrid.home}/classes/" />
+		<pathelement location="${sorcer.lib}/sorcer-prv.jar" />
+		<pathelement location="${sorcer.lib}/sorcer-lib.jar" />
+		<pathelement location="${lib}/common/jep-2.4.1a.jar" />
+		<pathelement location="${jini.lib}/jsk-lib.jar" />
+		<pathelement location="${jini.lib}/jsk-platform.jar" />
+		<pathelement location="${jini.lib}/common/serviceui.jar" />
+	</path>
+
+	<target name="run.requestor">
+		<java classname="${requestor.class}" fork="yes">
+			<arg value="1" />
+
+			<!--jvmarg value="-Xdebug" />
+			<jvmarg value="-Xnoagent" />
+			<jvmarg value="-Djava.compiler=NONE" />
+			<jvmarg value="-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=1010" />
+			<jvmarg value="-Djava.compiler=NONE" /-->
+
+			<classpath refid="project.classpath" />
+			<sysproperty key="java.util.logging.config.file" value="${iGrid.home}/configs/sorcer.logging" />
+			<sysproperty key="java.security.policy" value="../policy/policy.all" />
+			<sysproperty key="java.rmi.server.codebase" value="${provider.webster.url}/${requestor.name}.jar ${provider.webster.url}/jini-ext.jar ${provider.webster.url}/whoIsItPullJob-dl.jar" />
+			<sysproperty key="sorcer.env.file" value="${iGrid.home}/configs/sorcer.env" />
+
+			<!-- The Ant debugger setup is specified by the three jvmarg properties in your run/boot script 
+				as shown below. Additionally a debug configuration is required and can be defined in Eclipse, 
+				for example by using Run/Debug Configurations..., where Host/Port fields should be defined 
+				with the port as given in "address" below. 
+			<jvmarg value="-Xdebug" />
+			<jvmarg value="-Xnoagent" />
+			<jvmarg value="-Djava.compiler=NONE" />
+			<jvmarg value="-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=10000" /-->
+		</java>
+	</target>
+
+</project>

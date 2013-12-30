@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='ISO-8859-1' standalone='yes'?>
+<!-- 
+ * Copyight (C) 2004 SORCER Lab, Texas Tech University. All rights reserved.
+ * Service-Oriented Computing Environmet: build configuration for SORCER Arithetic
+ * service provider testing.
+ * Make sure the following variables are changed to reflect your environment:
+ *    IGRID_HOME        	iGrid location
+ *    JAVA_HOME         	JDK Location
+ *	  IGRID_WEBSTER_PORT 	The class server (webster) port
+ *    ANT_HOME          	Jakarta Ant location
+ Please see also the ../common-build.xml for classpaths, definitions and targets
+-->
+<project name="Indexed Context Tester" default="compile" basedir=".">
+	<property name="module.name" value="context-testing" />
+	<!-- set global properties -->
+	<import file="../../../../../common-build.xml" />
+	<property name="src" value="./../../../../src" />
+
+	<!-- The sources to compile -->
+	<patternset id="ant.java">
+		<include name="sorcer/test/context/**/*.java" />
+		<exclude name="**/SAVE/*.java" />
+		<exclude name="**/BAK/*.java" />
+	</patternset>
+
+	<patternset id="ant.classes">
+		<include name="sorcer/test/context/**/*.class" />
+	</patternset>
+
+	<path id="project.classpath">
+		<pathelement location="${classes}" />
+		<pathelement location="${lib}/jgapp.jar" />
+		<pathelement location="${lib}/sorcer.jar" />
+		<pathelement location="${common.lib}/jep-2.4.0.jar" />
+		<pathelement location="${lib}/tea.jar" />
+		<pathelement location="${servlet.api}" />
+		<pathelement location="${lib}/classes12.zip" />
+		<path refid="jaxp.path" />
+		<path refid="jini.path" />
+		<path refid="rio.path" />
+	</path>
+
+	<target name="compile" depends="compileSources" />
+</project>

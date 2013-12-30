@@ -1,0 +1,22 @@
+### run smart agent (if it is not running yet)
+/projects/sorcer/jsorcer/inprise/visibroker_java/4.1.1/bin/osagent 
+
+### run the server
+./runserver
+
+
+
+### run test client
+# first, source this file to update environment (LD_LIBRARY_PATH, etc.)
+source /projects/sorcer/jsorcer/inprise/visibroker_c++/4.0/vbroker.csh
+
+# then run one of the following scripts
+./runclient_autoshank 
+# or
+./runclient_das
+
+
+
+### test the XML parser only
+./runparser
+./runparser2

@@ -1,0 +1,32 @@
+Service-Oriented Geometry: tutorial
+
+1.Java objects 
+	- behavior (Java interfaces): ContextualRect, ParametricRectImpl
+	- implementation (Java classes): ParametricRect, ParametricRectImpl
+
+2. SORCER vars - junit/VarsTest
+	- evaluators
+	- differentiators
+	- filters
+	- persisters
+
+3. Var models (RectModelBuilder, junit/VarModelsTest)
+	- Var model (not implementing Modeling interface without evaluate())
+	- Response model
+	- Parametric model (RectModelBuilder.getParametricModel()): rect-model-beanlet-run.xml
+	- Optimization model
+
+4. SORCER services
+	POJO service provider (beanlet)
+		- Contextual beanlet (ContextualRect:ContextualRectImpl): contextualRect-beanlet-run.xml
+		- Parametric beanlet (ParametricRect:ParametricRectImpl): parametricRect-beanlet-run.xml
+	Service provider (inheritance of ServiceTasker)
+		- Contextual tasker (ContextualRect:ContextualRectTasker): contextualRect-tasker-run.xml
+		- Parametric tasker (ParametricRect:ParametricRectTasker): parametricRect-tasker-run.xml
+
+5. Exertion-oriented programming
+	- exertions (tasks and jobs) (junit/ExertVarsTest)
+	- data and control flow: to be added
+
+6. JUnit test cases in sorcer/model/geometry/junit 
+(VarsTest, VarModelsTest, ExertVarsTest, VarFidelitiesTest)

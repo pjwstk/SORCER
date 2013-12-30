@@ -1,0 +1,25 @@
+#!/bin/sh
+
+WEBSTER_URL="http://caleb.crd.ge.com:9000"
+
+CLASSES=${JINI_HOME}/lib/jini-core.jar:${JINI_HOME}/lib/jini-ext.jar:${JINI_HOME}/lib/sun-util.jar:${RIO_HOME}/lib/serviceui.jar:${RIO_HOME}/lib/cyberstarter.jar
+
+# DEBUG=-Dsun.rmi.loader.logLevel=20 -Dcom.sun.rio.debug
+DEBUG="-Dcom.sun.rio.debug -Dcom.sun.jini.reggie.proxy.debug=1 -Dcom.sun.jini.join.debug"
+# DEBUG=
+
+# QOS=-Dcom.sun.rio.qosSpec=org.jini.rio.qos.Workstation
+QOS=-Dcom.sun.rio.qosSpec=org.jini.rio.qos.Server
+# QOS=-Dcom.sun.rio.qosSpec=org.jini.rio.qos.Server -Dcom.sun.rio.qosUrl=http://129.154.20.71:9000/rio-core.jar
+# export QOS=
+
+# UNICAST=-Dcom.sun.rio.jini.lookup.locator=jini://129.154.20.71
+UNICAST=
+
+# WEBSTER=-Dcom.sun.rio.tools.webster=true -Dcom.sun.rio.tools.webster.root=${RIO_HOME}/lib
+# WEBSTER=-Dcom.sun.rio.tools.webster
+WEBSTER=-Dcom.sun.rio.service.codebase=$WEBSTER_URL
+
+java -server -cp $CLASSES $QOS $DEBUG $UNICAST $WEBSTER -Dcom.sun.rio.groups="fiper.DEV,fiper.*" -Djava.security.policy=${RIO_HOME}/policy/policy.all -Dcom.sun.rio.cybernode.maxservices=12 com.sun.rio.services.cybernode.CybernodeStarter &
+
+

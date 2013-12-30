@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Class-path: classes12.zip
+Sorcer-Version: @SORCER_VERSION@
+Sorcer-Build: @SORCER_BUILD@

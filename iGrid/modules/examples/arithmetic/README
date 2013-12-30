@@ -1,0 +1,11 @@
+Study a few examples of SORCER service providers and requestors
+
+Start for example with the JERI Arithmetic Remote provider one of many avalable arithmnetic 
+service providers in iGrid/modules/example/arithmetic.
+
+First build it wit corresponding *-arithmetic-prv-xml
+
+Second, directly from Eclipse, select 
+	a. iGrid/bin/examples/arithmetic/bin/jrmp-arithmetic-remote-run.xml and  "Run As/Ant Build"
+	b. iGrid/bin/examples/arithmetic/bin/jeri-arithmetic-remote-run.xml and  "Run As/Ant Build"
+	c. iGrid/bin/examples/arithmetic/bin/jeri-arithmetic-run.xml and  "Run As/Ant Build"

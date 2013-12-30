@@ -1,0 +1,21 @@
+#!/bin/bash
+OLD_CLASPATH=$CLASSPATH
+. $IGRID_HOME/configs/minClasspath
+
+# print help for '-h' option, then exit
+#
+for arg in $*; do
+	if [ $arg == "-h" ]; then
+	    printf "\nName:\t\tsenv\n\n"
+	    printf "Description:\tsenv lists the environment variables\n"
+	    printf "\t\tas seen by the Java Virtural Machine.\n\n"
+	    printf "Usage:\t\tsenv [-options]\n\n"
+	    printf "Options:\n\n"
+	    printf " -h\t\tprint this message and exit\n\n"
+	    exit 0;
+	fi
+done
+
+java -classpath "$CLASSPATH_SBIN" sorcer.util.GenericUtil -ev
+
+export CLASSPATH=$OLD_CLASSPATH

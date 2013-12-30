@@ -1,0 +1,15 @@
+#!/bin/sh
+clear
+
+if [ "$JAVACMD" = "" ] ; then 
+   # it may be defined in env - including flags!!
+   JAVACMD=${JAVA_HOME}/bin/java
+fi
+
+EXEC_COMMAND="fiper.security.util.SignCertificate "
+#myKey myKeySigned certNo
+
+KEYSTORE="${FIPER_HOME}/keystore/caKeyStore"
+
+$JAVACMD ${EXEC_COMMAND} ${KEYSTORE} fiper2ca $*
+

@@ -1,0 +1,43 @@
+<?xml version='1.0' encoding='ISO-8859-1' standalone='yes'?>
+
+<project name="greeter" default="compile-greeter" basedir=".">
+	<!-- set global properties -->
+	<import file="../../common-build.xml" />
+	<property name="src" value="./src" />
+	<property name="junit.src" value="./src" />
+
+	<!-- The test sources to compile -->
+	<patternset id="ant.java">
+		<include name="sorcer/greeter/**/*.java" />
+	</patternset>
+
+	<!-- The JUnit sources to be compiled -->
+	<patternset id="junit-ant.java">
+		<include name="junit/sorcer/**/*.java" />
+		<!-- Exclude source files -->
+		<exclude name="**/SAVE/*.java" />
+		<exclude name="**/BAK/*.java" />
+	</patternset>
+
+	<path id="project.classpath">
+		<pathelement location="${classes}/" />
+		<pathelement location="${support.lib}/junit.jar" />
+	</path>
+
+	<target name="compile-greeter" description="Compiles greeter classes" depends="compileSources, junit-compile">
+	</target>
+
+	<target name="run-tests" description="Compiles and runs JUnit tests" depends="junit-test">
+	</target>
+
+	<target name="run-reports" description="Compiles and runs JUnit tests" depends="prepare, run-test-reports">
+	</target>
+
+	<target name="prepare">
+		<delete includeemptydirs="true" quiet="true">
+			<fileset dir="./reports" includes="**/*" />
+		</delete>
+		<mkdir dir="./reports" />
+	</target>
+
+</project>

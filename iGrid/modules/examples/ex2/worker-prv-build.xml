@@ -1,0 +1,126 @@
+<?xml version='1.0' encoding='ISO-8859-1' standalone='yes'?>
+<!-- 
+ * Make sure the following variables are changed to reflect your environment:
+ *    IGRID_HOME        	iGrid location
+ *	  IGRID_WEBSTER			The class server hostname (webster) 
+ *	  IGRID_WEBSTER_PORT 	The class server (webster) port
+ *    JAVA_HOME         	JDK Location
+ Please see also the modules/common-build.xml for classpaths, definitions and targets
+-->
+<project name="Worker Provider" default="all" basedir=".">
+	<property name="module.name" value="ex2" />
+	<property name="module.run.dir" value="ex2" />
+	<property name="provider.name" value="worker" />
+
+	<!-- set global properties -->
+	<import file="../../common-build.xml" />
+	<property name="src" value="./src" />
+	<property name="junit.src" value="./src" />
+	<property name="resources" value="${iGrid.home}/modules/sorcer/resources" />
+
+	<fileset dir="${resources}" id="icons">
+		<include name="sorcer-ico-bw.png" />
+	</fileset>
+
+	<!-- The sources to compile -->
+	<patternset id="ant.java">
+		<include name="sorcer/ex2/**/*.java" />
+		<exclude name="**/SAVE/*.java" />
+		<exclude name="**/BAK/*.java" />
+	</patternset>
+
+	<!-- The JUnit sources to be compiled -->
+	<patternset id="junit-ant.java">
+		<include name="junit/sorcer/**/*.java" />
+		<!-- Exclude source files -->
+		<exclude name="**/SAVE/*.java" />
+		<exclude name="**/BAK/*.java" />
+	</patternset>
+
+	<patternset id="ant.classes">
+		<include name="sorcer/ex2/provider/**/*.class" />
+		<include name="junit/sorcer/**/*.class" />
+	</patternset>
+
+	<patternset id="ant.jars">
+		<include name="${provider.name}.jar" />
+		<include name="${provider.name}-dl.jar" />
+	</patternset>
+
+	<path id="project.classpath">
+		<pathelement location="${classes}" />
+		<pathelement location="${support.lib}/gsbase-2-3.0.1.jar" />
+		<pathelement location="${sorcer.lib}/sorcer-prv.jar" />
+		<pathelement location="${support.lib}/junit.jar" />
+		<path refid="jini.path" />
+		<path refid="rio.path" />
+	</path>
+
+	<path id="javadocs.classpath">
+		<pathelement location="${jini.lib}/serviceui.jar" />
+		<pathelement location="${common.lib}/buildsupport/ant-ext.jar" />
+		<pathelement location="${common.lib}/buildsupport/ant.jar" />
+	</path>
+
+	<target name="all" depends="prepare, compile, jars" />
+	<target name="all-test" depends="all, junit-test" />
+	<target name="compile" depends="compileSources, junit-compile" />
+	<target name="jars" depends="worker, copy-run-prv-files" />
+	<target name="worker" depends="worker.jar, worker-dl.jar" />
+
+
+	<target name="worker-dl.jar" depends="compile">
+		<classdepandjar jarfile="${sorcer-dl.lib}/${provider.name}-dl.jar" files="true" debug="false">
+			<classpath refid="project.classpath" />
+			<in name="sorcer.ex2" />
+			<topclass name="sorcer.ex2.provider.Worker" />
+		</classdepandjar>
+	</target>
+
+	<target name="worker.jar" depends="compile">
+		<classdepandjar jarfile="${sorcer.lib}/${provider.name}.jar" files="true" debug="false">
+			<classpath refid="project.classpath" />
+			<in name="sorcer.ex2" />
+			<in name="sorcer.ex2.provider" />
+			<topclass name="sorcer.ex2.provider.WorkerProvider" />
+			<topclass name="sorcer.ex2.provider.Worker" />
+			<topclass name="sorcer.util.Stopwatch" />
+			<fileset dir="${iGrid.home}/classes">
+				<include name="sorcer/util/sorcer.env" />
+				<include name="sorcer/util/data.formats" />
+			</fileset>
+			<fileset refid="icons" />
+		</classdepandjar>
+	</target>
+
+	<target name="docs" depends="prepare, compile">
+		<javadoc packagenames="org.jini.rio.tools.ant.*" maxmemory="100M" sourcepath="${src}" destdir="${docs}/api" Author="true" Version="true" Use="true" windowtitle="Worker Provider" doctitle="&lt;h1&gt;Worker Provider;/h1&gt;" bottom="&lt;i&gt;Copyright (c) 2008-2009 SORCERsoft.org, All Rights Reserved.&lt;/i&gt;">
+			<group title="Worker Provider" packages="sorcer.ex2.provider*" />
+			<classpath refid="project.classpath" />
+		</javadoc>
+	</target>
+
+	<target name="copy-run-prv-files">
+		<mkdir dir="${iGrid.home}/bin/examples/${module.run.dir}/configs" />
+		<mkdir dir="${iGrid.home}/bin/examples/${module.run.dir}/bin" />
+		<mkdir dir="${iGrid.home}/bin/examples/${module.run.dir}/policy" />
+		<mkdir dir="${iGrid.home}/bin/examples/${module.run.dir}/logs" />
+		<copy todir="${iGrid.home}/bin/examples/${module.run.dir}/configs">
+			<fileset dir="configs">
+				<include name="*" />
+			</fileset>
+		</copy>
+		<copy todir="${iGrid.home}/bin/examples/${module.run.dir}/bin">
+			<fileset dir="bin">
+				<include name="*" />
+			</fileset>
+		</copy>
+		<copy todir="${iGrid.home}/bin/examples/${module.run.dir}/policy">
+			<fileset dir="policy">
+				<include name="*" />
+			</fileset>
+		</copy>
+		<chmod dir="${iGrid.home}/bin/examples/${module.run.dir}/bin" perm="755" includes="*.sh" />
+	</target>
+
+</project>

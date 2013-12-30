@@ -1,0 +1,46 @@
+
+1. LoginContext for the provider defined in:
+ssl-jeri/configs/ssl-jeri-arithmetic-prv.config
+
+2. SslServerEndpoint in the provider exporter is defined in
+ssl-jeri/configs/ssl-jeri-arithmetic-prv.config
+
+3. Its JASS login configuration file is
+ssl-jeri/configs/ssl-jeri-arithmetic-prv.login
+The file is specified in ssl-jeri/bin/ssl-jeri-arithmetic-prv-run.xml via
+<sysproperty key="java.security.auth.login.config" value="../configs/${provider.name}-prv.login" />
+
+4. Key stores and trust stores in ssl-jeri/configs
+Create keystores and trustors for SSL Arithmetic as follows:
+4.1. Create private keys for the provider: 
+keytool -keystore ssl-jeri-arithmetic-prv.keystore -genkey -validity 1800 -alias provider -dname "CN=provider, OU=CS, O=TTU, L=Lubbock, S=TX, C=US"
+
+passwword=providerpw
+keytool -list -v -keystore ssl-jeri-arithmetic-prv.keystore
+
+4.2. Create private keys for the requestor: 
+keytool -keystore ssl-jeri-arithmetic-req.keystore -genkey -validity 1800 -alias requestor -dname "CN=requestor U=CS, O=TTU, L=Lubbock, S=TX, C=US"
+
+passwword=requestorpw
+keytool -list -v -keystore ssl-jeri-arithmetic-req.keystore
+
+4.3.Export the provider's certificate from the its keystore and 
+export the requestors's certificate from the its keystore
+
+keytool -keystore ssl-jeri-arithmetic-prv.keystore -export -alias provider -file prv.cert
+keytool -keystore ssl-jeri-arithmetic-req.keystore -export -alias requestor -file req.cert
+
+4.4.Import both it into the requestor's and provider's truststores
+under the "requestor" and "provider" aliases correspndingly: 
+
+keytool -keystore ssl-jeri-arithmetic-prv.truststore -import -noprompt -alias provider -file prv.cert 
+keytool -keystore ssl-jeri-arithmetic-prv.truststore -import -noprompt -alias requestor -file req.cert
+keytool -list -v -keystore ssl-jeri-arithmetic-prv.truststore
+
+keytool -keystore ssl-jeri-arithmetic-req.truststore -import -noprompt -alias requestor -file req.cert
+keytool -keystore ssl-jeri-arithmetic-req.truststore -import -noprompt -alias provider -file prv.cert 
+keytool -list -v -keystore ssl-jeri-arithmetic-req.truststore
+
+5. The service browser requires a trust store (with the provider's certifcate) 
+to have a proof of identity for the service browser itself.
+-Djavax.net.ssl.trustStore=%IGRID_HOME%\modules\examples\arithmetic\provider\ssl-jeri\configs\ssl-jeri-arithmetic-prv.truststore

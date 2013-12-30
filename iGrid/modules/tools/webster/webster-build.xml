@@ -1,0 +1,62 @@
+<?xml version='1.0' encoding='ISO-8859-1' standalone='yes'?>
+
+<project name="Code server" default="all" basedir=".">
+	<property name="module.name" value="SORCER-Webster" />
+	<!-- set global properties -->
+	<import file="../../common-build.xml" />
+	<property name="src" value="./src" />
+	
+	<!-- The sources to compile -->
+	<patternset id="ant.java">
+		<include name="sorcer/tools/webster/**/*.java" />
+		<exclude name="**/SAVE/*.java" />
+		<exclude name="**/BAK/*.java" />
+	</patternset>
+
+	<patternset id="ant.classes">
+		<include name="sorcer/tools/webster/**/*.class" />
+	</patternset>
+
+	<path id="project.classpath">
+		<pathelement location="${classes}" />
+		<path refid="jini.path" />
+		<path refid="rio.path" />
+	</path>
+
+	<target name="all" depends="local-prepare, compile, webster.jar" />
+	<target name="compile" depends="compileSources" />
+
+	<target name="webster.jar" depends="compile, local-prepare">
+		<copy tofile="${build.temp}/webster.mf" file="configs/webster.mf" filtering="yes" overwrite="yes" />
+		<classdepandjar jarfile="${sorcer-ext.lib}/webster.jar" files="true" debug="false" manifest="${build.temp}/webster.mf">
+			<classpath refid="project.classpath" />
+			<in name="sorcer.tools.webster" />
+			<in name="org.rioproject" />
+			<in name="com.sun.jini.start" />
+			<topclass name="sorcer.tools.webster.Webster" />
+			<topclass name="sorcer.tools.webster.InternalWebster" />
+			<topclass name="com.sun.jini.start.LifeCycle" />
+			<fileset dir="${src}">
+				<include name="sorcer/tools/webster/mimetypes.properties" />
+			</fileset>
+		</classdepandjar>
+	</target>
+
+	<target name="local-prepare">
+		<filter token="SORCER_BUILD" value="${DSTAMP}" />
+		<filter token="SORCER_VERSION" value="${sorcer-version}" />
+		<mkdir dir="${build.temp}" />
+		<mkdir dir="docs" />
+		<echo file="${default_manifest}">Manifest-Version: 1.0
+	            SORCER-Build: ${DSTAMP}
+	        </echo>
+		<echo file="${sorcer_manifest}">Manifest-Version: 1.0
+	            Class-Path: jsk-lib.jar jsk-platform.jar
+	            SORCER-Build: ${DSTAMP}
+	        </echo>
+		<echo file="${default_preferred_list}">PreferredResources-Version: 1.0
+	            Preferred: false
+	        </echo>
+	</target>
+
+</project>

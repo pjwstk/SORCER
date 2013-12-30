@@ -1,0 +1,183 @@
+<?xml version='1.0' encoding='ISO-8859-1' standalone='yes'?>
+<!-- 
+
+-->
+
+ <project name="SORCER" default="install" basedir=".">
+
+ <property environment="env"/>
+ <property name="CODEBASE" value="${env.APP_CODEBASE}" />
+ <property name="CURRDIR" value="sorcer/provider/grid/dispatcher" />
+ <property name="DISTRIBUTION"
+ value="${env.IGRID_HOME}/modules/sorcer/bin/${CURRDIR}" />
+ <property name="CONFIG" value="${env.IGRID_HOME}/modules/sorcer/configs/services"/>
+ 
+ <path id="project.classpath">
+    <pathelement path="${env.CLASSPATH}" />
+    <pathelement path="${CODEBASE}" />
+    </path>
+
+ <fileset dir=".">
+    <patternset id="java.source" >
+       <include name="benchmarks/**/*.java" />
+       <include name="**/*.java" />
+       <exclude name="**/SAVE/*.java" />
+       <exclude name="**/BAK/*.java" />
+    </patternset>
+ </fileset>
+
+ <fileset dir="${CODEBASE}">
+    <patternset id="java.classes" >
+       <include name="${CURRDIR}/**/*.class" />
+       <exclude name="${CURRDIR}/**/SAVE/*.class" />
+       <exclude name="${CURRDIR}/**/BAK/*.class" />
+    </patternset>
+ </fileset>
+
+ <fileset dir="${CODEBASE}">
+   <patternset id="rmic.classes" >
+      <include name="sorcer/provider/grid/dispatcher/GridDispatcherProviderImpl.class" />      
+   </patternset>
+ </fileset>
+
+ <target name="install" depends="clean, cleanjar, compile, rmics, copy_files, dispatcher.jar, dispatcher-dl.jar, dispatcher-ui.jar" />
+  
+ <target name="clean">
+   <delete verbose="false" failonerror="false" >
+    	<fileset dir="${CODEBASE}/${CURRDIR}" >
+           <patternset refid="java.classes" />
+        </fileset>
+   	<fileset dir="${DISTRIBUTION}/config" >
+           <include name="provider.properties" />
+        </fileset>
+   </delete>
+ </target>
+
+  <target name="cleanjar">
+      <delete file="${CODEBASE}/dispatcher-ui.jar"/>
+      <delete file="${CODEBASE}/dispatcher-dl.jar"/>
+      <delete file="${DISTRIBUTION}/lib/dispatcher.jar"/>  	
+  </target>
+
+ <target name="rmics" depends="compile" >
+   <rmic base="${CODEBASE}" >
+     <classpath refid="project.classpath" />
+     <patternset refid="rmic.classes" />
+   </rmic>
+ </target>
+
+  <target name="compile" >
+   <javac srcdir="." destdir="${CODEBASE}" deprecation="no" >
+    <classpath refid="project.classpath" />
+    <patternset refid="java.source" />
+   </javac>
+ </target>
+ 
+
+    <target name="dispatcher.jar">
+   <classdepandjar jarfile="${DISTRIBUTION}/lib/dispatcher.jar" files="true">
+	    	    <classpath refid="project.classpath"/>
+
+            <in  name="sorcer"/>
+            <in  name="net.jini"/>
+	    <in  name="com.sun" />
+	    <in  name="com.artima" />
+            <topclass name=
+                  "sorcer.provider.grid.dispatcher.GridDispatcherProviderImpl" />
+            <topclass name=
+                  "sorcer.provider.grid.dispatcher.GridDispatcherProviderImpl_Stub" />
+
+	    <topclass name= "net.jini.admin.Administrable" />
+            <topclass name=
+ 		"com.artima.lookup.util.ConsistentSet" />
+	     <fileset dir="${CODEBASE}"
+	    	    includes="sorcer/util/sorcer.env" />
+   	    
+	    </classdepandjar>
+     </target>
+
+    <target name="dispatcher-dl.jar">
+            <classdepandjar jarfile="${env.APP_CODEBASE}/dispatcher-dl.jar" files="true">	
+	    <classpath refid="project.classpath"/>
+            <in  name="sorcer"/>
+	    <in name="net.jini" />
+	    <in name="com.sun" />
+	  <topclass name=
+                  "sorcer.core.serviceui.UIFrameFactory" />
+            <topclass name=
+                  "sorcer.provider.grid.dispatcher.GridDispatcherRemote" />
+            <topclass name=
+                  "sorcer.provider.grid.dispatcher.GridDispatcherProviderImpl_Stub" />
+	    <topclass name=
+	          "sorcer.core.SorcerServiceType" /> 
+	     <topclass name= "net.jini.lookup.entry.ServiceInfo" />
+             <topclass name= "net.jini.admin.Administrable" />
+	      <topclass name= "sorcer.core.AdministratableProvider" />
+	    </classdepandjar>
+     </target>
+	
+     <target name="dispatcher-ui.jar">
+            <classdepandjar jarfile="${env.APP_CODEBASE}/dispatcher-ui.jar" files="true">
+	    <classpath refid="project.classpath"/>
+
+            <in  name="sorcer"/>
+            <in  name="net.jini"/>
+            <in  name="com.artima" />
+            <topclass name=
+                  "sorcer.provider.grid.dispatcher.DispatcherUI" />
+  	    <topclass name=
+		"com.artima.lookup.util.ConsistentSet" />
+	  </classdepandjar>
+     </target>
+
+  <target name="copy_files" >
+    <copy todir="${DISTRIBUTION}/bin" >
+      <fileset dir="." >
+	<include name="dispatcher.prv" />
+	<include name="dispatcherlogging.properties" />
+        <include name="provider.properties" />
+      </fileset>
+    </copy>
+    <copy todir="${DISTRIBUTION}/policy" >
+      <fileset dir="./policy" >
+	<include name="server.policy" />
+      </fileset>
+    </copy>
+    <copy todir="${DISTRIBUTION}/config" >
+       <fileset dir="./config" >
+         <include name="server.config" />
+         <include name="start-server.config" />
+       </fileset>
+    </copy>
+    <copy todir="${CODEBASE}/sorcer/util" >
+      <fileset dir="${CONFIG}/." >
+      <include name="sorcer.env" />
+      </fileset>
+    </copy>
+      
+
+
+ <chmod dir="${DISTRIBUTION}/bin" perm="755"
+	includes="dispatcher.prv" />
+  </target>     
+
+
+  <!--target name="copy_files" >
+    <copy todir="${CODEBASE}/${CURRDIR}" >
+      <fileset dir="." >
+ 	<include name="**/provider.properties" />
+      </fileset>
+    </copy>
+    <copy todir="${DISTRIBUTION}/config" >
+       <fileset dir="." >
+         <include name="**/provider.properties" />
+       </fileset>
+    </copy>
+  </target-->
+<!-- ++++++++++  Teach Ant a new trick... +++++++++++++ -->
+<taskdef name="classdepandjar" 
+classname="org.jini.project.example.jade.tools.ClassDepAndJarTask"
+classpath="${project.classpath}"
+/>
+<!-- ++++++++++  Teach Ant a new trick... +++++++++++++ -->
+</project>

@@ -1,0 +1,43 @@
+#
+if ( $#argv  == 1) then
+   if ( -f $argv[1] ) then
+      set serviceList = `cat $argv[1]`
+   else
+       echo "Usage:"
+       echo "Either: publish arg1, arg2"
+       echo "arg1 = serviceName where to publish"
+       echo "arg2 = machineName(.prv file name with out extension)"
+       echo "Example: publish cassidy, tp3"
+       echo ""
+       echo "Or: publish arg1"
+       echo "arg1 = fileName that holds pairs of (machineName serviceName)"
+       echo "Example: publish aeroServiceFile"
+       exit 1
+   endif
+else 
+   if ( $#argv != 2 ) then
+      echo "Usage:"
+       echo "Either: publish arg1, arg2"
+       echo "arg1 = ServiceName where to publish"
+       echo "arg2 = machineName(.prv file name with out extension)"
+       echo "Example: publish cassidy, tp3"
+       echo ""
+       echo "Or: publish arg1"
+       echo "arg1 = fileName that holds pairs of (machineName serviceName)"
+       echo "Example: publish aeroServiceFile"
+       exit 1
+   else
+       set serviceList = ( $argv[1] $argv[2] )
+   endif
+endif
+#echo ${serviceList}
+@ count = $#serviceList / 2
+set num = 1
+while ( $num <= $count)
+   @ i = $num * 2 - 1
+   @ j = $num * 2 
+   echo $serviceList[$i] $serviceList[$j]
+   ${HOME}/www/projects/fiper/bin/publishService $serviceList[$i] $serviceList[$j]
+   @ num = $num + 1
+end
+exit 0

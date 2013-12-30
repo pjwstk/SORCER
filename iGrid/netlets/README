@@ -1,0 +1,19 @@
+Rosen-Suzuki Demo
+
+1. Start SORCER Service Browser
+>nsh --browser &
+
+2. Start SORCER OS
+>nsh --sos &
+
+3. cd to the net let directory
+>ign
+
+4. Run Rosen-Suzuki netlets
+>rs-opti-local.ntl
+>rs-mf-opti-local.ntl
+
+>rs-opti-remote.groovy
+>rs-mf-opti-remote.groovy
+
+

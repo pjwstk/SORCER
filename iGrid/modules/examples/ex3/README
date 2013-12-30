@@ -1,0 +1,21 @@
+This example illustrates three different types of requestors 
+that use the Worker services defined in the example ex2. 
+
+	1. FlowWorkerRunner
+		- allows via its properties (configs/worker-run.properties) to control the behavior component exertions: 
+			a) flow (sequential or parallel) within the enclosing exertion
+			b) network access of components to providers. Components can be pushed to providers (Acess.PUSH) 
+			   or pulled (Acess.PULL) from the network by providers matching their signatures.
+	2. PipingWorkerRunner
+		- creates a pipe of three Worker services via data context pipes
+	3. SharedContextWorkerRunner
+		- uses a collaboration of three Worker services that share a distributed data context in the network
+		
+For prerequisites and how to run Ant scripts see the README file in the ex1 directory.
+		
+First, start in ex2/bin all workers:
+	worker1-prv-run.xml
+	worker2-prv-run.xml
+	worker3-prv-run.xml
+	
+then run worker requestors in ex3/bin

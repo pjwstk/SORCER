@@ -1,0 +1,471 @@
+/*
+ * Copyright 2010 the original author or authors.
+ * Copyright 2010 SorcerSoft.org.
+ *  
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+ 
+ package sorcer.provider.dispatcher;
+
+import java.rmi.*;
+import java.io.*;
+import java.util.*;
+import javax.swing.*;
+
+import javax.security.auth.*;
+import javax.security.auth.login.*;
+import java.awt.*;
+import java.awt.event.*;
+
+import net.jini.core.entry.*;
+import net.jini.lookup.entry.*;
+import sorcer.base.*;
+import sorcer.core.*;
+import sorcer.core.provider.*;
+import sorcer.util.*;
+import jgapp.util.*;
+import jgapp.jaas.*;
+
+import java.net.URI;
+
+import sorcer.core.*;
+import sorcer.base.*;
+import sorcer.util.*;
+import jgapp.util.Util;
+
+import jgapp.rmi.InputStreamAdapter;
+import jgapp.dm.rmi.RemoteFileStore;
+//import jgapp.util.GAppPricipal;
+import jgapp.security.GAppACL;
+import jgapp.dm.util.DocumentDescriptor;
+
+import net.jini.lookup.ui.MainUI;
+import net.jini.core.lookup.ServiceItem;
+import net.jini.config.ConfigurationProvider;
+import net.jini.security.*;
+import sorcer.core.entry.UIDescriptorFactory;
+import sorcer.core.serviceui.UIFrameFactory;
+
+import java.security.Principal;
+import java.net.InetAddress;
+import java.net.URL;
+import net.jini.security.policy.DynamicPolicy;
+import java.security.*;
+import javax.security.auth.x500.X500Principal;
+
+import com.sun.jini.start.LifeCycle;
+import java.security.cert.X509Certificate;
+import java.util.LinkedList;
+import java.security.cert.CertificateFactory;
+import javax.security.auth.x500.X500PrivateCredential;
+
+public class SecureSorcerUI extends JFrame implements ActionListener{
+    protected JTextField getUsrnamefld;
+    protected JPasswordField getPasswdfld;
+    protected JButton loginBtn, cancelBtn;
+    
+    protected Subject loggedSubject = null;
+    protected Object preparedProxy;
+    protected net.jini.config.Configuration config;
+    protected boolean debug = true;
+    protected boolean gotSubject = false;
+    
+    protected void debug(String str){
+	if(debug){
+	    System.out.println(this.getClass()+": "+ str);
+	}
+    }
+
+    public Permission[] getGrants(Class cl, Principal[] principals){
+	return null;
+    }
+
+    public void grant(Class cl, Principal[] principals, Permission[] permissions){
+	
+    }
+    
+    public boolean grantSupported(){
+	return false;
+    }
+    
+    
+    public SecureSorcerUI(Object obj){
+	super();
+	try{
+	    debug(" ------ In the 1st Constructor");
+	    URL clientCnfLocn = this.getClass().getResource("config/preparer-minimal.config");
+	    debug("this.getClass().getResource(\"config/preparer-minimal.config\"): "+clientCnfLocn);	
+	    String a[] = new String[1];
+	    a[0]=clientCnfLocn.toString();
+	    config = ConfigurationProvider.getInstance(a, this.getClass().getClassLoader());
+	    if(config==null){
+		//debug("URL was = "+clientCnfLocn);
+		debug("config is null, Configuration.getInstance did not work");
+	    }else{
+		debug("config is not null - "+ config.getEntry("client.ServiceUIProxyPreparer", "preparer", ProxyPreparer.class, new BasicProxyPreparer()).toString());
+	    }
+	    //SecureSorcerUI();
+	    instantiate();
+	    //getAuthUI();
+	    prepareProxy(obj);
+
+	}catch (Exception ex){
+	    debug("Exception in 1st Constructor");
+	    ex.printStackTrace();
+	}
+    }
+    void sleep() throws Exception{
+	Thread.sleep(10000);
+	if(loggedSubject==null){
+	    sleep();
+	}
+	else return;
+    }
+
+    /*
+    protected synchronized void wait0(){
+	while(loggedSubject==null){
+	    debug("Inside While for wait");
+	    //Thread.currentThread().wait();
+	    try{
+		wait();
+	    }catch (InterruptedException ex){
+		ex.printStackTrace();
+	    }
+	}
+	
+    }
+    */
+    
+    protected void init(Object obj){
+	
+    }
+    
+    protected void prepareProxy(Object obj){
+	ProxyPreparer preparer = null;
+	try{
+	    preparer= (ProxyPreparer) config.getEntry(
+						      "client.ServiceUIProxyPreparer","preparer",
+						      ProxyPreparer.class, new BasicProxyPreparer());
+	}catch (net.jini.config.ConfigurationException ce){
+	    debug(" Configuration Exception Occured");
+	    ce.printStackTrace();
+	    preparer= new BasicProxyPreparer();
+	}
+	try{
+	    java.security.Policy policy = java.security.Policy.getPolicy();
+	    if(policy==null){
+		debug("------- The Policy Object Was Null");
+		//Abhijit:: If security is found null we can implement a DynamicPolicyProvider 
+	    }else{
+		PermissionCollection permissions = policy.getPermissions(this.getClass().getProtectionDomain());
+		debug("THE PERMISSIONS =\r "+ permissions.toString());		
+		//Abhijit:: If security is not null, we can still set the new Policy to DynamicPolicyProvider
+	    }
+	    net.jini.security.policy.DynamicPolicyProvider policy1 = new  net.jini.security.policy.DynamicPolicyProvider();
+	    /*
+	    policy1.grant(this.getClass(), new Principal[]{new X500Principal("Abhijit".getBytes())}, 
+			 new Permission[]{net.jini.security.AuthenticationPermission});
+	    */
+	    java.security.Policy.setPolicy(policy1);
+	    java.security.Policy.getPolicy().refresh();
+	    PermissionCollection permissions = policy1.getPermissions(this.getClass().getProtectionDomain());
+	    debug("THE PERMISSIONS =\r "+ permissions.toString());	
+		
+	    
+	    ServiceItem item = (ServiceItem)obj;
+	    preparedProxy = preparer.prepareProxy(item.service);
+	}catch(Exception ex){
+	    debug("Possible Remote Exception/ Security Exception in Authentication Permission");
+	    ex.printStackTrace();
+	}
+    }
+    
+    protected Object getPreparedProxy(){
+	return preparedProxy;
+    }
+    
+    public SecureSorcerUI(){                   
+	super();
+	instantiate();
+    }
+
+    public void instantiate(){
+	debug("Inside Instantiate");
+	getUsrnamefld = new JTextField(20);
+	debug("Instantiated getUsernameField");
+	JLabel usrLbl = new JLabel("Username: ", JLabel.RIGHT);
+	getPasswdfld = new JPasswordField(20);
+	debug("Instantiated getPaswordField");
+	getPasswdfld.setEchoChar('*');
+	JLabel passLbl = new JLabel("Password: ");
+	
+	//Set the classloader and everything so that further classes can be downloaded
+	
+	URL url = this.getClass().getResource("config/jaas.config");
+	/** need to read  this file name from the jar file. Shouldnt be hardcoded **/	
+	
+	String resourceLocation = url.toString();
+	//System.out.println("Resource for the config file:" + this.getClass().getClassLoader().getResource("jaas.config"));
+	System.setProperty("java.security.auth.login.config",resourceLocation);
+	System.out.println("java.rmi.server.codebase "+ resourceLocation);
+	System.setProperty("java.rmi.server.codebase", resourceLocation);
+	resourceLocation = (this.getClass().getResource("config/keystore.client")).toString();
+	String trustStoreURL = "file:"+System.getProperty("user.home").replace(File.separatorChar, '\\') +
+	    '\\' + "truststore.client";
+	debug("\r\r trustStoreURL="+trustStoreURL);
+	System.setProperty("javax.net.ssl.trustStore", resourceLocation);
+	//System.out.println("java keystore = "+ resourceLocation);
+	//	System.setProperty("javax.net.ssl.keyStore", resourceLocation);
+	
+    }
+
+    protected void getAuthUI() throws Exception{	
+	
+	AuthUI authUI = new AuthUI();
+	authUI.show();
+	authUI.pack();
+	//Thread.currentThread().yield();
+	
+	//Thread t = new Thread(authUI);
+	//t.start();
+	//t.join();
+	/*
+	while(true){
+	    if(loggedSubject!=null) return;
+	    Thread.sleep(10000);
+	}
+	*/
+	/*
+	AuthUI authUI = new AuthUI();
+	while(loggedSubject==null){
+	    debug("Showing Auth UI");
+	    authUI.show();
+	    authUI.pack();
+	}
+	*/
+    }
+
+    protected void setPermission(){
+	String targetName = ((Principal)(loggedSubject.getPrincipals().iterator().next())).getName();
+	debug("Set the Permission for = "+targetName);
+	AuthenticationPermission p = new AuthenticationPermission(targetName,"connect");	
+    }
+    
+    public void actionPerformed(ActionEvent e){
+    }
+
+    class AuthUI extends JFrame implements ActionListener, Runnable{
+      
+	public AuthUI(){
+	    //this.super();
+	    System.out.println("Inside the AUTHUI constructor");
+	    setTitle("Login");
+	    getContentPane().setLayout(new GridLayout(2,1));
+	    getContentPane().add(getMainUI());
+	    getContentPane().add(getBtnUI());
+	    //this.start();
+	}
+
+	public synchronized void run(){
+	    show();
+	    pack();
+	    //requestFocusInWindow();
+	    toFront();
+	}
+	private JPanel getMainUI(){
+	    try{
+		System.out.println("Inside getMainUI");
+		JPanel tempPnl = new JPanel();
+		tempPnl.setLayout(new GridLayout(2,1));
+		JPanel tmp1, tmp2;
+		tmp1 = new JPanel();
+		//getUsrnamefld = new JTextField(20);
+		JLabel usrLbl = new JLabel("Username: ", JLabel.RIGHT);
+		tmp1.add(usrLbl);
+		tmp1.add(getUsrnamefld);
+		
+		tmp2 = new JPanel();
+		//getPasswdfld = new JPasswordField(20);
+		//getPasswdfld.setEchoChar('*');
+		JLabel passLbl = new JLabel("Password: ", JLabel.RIGHT);
+		tmp2.add(passLbl);
+		tmp2.add(getPasswdfld);
+		
+		tempPnl.add(tmp1);
+		tempPnl.add(tmp2);				
+		return tempPnl;
+	    }catch (Exception ex){
+		debug("error in mainUI");
+		ex.printStackTrace();
+		return null;
+	    }
+	}
+	
+	private JPanel getBtnUI(){
+	    System.out.println("Inside getBtnUI");
+	    JPanel tempPnl = new JPanel();
+	    loginBtn = new JButton("Login");
+	    cancelBtn = new JButton("Cancel");
+	    loginBtn.addActionListener(this);
+	    cancelBtn.addActionListener(this);
+	    tempPnl.add(loginBtn);
+	    tempPnl.add(cancelBtn);
+	    return tempPnl;
+	}
+	private void getKeyStoreSubject(String username, String password, String keyStorePassword){
+	    String keyStoreURL = "file:"+System.getProperty("user.home").replace(
+		    File.separatorChar, '\\') +
+		'\\' + "keystore.client";
+	    String trustStoreURL = "file:"+System.getProperty("user.home").replace(
+		    File.separatorChar, '\\') +
+		'\\' + "truststore.client";
+	    debug("getKeystoreSubject():: The URL for keystore file is = "+keyStoreURL);
+	    String alias = username;
+	    Subject subject = loggedSubject;
+	    if(loggedSubject==null){
+		debug("getKeyStoreSubject:: loggedSubject was null");
+		return;
+	    }
+	    KeyStore keyStore = null;
+	    
+	    //load Keystore
+	    try{
+		keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+		InputStream in = (new URL(keyStoreURL)).openStream();
+		keyStore.load(in, keyStorePassword.toCharArray());
+		in.close();
+	    }catch (Exception ex){
+		System.out.println("Exception Occured in loading keystore");
+		ex.printStackTrace();
+	    }
+	    //get certificate from keystore
+	    java.security.cert.Certificate[] fromKeyStore =null;
+	    java.security.cert.CertPath certP = null;
+
+	    try {
+		fromKeyStore =
+		    keyStore.getCertificateChain(alias);
+		if (fromKeyStore == null
+		    || fromKeyStore.length == 0
+		    || !(fromKeyStore[0] instanceof X509Certificate)){
+		    throw new FailedLoginException(
+						   "Unable to find X.509 certificate chain in keystore");
+		}else{
+		    LinkedList certList = new LinkedList();
+		    for (int i=0; i < fromKeyStore.length; i++) {
+			certList.add(fromKeyStore[i]);
+		    }
+		    CertificateFactory certF= 
+			CertificateFactory.getInstance("X.509");
+		    certP = 
+			certF.generateCertPath(certList);	
+		}
+	    }catch (Exception ex){
+		debug("problem in getting Certificate chain");
+		ex.printStackTrace();
+	    }
+	    //get Principal and keys
+	    javax.security.auth.x500.X500Principal principal = null;
+	    javax.security.auth.x500.X500PrivateCredential privateCredential = null;
+	    try {
+		X509Certificate certificate = (X509Certificate)fromKeyStore[0];
+		principal = new javax.security.auth.x500.X500Principal
+		    (certificate.getSubjectDN().getName());
+		Key privateKey =
+		    keyStore.getKey(alias, password.toCharArray()); //shall be changed to private key password
+		if (privateKey == null
+		    || !(privateKey instanceof PrivateKey))
+		    {
+			throw new FailedLoginException(
+						       "Unable to recover key from keystore");
+		    }
+		
+		privateCredential = new X500PrivateCredential(
+							      certificate, (PrivateKey) privateKey, alias);
+	    }catch (Exception ex){
+		debug("problem in obtaining certificate and keys");
+		ex.printStackTrace();
+	    }
+ 	    if(loggedSubject.isReadOnly()){
+		debug("Your subject is readonly ----------------------");
+	    }else{
+		loggedSubject.getPrincipals().add(principal);
+		loggedSubject.getPublicCredentials().add(certP);
+		loggedSubject.getPrivateCredentials().add(privateCredential);
+		debug("CREDENTIALS ADDED SUCCESSFULLY TO THE SUBJECT");
+		debug("The subject = "+subject);
+	    }	    
+	}
+	public void actionPerformed(ActionEvent e){
+	    String cmd = e.getActionCommand();
+	    if("Login".equals(cmd)){
+		String username = getUsrnamefld.getText();
+		char[] password = getPasswdfld.getPassword();
+		System.out.println("Login  Command"+ "\n.."+username+ new String(password));
+		try{
+		    System.out.println("Setting the current class laoder to the class's loader. from..."+ Thread.currentThread().getContextClassLoader().toString());
+		    Thread.currentThread().setContextClassLoader(this.getClass().getClassLoader());
+		    System.out.println("The current class loader set to ..."+ Thread.currentThread().getContextClassLoader().toString());	
+
+		    LoginContext loginContext = new LoginContext("GAppLogin", 
+								 new UsernamePasswordCallbackHandler(username, password));
+		    System.out.println();
+		    System.out.println();
+		    System.out.println("The class loader for this class = "+ this.getClass().getClassLoader().toString());
+		    System.out.println("The current class loader thread = "+ Thread.currentThread().getContextClassLoader().toString()); 
+		    System.out.println();
+		    System.out.println();
+		    System.out.println("System class Loader:" + (this.getClass().getClassLoader().getSystemClassLoader()).toString());
+		    
+		    
+		    System.out.println();
+		    System.out.println();
+		    System.out.println();
+		    System.out.println();
+		    
+		    System.out.println();
+		    System.out.println();
+		    //System.out.println("Class Loader for LoginContext class"+ loginContext.getClassLoader().toString());
+		    System.out.println("Calling the LoginContext.login() ................................................");
+		    
+		    loginContext.login();
+		    System.out.println("----------------------");
+		    loggedSubject = loginContext.getSubject();
+		    System.out.println(loggedSubject);
+		    Set principals =loggedSubject.getPrincipals();
+		    Iterator iterator = principals.iterator();
+		    while(iterator.hasNext()){
+			Principal principal = (GAppPrincipal) iterator.next();
+			debug("The principal is = "+principal.getName());
+		    }
+		    //Abhijit:: For the time being just pass both the password
+		    //Abhijit:: Later user shall have an option of specifing a password for the key an keystore
+		    getKeyStoreSubject(username, new String(password),new String( password));
+		    this.notifyAll();
+		}
+		//catch LoginException and print out a dialogbox indicating wrong usename and password
+		catch (Exception ex){
+		    System.out.println("Error in the Login Context Login Method 12");
+		    ex.printStackTrace();
+		}
+	    }
+	    
+	    if("Cancel".equals(cmd)){
+		System.out.println("Cancel Command");
+	    }
+	}   
+    }
+}
+
+

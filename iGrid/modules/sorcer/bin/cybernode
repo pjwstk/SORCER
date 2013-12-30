@@ -1,0 +1,38 @@
+#!/bin/ksh
+
+# Rio -name Cybernode start utility generated Mon Nov 19 19:31:36 EST 2001
+
+# Set the installation root directory
+export JINI=${JINI_HOME}/lib
+export ROOT=${RIO_HOME}/lib
+
+# Set the included classes
+export CLASSES=$JINI/jini-core.jar:$JINI/jini-ext.jar:$JINI/sun-util.jar:$ROOT/serviceui.jar:$ROOT/loader.jar:$ROOT/jaxp.jar:$ROOT/crimson.jar:$ROOT/xalan.jar
+
+# Set debug options
+export DEBUG="-Dcom.sun.rio.debug -Dcom.sun.jini.reggie.proxy.debug=1 -Dcom.sun.jini.join.debug -Dcom.sun.rio.client.debug"
+
+# Set the LookupLocators for Unicast discovery
+export LOCATORS=
+
+# Set the Lookup Service groups for multicast discovery
+export GROUPS=-Dcom.sun.rio.groups=fiper.DEV
+
+# Set the Policy file
+export POLICY=-Djava.security.policy=${RIO_HOME}/policy/policy.all
+
+HTTP_CODEBASE="http://${FIPER_HTTP_HOST}:${FIPER_HTTP_PORT}/fiper/jfiper/jinilib/jini-ext.jar \
+        http://${FIPER_HTTP_HOST}:${FIPER_HTTP_PORT}/fiper/jfiper/jinilib/mahalo-dl.jar \
+        http://${FIPER_PORTAL_HOST}:${FIPER_PORTAL_PORT}/fiper/jfiper/"
+
+java -cp $CLASSES $DEBUG $LOCATORS $GROUPS $POLICY \
+    -Djava.rmi.server.codebase="$HTTP_CODEBASE" \
+    -Dcom.sun.rio.cybernode.maxservices=12 \
+    com.sun.rio.resources.jsb.Loader com.sun.rio.services.cybernode.CybernodeImpl cybernode.jar cybernode-dl.jar -name Cybernode &
+
+
+
+
+
+
+

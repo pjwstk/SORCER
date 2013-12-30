@@ -1,0 +1,30 @@
+#!/bin/sh
+##################################################################
+#
+# First set RIO_HOME to the directory where RIO is installed
+# which should be the directory for ../
+#
+# Second, edit launch.xml in this directory to point to the configuration
+# on your machine.
+#
+##################################################################
+
+if [ "$RIO_HOME" = "" ] ; then
+    echo RIO_HOME is not set, you need to set it.
+    exit 1
+
+fi
+
+if [ "$JINI_HOME" = "" ] ; then
+    echo JINI_HOME is not set, you need to set it.
+    exit 1
+fi
+
+XML_HOME=$RIO_HOME/lib
+#XML_HOME=$FIPER_CODEBASE/jaxp-1.1
+
+JINICLASSES=$JINI_HOME/lib/jini-core.jar:$JINI_HOME/lib/jini-ext.jar:$JINI_HOME/lib/sun-util.jar
+XMLCLASSES=$XML_HOME/jaxp.jar:$XML_HOME/crimson.jar:$XML_HOME/xalan.jar
+CLASSES=$JINICLASSES:$XMLCLASSES:$RIO_HOME/lib/launcher.jar
+
+java -cp "$CLASSES" -Djava.security.policy="$RIO_HOME/policy/policy.all" -Dcom.sun.rio.tools.launcher.config="$FIPER_HOME/xml/launch.xml" com.sun.rio.tools.launcher.ServiceLauncher

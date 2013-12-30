@@ -1,0 +1,179 @@
+<?xml version='1.0' encoding='ISO-8859-1' standalone='yes'?>
+<!-- 
+ * Make sure the following variables are changed to reflect your environment:
+ *    IGRID_HOME        	iGrid location
+ *	  IGRID_WEBSTER			The class server hostname (webster) 
+ *	  IGRID_WEBSTER_PORT 	The class server (webster) port
+ *    JAVA_HOME         	JDK Location
+ Please see also the modules/common-build.xml for classpaths, definitions and targets
+-->
+<project name="Who Is It? Provider" default="all" basedir=".">
+	<property name="module.name" value="ex1" />
+	<property name="module.run.dir" value="ex1" />
+	<property name="provider.name" value="whoIsIt" />
+
+	<!-- set global properties -->
+	<import file="../../common-build.xml" />
+	<property name="src" value="./src" />
+	<property name="resources" value="${iGrid.home}/modules/sorcer/resources" />
+
+	<!-- The sources to compile -->
+	<patternset id="ant.java">
+		<include name="sorcer/ex1/**/*.java" />
+		<exclude name="**/SAVE/*.java" />
+		<exclude name="**/BAK/*.java" />
+	</patternset>
+
+	<fileset dir="${resources}" id="icons">
+		<include name="sorcer-ico-bw.png" />
+	</fileset>
+
+	<patternset id="ant.classes">
+		<include name="sorcer/ex1/provider/**/*.class" />
+	</patternset>
+
+	<patternset id="ant.jars">
+		<include name="${provider.name}.jar" />
+		<include name="${provider.name}-dl.jar" />
+	</patternset>
+
+	<path id="project.classpath">
+		<pathelement location="${classes}" />
+		<pathelement location="${sorcer.lib}/sorcer-prv.jar" />
+		<pathelement location="${support.lib}/junit.jar" />
+		<path refid="jini.path" />
+		<path refid="rio.path" />
+	</path>
+
+	<path id="javadocs.classpath">
+		<pathelement location="${jini.lib}/serviceui.jar" />
+		<pathelement location="${common.lib}/buildsupport/ant-ext.jar" />
+		<pathelement location="${common.lib}/buildsupport/ant.jar" />
+	</path>
+
+	<target name="compile" depends="compileSources" />
+	<target name="jars" depends="whoIsIt, copy-run-prv-files" />
+	<target name="whoIsIt" depends="whoIsIt-bean1.jar, whoIsIt-bean2.jar, whoIsIt-bean-dl.jar, whoIsIt1.jar, whoIsIt2.jar, whoIsIt-dl.jar, whoIsIt-prv-dl.jar" />
+	<target name="all" depends="prepare, jars" />
+
+	<target name="whoIsIt-bean1.jar" depends="compile">
+		<classdepandjar jarfile="${sorcer.lib}/${provider.name}-bean1.jar" files="true" debug="false">
+			<classpath refid="project.classpath" />
+			<in name="sorcer.ex1" />
+			<topclass name="sorcer.ex1.WhoIsIt" />
+			<topclass name="sorcer.ex1.bean.WhoIsItBean1" />
+			<fileset dir="${iGrid.home}/classes">
+				<include name="sorcer/util/sorcer.env" />
+				<include name="sorcer/util/data.formats" />
+			</fileset>
+			<fileset refid="icons" />
+		</classdepandjar>
+	</target>
+
+	<target name="whoIsIt-bean2.jar" depends="compile">
+		<classdepandjar jarfile="${sorcer.lib}/${provider.name}-bean2.jar" files="true" debug="false">
+			<classpath refid="project.classpath" />
+			<in name="sorcer.ex1" />
+			<topclass name="sorcer.ex1.WhoIsIt" />
+			<topclass name="sorcer.ex1.bean.WhoIsItBean2" />
+			<fileset dir="${iGrid.home}/classes">
+				<include name="sorcer/util/sorcer.env" />
+				<include name="sorcer/util/data.formats" />
+			</fileset>
+			<fileset refid="icons" />
+		</classdepandjar>
+	</target>
+
+	<target name="whoIsIt-bean-dl.jar" depends="compile">
+		<classdepandjar jarfile="${sorcer-dl.lib}/${provider.name}-bean-dl.jar" files="true" debug="false">
+			<classpath refid="project.classpath" />
+			<in name="sorcer.ex1" />
+			<topclass name="sorcer.ex1.WhoIsIt" />
+			<topclass name="sorcer.ex1.provider.ProviderMessage" />
+		</classdepandjar>
+	</target>
+
+	<target name="whoIsIt-prv-dl.jar" depends="compile">
+		<classdepandjar jarfile="${sorcer-dl.lib}/${provider.name}-prv-dl.jar" files="true" debug="false">
+			<classpath refid="project.classpath" />
+			<in name="sorcer.ex1" />
+			<topclass name="sorcer.ex1.WhoIsIt" />
+			<topclass name="sorcer.ex1.provider.ProviderMessage" />
+		</classdepandjar>
+	</target>
+
+	<target name="whoIsIt1.jar" depends="compile">
+		<classdepandjar jarfile="${sorcer.lib}/${provider.name}1.jar" files="true" debug="false">
+			<classpath refid="project.classpath" />
+			<in name="sorcer.ex1" />
+			<topclass name="sorcer.ex1.provider.WhoIsItProvider1" />
+			<topclass name="sorcer.util.Stopwatch" />
+			<fileset dir="${iGrid.home}/classes">
+				<include name="sorcer/util/sorcer.env" />
+				<include name="sorcer/util/data.formats" />
+			</fileset>
+			<fileset refid="icons" />
+		</classdepandjar>
+	</target>
+
+	<target name="whoIsIt2.jar" depends="compile">
+		<classdepandjar jarfile="${sorcer.lib}/${provider.name}2.jar" files="true" debug="false">
+			<classpath refid="project.classpath" />
+			<in name="sorcer.ex1" />
+			<topclass name="sorcer.ex1.provider.WhoIsItProvider2" />
+			<topclass name="sorcer.util.Stopwatch" />
+			<fileset dir="${iGrid.home}/classes">
+				<include name="sorcer/util/sorcer.env" />
+				<include name="sorcer/util/data.formats" />
+			</fileset>
+			<fileset refid="icons" />
+		</classdepandjar>
+	</target>
+			
+	<!-- No RMI stubs are required for JERI type of providers -->
+	<target name="whoIsIt-dl.jar" depends="compile">
+		<classdepandjar jarfile="${sorcer-dl.lib}/${provider.name}-dl.jar" files="true" debug="false">
+			<classpath refid="project.classpath" />
+			<in name="sorcer.ex1" />
+			<topclass name="sorcer.ex1.WhoIsIt" />
+			<topclass name="sorcer.ex1.provider.ProviderMessage" />
+			<topclass name="sorcer.ui.serviceui.UIFrameFactory" />
+			<topclass name="sorcer.util.Stopwatch" />
+			<topclass name="sorcer.core.AdministratableProvider" />
+			<topclass name="sorcer.jini.lookup.entry.SorcerServiceType" />
+			<topclass name="sorcer.service.RemoteTasker" />
+			<fileset refid="icons" />
+		</classdepandjar>
+	</target>
+
+	<target name="docs" depends="prepare, compile">
+		<javadoc packagenames="org.jini.rio.tools.ant.*" maxmemory="100M" sourcepath="${src}" destdir="${docs}/api" Author="true" Version="true" Use="true" windowtitle="Who Is It? Provider" doctitle="&lt;h1&gt;Who Is It? Provider;/h1&gt;" bottom="&lt;i&gt;Copyright (c) 2008-2009 AFRL/WPAFB, All Rights Reserved.&lt;/i&gt;">
+			<group title="Who Is It? Provider" packages="sorcer.ex1.provider*" />
+			<classpath refid="project.classpath" />
+		</javadoc>
+	</target>
+
+	<target name="copy-run-prv-files">
+		<mkdir dir="${iGrid.home}/bin/examples/${module.run.dir}/configs" />
+		<mkdir dir="${iGrid.home}/bin/examples/${module.run.dir}/bin" />
+		<mkdir dir="${iGrid.home}/bin/examples/${module.run.dir}/policy" />
+		<mkdir dir="${iGrid.home}/bin/examples/${module.run.dir}/logs" />
+		<copy todir="${iGrid.home}/bin/examples/${module.run.dir}/configs">
+			<fileset dir="configs">
+				<include name="*" />
+			</fileset>
+		</copy>
+		<copy todir="${iGrid.home}/bin/examples/${module.run.dir}/bin">
+			<fileset dir="bin">
+				<include name="*" />
+			</fileset>
+		</copy>
+		<copy todir="${iGrid.home}/bin/examples/${module.run.dir}/policy">
+			<fileset dir="policy">
+				<include name="*" />
+			</fileset>
+		</copy>
+		<chmod dir="${iGrid.home}/bin/examples/${module.run.dir}/bin" perm="755" includes="*.sh" />
+	</target>
+
+</project>

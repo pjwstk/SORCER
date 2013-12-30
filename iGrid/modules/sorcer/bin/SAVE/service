@@ -1,0 +1,35 @@
+#!/bin/ksh
+#
+# Startup script for FIPER Services
+# Mike Sobolewski, sobol@crd.ge.com
+#
+# pidfile: ${FIPER_HOME}/bin/run/$2.pid
+# config: ${FIPER_HOME}/jfiper/fiper/service/cache/cache.conf
+
+# Source function library.
+. ${FIPER_HOME}/bin/functions
+
+# See how we were called.
+case "$2" in
+  start)
+	echo "Starting $1: "
+	echo ${FIPER_HOME}/jfiper/fiper/service/${1%*.prv}/$1
+#	cd ${FIPER_HOME}/jfiper/fiper/service/${1%*.prv}
+	startproc ${FIPER_HOME}/jfiper/fiper/service/${1%*.prv}/$1
+	echo
+	;;
+  stop)
+	echo "Shutting service: $1"
+	killproc $1
+	echo
+	;;
+  restart)
+	$0 stop
+	$0 start
+	;;
+  *)
+	echo "Usage: $0 <provider-package-name>.prv {start|stop|restart}"
+	exit 1
+esac
+
+exit 0

@@ -1,0 +1,32 @@
+# test file for design variables
+5.0 1.0 2.0 3.0
+#
+0.0 1.0 2.0 3.0
+#
+0.0 1.0 2.0 3.0
+This is a test of [bracket keyword] filter
+#
+5.0 3.2 7.5 [QDP] 12.9 3.14
+#
+#This is a test of keyword,variable in field i 
+DESVAR, 0, 0.0
+DESVAR, 1, 1.0
+DESVAR, 2, 2.0
+DESVAR, 3, 3.0 
+# test keyword with "=" delimeter.
+home_dir = "/home/kolonarm"
+sim_dir = "/sorcer/tmp/avus"
+MDICEAVUS=/avus/home;
+NPROC="24";
+# Test with keyword(s) on one line and field values on the following record.
+CFL       NO. TIME STEPS     NO. NEWTON SUB-ITERATIONS
+ ${CFL}      ${NITER}                 1000
+ # gridgen_glyph parser set sweep [DESVAR23];
+set sweep 45.0;
+# test keyword with field in a record n lines after keyword=GPWG, lineAfter = 3, field=4, delimiter=" "
+           GPWG
+35.0   26.0   
+19.0   22.0
+0.0   11.0    45.0   120.0
+
+

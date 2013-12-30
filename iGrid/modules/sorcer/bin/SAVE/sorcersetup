@@ -1,0 +1,307 @@
+#!/bin/ksh
+#
+# Create directories and links for the SORCER environment
+# Mike Sobolewski, sobol@cs.ttu.edu
+# modified by Mike Lapinski to work with new dir structure
+
+# Check if SORCER_BASEDIR is set
+if [ -z ${SORCER_BASEDIR} ] ; then
+    SORCER_BASEDIR=/research/sorcer
+fi
+
+SORCER_LIB_BASE=${SORCER_BASEDIR}/lib
+SORCER_ASSETS_BASE=${SORCER_BASEDIR}/assets
+
+#
+# Check if SORCER_HOME set
+if [ -z ${SORCER_HOME} ] ; then
+    echo SORCER_HOME is not set
+    return 1
+fi
+
+
+# Create required directories and links
+mkdir -p ${SORCER_HOME}/bin/logs
+mkdir -p ${SORCER_HOME}/bin/serviceid
+mkdir -p ${SORCER_HOME}/bin/run
+mkdir -p ${APP_CODEBASE}/sorcer
+mkdir -p ${APP_CODEBASE}/jgapp
+mkdir -p ${SORCER_HOME}/api/sorcer
+mkdir -p ${SORCER_HOME}/lib
+
+#mkdir -p ${SORCER_HOME}/web/WEB-INF/classes
+
+#cd ${SORCER_HOME}/web
+#link=${SORCER_HOME}/web/api
+#if [ ! -r $link ] ; then
+#    ln -s ${SORCER_HOME}/docs/api  ./api
+#fi    
+
+#cd ${HOME}/www/public_html
+#link=${HOME}/www/public_html/sorcer
+#if [ ! -r $link ] ; then
+#    ln -s ${SORCER_HOME}/web  ./sorcer
+#fi
+
+cd ${SORCER_HOME}
+link=${SORCER_HOME}/classes
+if [ ! -r $link ] ; then
+    echo "Creating link from ./classes -> ${APP_CODEBASE}"
+    ln -s ${APP_CODEBASE}  ./classes
+fi
+
+cd ${APP_CODEBASE}
+link=${APP_CODEBASE}/tea
+if [ ! -r $link ] ; then
+    ln -s ${SORCER_BASEDIR}/classes/tea  ./tea
+fi
+
+link=${APP_CODEBASE}/Jama
+if [ ! -r $link ] ; then
+    ln -s ${SORCER_BASEDIR}/classes/Jama  ./Jama
+fi
+
+link=${APP_CODEBASE}/antlr
+if [ ! -r $link ] ; then
+    ln -s ${SORCER_BASEDIR}/classes/antlr  ./antlr
+fi
+
+link=${APP_CODEBASE}/matrix
+if [ ! -r $link ] ; then
+    ln -s ${SORCER_BASEDIR}/classes/matrix  ./matrix
+fi
+
+
+
+
+#cd ${SORCER_HOME}/web
+#link=${SORCER_HOME}/web/classes
+#if [ ! -r $link ] ; then
+#    ln -s ${SORCER_HOME}/classes  ./classes
+#fi
+
+#link=${SORCER_HOME}/web/index.html
+#if [ ! -L $link ] ; then
+#    ln -s ${SORCER_HOME}/web/login.html  ./index.html
+#fi
+
+cd ${APP_CODEBASE}/../..
+link=${APP_CODEBASE}/../../data
+if [ ! -r $link ] ; then
+    ln -s /projects/sorcer-data  ./data
+fi
+cd ${APP_CODEBASE}
+
+cd ${APP_CODEBASE}/../..
+link=${APP_CODEBASE}/../../upload
+if [ ! -r $link ] ; then
+    ln -s /projects/sorcer/sorcerdm/upload  ./upload
+fi
+cd ${APP_CODEBASE}
+
+cd ${SORCER_HOME}
+
+
+#cd ${SORCER_HOME}/web/WEB-INF/classes
+#link=${SORCER_HOME}/web/WEB-INF/classes/sorcer
+#if [ ! -r $link ] ; then
+#    ln -s ${SORCER_HOME}/classes/sorcer ./sorcer
+#fi
+
+#link=${SORCER_HOME}/web/WEB-INF/classes/jgapp
+#if [ ! -r $link ] ; then
+#    ln -s ${SORCER_HOME}/classes/jgapp ./jgapp
+#fi
+
+#link=${SORCER_HOME}/web/WEB-INF/classes/tea
+#if [ ! -r $link ] ; then
+#    ln -s ${SORCER_BASEDIR}/classes/TeaSet/TeaSet138/tea  ./tea
+#fi
+
+# Tomcat SORCER application
+#cd ${SORCER_HOME}/tomcat/webapps
+#link=${SORCER_HOME}/tomcat/webapps/sorcer
+#if [ ! -r $link ] ; then
+#    ln -s ${SORCER_HOME}/web  ./sorcer
+#fi
+
+# Allow exec permissions on SORCER scripts
+chmod 755 ${SORCER_HOME}/bin/*
+
+
+############################################################
+##
+## create links for SORCER API doc in docs/
+##
+############################################################
+link=${SORCER_HOME}/docs/api
+if [ ! -r $link ] ; then
+    ln -s ${SORCER_BASEDIR}/public_html/api/sorcer $link
+fi
+
+
+
+
+
+############################################################
+##
+## create links for jar files in lib/
+##
+############################################################
+
+echo "Creating links to jar files ..."
+
+mkdir -p ${SORCER_HOME}/lib
+/bin/rm -f ${SORCER_HOME}/lib/ant-ext.jar
+ln -s ${SORCER_LIB_BASE}/ant-ext.jar ${SORCER_HOME}/lib
+/bin/rm -f ${SORCER_HOME}/lib/crimson.jar
+ln -s ${SORCER_LIB_BASE}/crimson.jar ${SORCER_HOME}/lib
+/bin/rm -f ${SORCER_HOME}/lib/cybernode-dl.jar
+ln -s ${SORCER_LIB_BASE}/cybernode-dl.jar ${SORCER_HOME}/lib
+/bin/rm -f ${SORCER_HOME}/lib/cybernode-ui.jar
+ln -s ${SORCER_LIB_BASE}/cybernode-ui.jar ${SORCER_HOME}/lib
+/bin/rm -f ${SORCER_HOME}/lib/cybernode.jar
+ln -s ${SORCER_LIB_BASE}/cybernode.jar ${SORCER_HOME}/lib
+/bin/rm -f ${SORCER_HOME}/lib/cyberstarter.jar
+ln -s ${SORCER_LIB_BASE}/cyberstarter.jar ${SORCER_HOME}/lib
+/bin/rm -f ${SORCER_HOME}/lib/fiddler-cs.jar
+ln -s ${SORCER_LIB_BASE}/fiddler-cs.jar ${SORCER_HOME}/lib
+/bin/rm -f ${SORCER_HOME}/lib/fiddler-dl.jar
+ln -s ${SORCER_LIB_BASE}/fiddler-dl.jar ${SORCER_HOME}/lib
+/bin/rm -f ${SORCER_HOME}/lib/fiddler.jar
+ln -s ${SORCER_LIB_BASE}/fiddler.jar ${SORCER_HOME}/lib
+/bin/rm -f ${SORCER_HOME}/lib/sorcer-core.jar
+ln -s ${SORCER_LIB_BASE}/sorcer-core.jar ${SORCER_HOME}/lib
+/bin/rm -f ${SORCER_HOME}/lib/jaxp.jar
+ln -s ${SORCER_LIB_BASE}/jaxp.jar ${SORCER_HOME}/lib
+/bin/rm -f ${SORCER_HOME}/lib/jini-core.jar
+ln -s ${SORCER_LIB_BASE}/jini-core.jar ${SORCER_HOME}/lib
+/bin/rm -f ${SORCER_HOME}/lib/jini-examples-dl.jar
+ln -s ${SORCER_LIB_BASE}/jini-examples-dl.jar ${SORCER_HOME}/lib
+/bin/rm -f ${SORCER_HOME}/lib/jini-examples.jar
+ln -s ${SORCER_LIB_BASE}/jini-examples.jar ${SORCER_HOME}/lib
+/bin/rm -f ${SORCER_HOME}/lib/jini-ext.jar
+ln -s ${SORCER_LIB_BASE}/jini-ext.jar ${SORCER_HOME}/lib
+/bin/rm -f ${SORCER_HOME}/lib/jnlp.jar
+ln -s ${SORCER_LIB_BASE}/jnlp.jar ${SORCER_HOME}/lib
+/bin/rm -f ${SORCER_HOME}/lib/launcher.jar
+ln -s ${SORCER_LIB_BASE}/launcher.jar ${SORCER_HOME}/lib
+/bin/rm -f ${SORCER_HOME}/lib/lincoln-dl.jar
+ln -s ${SORCER_LIB_BASE}/lincoln-dl.jar ${SORCER_HOME}/lib
+/bin/rm -f ${SORCER_HOME}/lib/lincoln-ui.jar
+ln -s ${SORCER_LIB_BASE}/lincoln-ui.jar ${SORCER_HOME}/lib
+/bin/rm -f ${SORCER_HOME}/lib/lincoln.jar
+ln -s ${SORCER_LIB_BASE}/lincoln.jar ${SORCER_HOME}/lib
+/bin/rm -f ${SORCER_HOME}/lib/loader.jar
+ln -s ${SORCER_LIB_BASE}/loader.jar ${SORCER_HOME}/lib
+/bin/rm -f ${SORCER_HOME}/lib/mahalo-dl.jar
+ln -s ${SORCER_LIB_BASE}/mahalo-dl.jar ${SORCER_HOME}/lib
+/bin/rm -f ${SORCER_HOME}/lib/mahalo.jar
+ln -s ${SORCER_LIB_BASE}/mahalo.jar ${SORCER_HOME}/lib
+/bin/rm -f ${SORCER_HOME}/lib/mercury-dl.jar
+ln -s ${SORCER_LIB_BASE}/mercury-dl.jar ${SORCER_HOME}/lib
+/bin/rm -f ${SORCER_HOME}/lib/mercury.jar
+ln -s ${SORCER_LIB_BASE}/mercury.jar ${SORCER_HOME}/lib
+/bin/rm -f ${SORCER_HOME}/lib/monitor-dl.jar
+ln -s ${SORCER_LIB_BASE}/monitor-dl.jar ${SORCER_HOME}/lib
+/bin/rm -f ${SORCER_HOME}/lib/monitor-ui.jar
+ln -s ${SORCER_LIB_BASE}/monitor-ui.jar ${SORCER_HOME}/lib
+/bin/rm -f ${SORCER_HOME}/lib/monitor.jar
+ln -s ${SORCER_LIB_BASE}/monitor.jar ${SORCER_HOME}/lib
+/bin/rm -f ${SORCER_HOME}/lib/norm-dl.jar
+ln -s ${SORCER_LIB_BASE}/norm-dl.jar ${SORCER_HOME}/lib
+/bin/rm -f ${SORCER_HOME}/lib/norm.jar
+ln -s ${SORCER_LIB_BASE}/norm.jar ${SORCER_HOME}/lib
+/bin/rm -f ${SORCER_HOME}/lib/opmon.jar
+ln -s ${SORCER_LIB_BASE}/opmon.jar ${SORCER_HOME}/lib
+/bin/rm -f ${SORCER_HOME}/lib/outrigger-dl.jar
+ln -s ${SORCER_LIB_BASE}/outrigger-dl.jar ${SORCER_HOME}/lib
+/bin/rm -f ${SORCER_HOME}/lib/outrigger.jar
+ln -s ${SORCER_LIB_BASE}/outrigger.jar ${SORCER_HOME}/lib
+/bin/rm -f ${SORCER_HOME}/lib/reggie-dl.jar
+ln -s ${SORCER_LIB_BASE}/reggie-dl.jar ${SORCER_HOME}/lib
+/bin/rm -f ${SORCER_HOME}/lib/reggie.jar
+ln -s ${SORCER_LIB_BASE}/reggie.jar ${SORCER_HOME}/lib
+/bin/rm -f ${SORCER_HOME}/lib/rio-core.jar
+ln -s ${SORCER_LIB_BASE}/rio-core.jar ${SORCER_HOME}/lib
+/bin/rm -f ${SORCER_HOME}/lib/rio-dl.jar
+ln -s ${SORCER_LIB_BASE}/rio-dl.jar ${SORCER_HOME}/lib
+/bin/rm -f ${SORCER_HOME}/lib/rio-installer.jar
+ln -s ${SORCER_LIB_BASE}/rio-installer.jar ${SORCER_HOME}/lib
+/bin/rm -f ${SORCER_HOME}/lib/rio-webstart.jar
+ln -s ${SORCER_LIB_BASE}/rio-webstart.jar ${SORCER_HOME}/lib
+/bin/rm -f ${SORCER_HOME}/lib/serviceui.jar
+ln -s ${SORCER_LIB_BASE}/serviceui.jar ${SORCER_HOME}/lib
+/bin/rm -f ${SORCER_HOME}/lib/servlet.jar
+ln -s ${SORCER_LIB_BASE}/servlet.jar ${SORCER_HOME}/lib
+/bin/rm -f ${SORCER_HOME}/lib/space-examples-dl.jar
+ln -s ${SORCER_LIB_BASE}/space-examples-dl.jar ${SORCER_HOME}/lib
+/bin/rm -f ${SORCER_HOME}/lib/space-examples.jar
+ln -s ${SORCER_LIB_BASE}/space-examples.jar ${SORCER_HOME}/lib
+/bin/rm -f ${SORCER_HOME}/lib/space-ui.jar
+ln -s ${SORCER_LIB_BASE}/space-ui.jar ${SORCER_HOME}/lib
+/bin/rm -f ${SORCER_HOME}/lib/sun-util.jar
+ln -s ${SORCER_LIB_BASE}/sun-util.jar ${SORCER_HOME}/lib
+/bin/rm -f ${SORCER_HOME}/lib/tea.jar
+ln -s ${SORCER_LIB_BASE}/tea.jar ${SORCER_HOME}/lib
+/bin/rm -f ${SORCER_HOME}/lib/tools.jar
+ln -s ${SORCER_LIB_BASE}/tools.jar ${SORCER_HOME}/lib
+/bin/rm -f ${SORCER_HOME}/lib/transient-outrigger.jar
+ln -s ${SORCER_LIB_BASE}/transient-outrigger.jar ${SORCER_HOME}/lib
+/bin/rm -f ${SORCER_HOME}/lib/viewer.jar
+ln -s ${SORCER_LIB_BASE}/viewer.jar ${SORCER_HOME}/lib
+/bin/rm -f ${SORCER_HOME}/lib/watch-ui.jar
+ln -s ${SORCER_LIB_BASE}/watch-ui.jar ${SORCER_HOME}/lib
+/bin/rm -f ${SORCER_HOME}/lib/watchsmith-dl.jar
+ln -s ${SORCER_LIB_BASE}/watchsmith-dl.jar ${SORCER_HOME}/lib
+/bin/rm -f ${SORCER_HOME}/lib/watchsmith.jar
+ln -s ${SORCER_LIB_BASE}/watchsmith.jar ${SORCER_HOME}/lib
+/bin/rm -f ${SORCER_HOME}/lib/webster.jar
+ln -s ${SORCER_LIB_BASE}/webster.jar ${SORCER_HOME}/lib
+/bin/rm -f ${SORCER_HOME}/lib/xalan.jar
+ln -s ${SORCER_LIB_BASE}/xalan.jar ${SORCER_HOME}/lib
+
+# jintegra
+/bin/rm -f ${SORCER_HOME}/lib/jintegra.jar
+ln -s ${SORCER_ASSETS_BASE}/jintegra/lib/jintegra.jar ${SORCER_HOME}/lib
+
+
+# finder 1.0
+mkdir -p ${SORCER_HOME}/lib/finder-1.0
+/bin/rm -f ${SORCER_HOME}/lib/finder-1.0/bin
+ln -s ${SORCER_ASSETS_BASE}/finder-1.0/bin ${SORCER_HOME}/lib/finder-1.0
+/bin/rm -f ${SORCER_HOME}/lib/finder-1.0/lib
+ln -s ${SORCER_ASSETS_BASE}/finder-1.0/lib ${SORCER_HOME}/lib/finder-1.0
+
+# jdbc 
+mkdir -p ${SORCER_HOME}/lib/jdbc
+/bin/rm -f ${SORCER_HOME}/lib/jdbc/oracle
+ln -s ${SORCER_ASSETS_BASE}/jdbc/lib ${SORCER_HOME}/lib/jdbc/oracle
+/bin/rm -f ${SORCER_HOME}/lib/jdbc/microsoft
+ln -s ${SORCER_ASSETS_BASE}/jdbc/microsoft/lib ${SORCER_HOME}/lib/jdbc/microsoft
+
+# jini 1.1
+mkdir -p ${SORCER_HOME}/lib/jini1_1
+/bin/rm -f ${SORCER_HOME}/lib/jini1_1/lib
+ln -s ${SORCER_ASSETS_BASE}/jini/jini1_1/lib ${SORCER_HOME}/lib/jini1_1
+
+# tomcat
+mkdir -p ${SORCER_HOME}/lib/tomcat
+/bin/rm -f ${SORCER_HOME}/lib/tomcat/lib
+ln -s ${SORCER_ASSETS_BASE}/tomcat/lib ${SORCER_HOME}/lib/tomcat
+/bin/rm -f ${SORCER_HOME}/lib/tomcat/bin
+ln -s ${SORCER_ASSETS_BASE}/tomcat/bin ${SORCER_HOME}/lib/tomcat
+
+# ant
+mkdir -p ${SORCER_HOME}/lib/ant
+/bin/rm -f ${SORCER_HOME}/lib/ant/lib
+ln -s ${SORCER_ASSETS_BASE}/ant/lib ${SORCER_HOME}/lib/ant
+/bin/rm -f ${SORCER_HOME}/lib/ant/bin
+ln -s ${SORCER_ASSETS_BASE}/ant/bin ${SORCER_HOME}/lib/ant
+
+
+
+
+
+
+

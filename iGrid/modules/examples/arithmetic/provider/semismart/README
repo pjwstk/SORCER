@@ -1,0 +1,19 @@
+In this examaple a plain SorcerProvider is used with 
+a SemismartArithmometer proxy. 
+Compare it with Arithmometer and SmartArithmometer cases.
+
+The SemismartArithmometer class implements the SmartProxy interface, 
+so the SemismartArithmometer proxy can use the ProviderAdministrable 
+interface of SorcerProvider and now, for example can destroy its 
+registering provider.
+
+Also a SemismartArithmometer proxy owns the registering provider proxy
+as its inner proxy and can communicate directly with the registering provider,
+for example via the standard "About" provider's service UI that is accesible 
+via the inner proxy of this SemismartArithmometer proxy.
+
+Since this SemismartArithomometer does not complemnt its primary 
+functionalty by any additional remote oprations, its similar to 
+a fat proxy implemented by Arithmometer. 
+However this smart proxy can communicate back to its registering 
+provider so it is called semismart.

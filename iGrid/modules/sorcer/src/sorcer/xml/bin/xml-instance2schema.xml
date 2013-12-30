@@ -1,0 +1,43 @@
+<?xml version="1.0"?>
+
+<project name="xml-instance2schema" default="xml-instance2schema" basedir=".">
+	
+	<!-- loads system environment variables -->
+	<property environment="env"/>
+	<import file="${env.IGRID_HOME}/modules/common-run.xml"/>
+	
+	<!-- set property values here -->
+	<property name="requestor.name" value="xml-instance2schema"/>
+	<property name="requestor.class"
+		value="org.exolab.castor.xml.schema.util.XMLInstance2Schema"/>
+	
+	<path id="project.classpath">
+		<pathelement location="${iGrid.home}/common/castor-1.2-xml-schema.jar"/>
+		<pathelement location="${iGrid.home}/common/castor-1.2-anttasks.jar"/>
+		<pathelement location="${iGrid.home}/common/castor-1.2-xml.jar"/>
+		<pathelement location="${iGrid.home}/common/log4j-1.2.15.jar"/>
+		<pathelement
+			location="${iGrid.home}/common/commons-logging-api-1.1.jar"/>
+		<pathelement location="${iGrid.home}/common/xalan.jar"/>
+		<pathelement location="${iGrid.home}/common/xerces.jar"/>
+		<pathelement location="${iGrid.home}/common/jaxb-xjc.jar"/>
+	</path>
+	
+	<target name="run">
+		<java classname="${requestor.class}" fork="yes">
+			<arg line="${iGrid.home}/data/maelstrom/input/static.xml"/>
+			<classpath refid="project.classpath"/>
+		</java>
+	</target>
+	
+	<target name="xml-instance2schema">
+		<taskdef name="schema-gen"
+			classname="org.castor.anttask.XMLInstance2SchemaTask"
+			classpathref="project.classpath"/>
+		
+		<mkdir dir="${iGrid.home}/data/maelstrom/input/generated"/>
+		<schema-gen file="${iGrid.home}/data/maelstrom/input/static.xml"
+			XmlschemaFileName="${iGrid.home}/data/maelstrom/input/generated/schema.xsd"/>
+	</target>
+	
+</project>

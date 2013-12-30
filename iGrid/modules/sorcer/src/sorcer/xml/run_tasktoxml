@@ -1,0 +1,4 @@
+#!/bin/ksh 
+
+## $1: serialized task file name
+java sorcer.service.xml.SorcerXMLUtil -txml $1

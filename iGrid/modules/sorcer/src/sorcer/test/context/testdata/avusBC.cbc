@@ -1,0 +1,283 @@
+##################################################
+	 Boundary Condition Specifications for:
+	NACA0006_AoA05_TRdp at angle of attack of 5� with Trans. Contr. Surf.
+##################################################
+1
+Farfield
+Farfield
+Modified Riemann Invariant
+ P-Stat   T-Stat     K     Omega      Mach     Alpha     Beta
+ -1.      -1.      -1.      -1.      -1.      -370.      -370.
+##################################################
+ 4
+Wing tip
+Solid Wall
+Slip
+Yes
+##################################################
+ 7
+Mirror plane
+Solid Wall
+Slip
+No
+##################################################
+ 9
+Wing Panel Fore Surface 1
+Solid Wall
+Slip
+Yes
+##################################################
+ 10
+Wing Panel Fore Surface 2
+Solid Wall
+Slip
+Yes
+##################################################
+ 11
+Wing Panel Fore Surface 3
+Solid Wall
+Slip
+Yes
+##################################################
+ 12
+Wing Panel Fore Surface 4
+Solid Wall
+Slip
+Yes
+##################################################
+ 13
+Wing Panel Fore Surface 5
+Solid Wall
+Slip
+Yes
+##################################################
+ 14
+Wing Panel Fore Surface 6
+Solid Wall
+Slip
+Yes
+##################################################
+ 15
+Wing Panel Fore Surface 7
+Solid Wall
+Slip
+Yes
+##################################################
+ 16
+Wing Panel Fore Surface 8
+Solid Wall
+Slip
+Yes
+##################################################
+ 17
+Wing Panel Fore Surface 9
+Solid Wall
+Slip
+Yes
+##################################################
+ 18
+Wing Panel Fore Surface 10
+Solid Wall
+Slip
+Yes
+##################################################
+ 19
+Wing Panel Fore Surface 11
+Solid Wall
+Slip
+Yes
+##################################################
+ 20
+Wing Panel Fore Surface 12
+Solid Wall
+Slip
+Yes
+##################################################
+ 21
+Wing Panel Fore Surface 13
+Solid Wall
+Slip
+Yes
+##################################################
+ 22
+Wing Panel Fore Surface 14
+Solid Wall
+Slip
+Yes
+##################################################
+ 23
+Wing Panel Fore Surface 15
+Solid Wall
+Slip
+Yes
+##################################################
+ 24
+Wing Panel Fore Surface 16
+Solid Wall
+Slip
+Yes
+##################################################
+ 25
+Wing Panel Fore Surface 17
+Solid Wall
+Slip
+Yes
+##################################################
+ 26
+Wing Panel Fore Surface 18
+Solid Wall
+Slip
+Yes
+##################################################
+ 27
+Wing Panel Fore Surface 19
+Solid Wall
+Slip
+Yes
+##################################################
+ 28
+Wing Panel Fore Surface 20
+Solid Wall
+Slip
+Yes
+##################################################
+29
+Wing CS 1
+User
+Specified
+ Density    X-vel    Y-vel    Z-vel    Pressure    Turb Model    Dummy    CS angle
+1.0 0. 0. 0. 1.0 1.0 1.0 11.14159
+##################################################
+30
+Wing CS 2
+User
+Specified
+ Density    X-vel    Y-vel    Z-vel    Pressure    Turb Model    Dummy    CS angle
+1.0 0. 0. 0. 1.0 1.0 1.0 0.0
+##################################################
+31
+Wing CS 3
+User
+Specified
+ Density    X-vel    Y-vel    Z-vel    Pressure    Turb Model    Dummy    CS angle
+1.0 0. 0. 0. 1.0 1.0 1.0 0.0
+##################################################
+32
+Wing CS 4
+User
+Specified
+ Density    X-vel    Y-vel    Z-vel    Pressure    Turb Model    Dummy    CS angle
+1.0 0. 0. 0. 1.0 1.0 1.0 0.0
+##################################################
+33
+Wing CS 5
+User
+Specified
+ Density    X-vel    Y-vel    Z-vel    Pressure    Turb Model    Dummy    CS angle
+1.0 0. 0. 0. 1.0 1.0 1.0 0.0
+##################################################
+34
+Wing CS 6
+User
+Specified
+ Density    X-vel    Y-vel    Z-vel    Pressure    Turb Model    Dummy    CS angle
+1.0 0. 0. 0. 1.0 1.0 1.0 0.0
+##################################################
+35
+Wing CS 7
+User
+Specified
+ Density    X-vel    Y-vel    Z-vel    Pressure    Turb Model    Dummy    CS angle
+1.0 0. 0. 0. 1.0 1.0 1.0 0.0
+##################################################
+36
+Wing CS 8
+User
+Specified
+ Density    X-vel    Y-vel    Z-vel    Pressure    Turb Model    Dummy    CS angle
+1.0 0. 0. 0. 1.0 1.0 1.0 0.0
+##################################################
+37
+Wing CS 9
+User
+Specified
+ Density    X-vel    Y-vel    Z-vel    Pressure    Turb Model    Dummy    CS angle
+1.0 0. 0. 0. 1.0 1.0 1.0 0.0
+##################################################
+38
+Wing CS 10
+User
+Specified
+ Density    X-vel    Y-vel    Z-vel    Pressure    Turb Model    Dummy    CS angle
+1.0 0. 0. 0. 1.0 1.0 1.0 0.0
+##################################################
+39
+Wing CS 11
+User
+Specified
+ Density    X-vel    Y-vel    Z-vel    Pressure    Turb Model    Dummy    CS angle
+1.0 0. 0. 0. 1.0 1.0 1.0 0.0
+##################################################
+40
+Wing CS 12
+User
+Specified
+ Density    X-vel    Y-vel    Z-vel    Pressure    Turb Model    Dummy    CS angle
+1.0 0. 0. 0. 1.0 1.0 1.0 0.0
+##################################################
+41
+Wing CS 13
+User
+Specified
+ Density    X-vel    Y-vel    Z-vel    Pressure    Turb Model    Dummy    CS angle
+1.0 0. 0. 0. 1.0 1.0 1.0 0.0
+##################################################
+42
+Wing CS 14
+User
+Specified
+ Density    X-vel    Y-vel    Z-vel    Pressure    Turb Model    Dummy    CS angle
+1.0 0. 0. 0. 1.0 1.0 1.0 0.0
+##################################################
+43
+Wing CS 15
+User
+Specified
+ Density    X-vel    Y-vel    Z-vel    Pressure    Turb Model    Dummy    CS angle
+1.0 0. 0. 0. 1.0 1.0 1.0 0.0
+##################################################
+44
+Wing CS 16
+User
+Specified
+ Density    X-vel    Y-vel    Z-vel    Pressure    Turb Model    Dummy    CS angle
+1.0 0. 0. 0. 1.0 1.0 1.0 0.0
+##################################################
+45
+Wing CS 17
+User
+Specified
+ Density    X-vel    Y-vel    Z-vel    Pressure    Turb Model    Dummy    CS angle
+1.0 0. 0. 0. 1.0 1.0 1.0 0.0
+##################################################
+46
+Wing CS 18
+User
+Specified
+ Density    X-vel    Y-vel    Z-vel    Pressure    Turb Model    Dummy    CS angle
+1.0 0. 0. 0. 1.0 1.0 1.0 0.0
+##################################################
+47
+Wing CS 19
+User
+Specified
+ Density    X-vel    Y-vel    Z-vel    Pressure    Turb Model    Dummy    CS angle
+1.0 0. 0. 0. 1.0 1.0 1.0 0.0
+##################################################
+48
+Wing CS 20
+User
+Specified
+ Density    X-vel    Y-vel    Z-vel    Pressure    Turb Model    Dummy    CS angle
+1.0 0. 0. 0. 1.0 1.0 1.0 0.0
+##################################################

@@ -1,0 +1,60 @@
+#!/bin/bash
+
+
+# config
+#
+SCRIPT_NAME=smakeprod
+ANT_FILENAME=products-install.xml
+ANT_FILE_DIR=$IGRID_HOME/../Products/bin
+ANT_CMD="ant -f $ANT_FILENAME"
+
+
+# vars
+#
+ANT_FILE=$ANT_FILE_DIR/$ANT_FILENAME
+
+
+# help menu
+#
+if [ "$#" -gt 0 ]; then
+	if [ "$1" == "-h" ]; then
+		printf "\nName:\t\t$SCRIPT_NAME\n\n"
+		printf "Description:\tCalls $ANT_FILE\n"
+		printf "\t\twhich deletes Products classes and JAR files and\n"
+		printf "\t\tcompiles.\n\n"
+		printf "Usage:\t\t$SCRIPT_NAME [-options]\n\n"
+		printf "Options:\n\n"
+		printf " -h\t\tprint this message and exit\n\n"
+		printf " -w\t\tstart process in new window\n\n"
+		exit 0;
+	fi
+fi
+
+
+# check ant file
+#
+if [ ! -r $ANT_FILE ]; then
+    echo "***error: $ANT_FILE not readable."
+    exit 1;
+fi
+
+
+# run ant file
+#
+THIS_DIR=${PWD}
+PID_FILE=`basename $0`
+PID_DIR=`dirname $0`
+PID_FILE="$PID_DIR/.$PID_FILE.pid"
+
+cd $ANT_FILE_DIR
+if [ "$1" == "-w" ]; then
+	#SBIN_HOME=`dirname \`readlink -f $0\``
+	#SBIN_HOME=`dirname $0`
+	SBIN_HOME=$IGRID_HOME/sbin
+    $SBIN_HOME/rantback "$PID_FILE" "$ANT_CMD" "$ANT_FILENAME"
+else
+    echo $$ > $PID_FILE
+    $ANT_CMD
+fi
+cd $THIS_DIR
+

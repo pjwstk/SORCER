@@ -1,0 +1,1 @@
+java -jar -Djava.security.policy=./policy/policy.all -Djava.rmi.server.codebase=http://${JINI_HTTP_HOST}:${JINI_HTTP_PORT}/sdm-dl.jar ./lib/arithmetic.jar

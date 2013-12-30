@@ -1,0 +1,51 @@
+   To add a main service UI or a group of service UIs programatically,
+   one or both methodes defined in the sorcer.base.Provider should be implemented:
+   
+   /**
+     * Returns a UI descriptor for this provider to be 
+     * included in a UI descriptor for your provider. 
+     * 
+     * @return a UIDescriptor for your service.
+     * @throws RemoteException
+     */
+    public UIDescriptor getMainUIDescriptor() throws RemoteException;
+
+    /**
+	 * Returns an array of additional service UI descriptors to be included 
+	 * in a Jini service item that is registerd with lookup services.
+	 * 
+	 * @return an array of service UI descriptors
+	 */public UIDescriptor[] getServiceUIEntries() throws RemoteException;
+		 
+		 
+Alternatively you can add a service UI buy configuring your SORCER provider 
+starter script by adding to codbase and classpath your jars as follows:
+
+private static codebase = ConfigUtil.concat(
+	new Object[] {"http://", ConfigUtil.getHostName(), 
+		":9000/lib/myprovider-dl.jar"," ",
+		"http://", ConfigUtil.getHostName(), ":9000/myprovider-ui.jar"});
+
+private static classpath = ConfigUtil.concat(new Object[] {
+	"lib/myprovider.jar",File.pathSeparator,"myprovider-ui.jar"});
+
+Then in the service config file you need to the following:
+
+import MyProviderUI;
+
+initialLookupAttributes=new Entry[]{
+	new Name("MyProviderName"), MyProviderUI.getUIDescriptor()};
+
+Please note that in the configuration approach you need to return a UIDesctiptor
+by your class method (getUIDescriptor) in the UI component.
+
+
+You can add icon to your provider by adding sorcer.jini.lookup.entry.IconProvider 
+to the initialLookupAttributes; as follows:
+
+import MyProviderUI;
+import sorcer.jini.lookup.entry.IconProvider;
+
+initialLookupAttributes=new Entry[]{
+	new Name("MyProviderName"), MyProviderUI.getUIDescriptor(),
+	new IconProvider(iconFilename)};

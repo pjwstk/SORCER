@@ -1,0 +1,38 @@
+#!/bin/ksh
+#
+# Build the SORCER environment
+# Mike Sobolewski, sobol@crd.ge.com
+#
+#
+# Create required directories and links
+fipsetup
+
+# Build GApp
+cd ${SORCER_HOME}
+cd ../jgapp/src/jgapp
+make install
+echo ### SORCER GApp BUILT
+
+#build sorcer dm
+cd ${SORCER_HOME}
+cd ../sorcerdm/src/sorcerdm/lnch
+make install
+
+
+# Build the SORCER environment
+cd ${SORCER_HOME}/src/sorcer
+make env
+echo ### SORCER Environmet BUILT
+make providers
+echo ### SORCER Providers BUILT
+make requestors
+echo ### SORCER Requestors BUILT
+
+# Configure the SORCER environment
+cd ${SORCER_HOME}/conf
+setup
+echo ### SORCER environmet set up
+
+
+
+

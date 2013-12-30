@@ -1,0 +1,63 @@
+<?xml version='1.0' encoding='ISO-8859-1' standalone='yes'?>
+
+<project name="RosenSuzuki demo" default="all" basedir=".">
+	<!-- Import common buildfile. Leave this alone -->
+		<import file="../../common-build.xml" />
+	
+	<target name="all" depends="prepare">
+		<property name="target" value="all" />
+		<ant target="doIt" antfile="rs-all-build.xml" />
+	</target>
+
+	<target name="doIt">
+		<!-- Rosen-Suzuki Services -->
+		<!-- Conmin Optimizer -->
+		<antcall target="doOne">
+			<param name="dir" location="${iGrid.home}/modules/engineering/optimization/conmin/provider" />
+			<param name="antfile" value="conmin-prv-build.xml" />
+		</antcall>
+		<!-- model -->
+		<antcall target="doOne">
+			<param name="dir" location="../ex8" />
+			<param name="antfile" value="rs-model-build.xml" />
+		</antcall>
+		<!-- optimizer -->
+		<antcall target="doOne">
+			<param name="dir" location="../ex9" />
+			<param name="antfile" value="rs-opti-build.xml" />
+		</antcall>
+		<!-- explorer -->
+		<antcall target="doOne">
+			<param name="dir" location="." />
+			<param name="antfile" value="rs-explorer-build.xml" />
+		</antcall>
+	</target>
+
+	<target name="doOne">
+		<condition property="whichone" value="doWith">
+			<isset property="target" />
+		</condition>
+		<condition property="whichone" value="doWithOut">
+			<not>
+				<isset property="target" />
+			</not>
+		</condition>
+		<ant target="${whichone}" antfile="rs-all-build.xml" />
+	</target>
+
+	<target name="doWith">
+		<ant dir="${dir}" antfile="${antfile}" target="${target}" inheritAll="true" />
+	</target>
+
+	<target name="doWithOut">
+		<ant dir="${dir}" antfile="${antfile}" inheritAll="true" />
+	</target>
+
+	<target name="prepare">
+		<mkdir dir="logs" />
+		<mkdir dir="configs" />
+		<mkdir dir="policy" />
+		<mkdir dir="docs" />
+	</target>
+
+</project>

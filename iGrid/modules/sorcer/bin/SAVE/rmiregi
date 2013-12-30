@@ -1,0 +1,48 @@
+#!/bin/ksh
+#
+# Startup script for the SORCER RMI registry
+# Mike Sobolewski, sobol@crd.ge.com
+#
+# pidfile: ${SORCER_HOME}/bin/run/rmiregistry.pid
+# config: SORCER_RMI_HOST and SORCER_RMI_PORT
+
+# Source function library.
+. ${SORCER_HOME}/bin/functions
+
+# See how we were called.
+case "$1" in
+  start)
+	if [ -f ${SORCER_HOME}/bin/run/rmiregi.pid ] ; then
+	echo RMI Registry at $SORCER_RMI_HOST:$SORCER_RMI_PORT is already runnig
+	return 1
+	fi
+	
+	unset CLASSPATH
+	if [ -f ${JAVA_HOME}/lib/tools.jar ] ; then
+	    # We are probably in a JDK1.2 environment
+	    CLASSPATH=${CLASSPATH}:${JAVA_HOME}/lib/tools.jar
+	fi
+
+	#export CLASSPATH=${CLASSPATH}:${JAVA_HOME}/lib/tools.jar:$JINI_HOME/lib/jini-core.jar
+
+	echo "Starting rmi registry: ${SORCER_RMI_HOST}:${SORCER_RMI_PORT}"
+	echo CLASSPATH $CLASSPATH
+	rmiregistry ${SORCER_RMI_PORT} &
+	echo $! >> ${SORCER_HOME}/bin/run/rmiregi.pid
+	echo
+	;;
+  stop)
+	echo "Shutting down rmi registry: "
+	killproc rmiregi
+	echo
+	;;
+  restart)
+	$0 stop
+	$0 start
+	;;
+  *)
+	echo "Usage: $0 {start|stop|restart}"
+	exit 1
+esac
+
+exit 0

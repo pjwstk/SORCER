@@ -1,0 +1,8 @@
+import sorcer.arithmetic.provider.AdderImpl;
+
+o1 = instance(sig(null, AdderImpl.class));
+println 'o1=' + o1
+o2 = newInstance(sig(null, AdderImpl.class));
+println 'o2=' + o2
+o3 = classInstance(sig(null, AdderImpl.class));
+println 'o3=' + o3	

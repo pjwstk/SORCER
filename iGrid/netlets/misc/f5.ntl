@@ -1,0 +1,14 @@
+#!/usr/bin/env nsh -f
+
+import sorcer.arithmetic.provider.Adder;
+import sorcer.service.Strategy.Monitor
+import sorcer.service.Strategy.Wait
+
+task("f5",
+	sig("add", Adder.class),
+	context("add", 
+		input("arg/x1", 20.0d),
+		input("arg/x2", 80.0d), 
+		output("result/y")),
+	strategy(Monitor.NO, Wait.YES));
+				

@@ -1,0 +1,5 @@
+Manifest-Version: 1.0
+Main-Class: sorcer.core.provider.SorcerJoiner
+Class-path: jsk-platform.jar serviceui.jar
+Sorcer-Version: @SORCER_VERSION@
+Sorcer-Build: @SORCER_BUILD@

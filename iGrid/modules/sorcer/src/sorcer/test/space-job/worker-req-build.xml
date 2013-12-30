@@ -1,0 +1,120 @@
+<?xml version='1.0' encoding='ISO-8859-1' standalone='yes'?>
+<!-- 
+ * Make sure the following variables are changed to reflect your environment:
+ *    IGRID_HOME        	iGrid location
+ *	  IGRID_WEBSTER 		The class server (webster) 
+ *	  IGRID_WEBSTER_PORT 	The class server (webster) port
+ *    JAVA_HOME         	JDK Location
+ Please see also the modules/common-build.xml for classpaths, definitions and targets
+-->
+<project name="worker requestor" default="all" basedir=".">
+	<property name="module.name" value="worker-req" />
+	<property name="module.run.dir" value="space" />
+	<!-- set global properties -->
+	<import file="../../../../../common-build.xml" />
+	<property name="src" value="./src" />
+	<property name="preferred_list" value="configs/req-preferred.list" />
+
+	<!-- The sources to compile -->
+	<patternset id="ant.java">
+		<include name="sorcer/space/requestor/**/*.java" />
+		<exclude name="**/SAVE/*.java" />
+		<exclude name="**/BAK/*.java" />
+	</patternset>
+
+	<patternset id="ant.classes">
+		<include name="sorcer/space/requestor/**/*.class" />
+	</patternset>
+
+	<path id="project.classpath">
+		<pathelement location="${classes}" />
+		<pathelement location="${lib}/jgapp.jar" />
+		<pathelement location="${lib}/sorcer.jar" />
+		<path refid="jini.path" />
+		<path refid="rio.path" />
+	</path>
+
+	<path id="javadocs.classpath">
+		<pathelement location="${common.lib}/rio/serviceui-1.1a.jar" />
+		<pathelement location="${common.lib}rio//ant-ext.jar" />
+		<pathelement location="${ant.home}/lib/ant.jar" />
+	</path>
+
+	<target name="all" depends="prepare, jars" />
+	<target name="work-req" depends="worker-req.jar, worker-req-dl.jar" />
+	<target name="compile" depends="compileSources" />
+	<target name="jars" depends="compile, work-req, copy-run-req-files" />
+
+	<target name="docs" depends="prepare, compile">
+		<javadoc packagenames="org.jini.rio.tools.ant.*" maxmemory="100M" sourcepath="${src}" destdir="${docs}/api" Author="true" Version="true" Use="true" windowtitle="Worker Requestor" doctitle="&lt;h1&gt;Worker Requestor;/h1&gt;" bottom="&lt;i&gt;Copyright (c) 2008-2009 AFRL/WPAFB, All Rights Reserved.&lt;/i&gt;">
+			<group title="Worker Requestor" packages="sorcer.space.requestor*" />
+			<classpath refid="project.classpath" />
+		</javadoc>
+	</target>
+
+	<target name="worker-req.jar" >
+		<classdepandjar jarfile="${lib}/worker-req.jar" manifest="configs/worker-req.mf" files="true">
+			<classpath refid="project.classpath" />
+			<in name="sorcer" />
+			<in name="jgapp" />
+			<in name="net.jini" />
+			<topclass name="sorcer.space.requestor.WorkerJobRequestor" />
+			<fileset dir="${iGrid.home}/classes">
+				<include name="sorcer/util/sorcer.env" />
+				<include name="sorcer/util/data.formats" />
+			</fileset>
+		</classdepandjar>
+	</target>
+
+	<target name="worker-req-dl.jar">
+			<classdepandjar jarfile="${lib}/worker-req-dl.jar" manifest="configs/worker-req.mf" preferredlist="${preferred_list}" files="true">
+				<manifest>
+					<attribute name="Implementation-Title" value="${sorcer-title}" />
+					<attribute name="Implementation-Version" value="${sorcer-version}" />
+					<attribute name="SORCER-Version" value="${sorcer-version}" />
+					<attribute name="SORCER-Build" value="${DSTAMP}" />
+				</manifest>
+				<classpath refid="project.classpath" />
+				<in name="sorcer" />
+				<in name="jgapp" />
+				<in name="net.jini" />
+				<topclass name="sorcer.space.requestor.WorkerJobRequestor" />
+				<fileset dir="${iGrid.home}/classes">
+					<include name="sorcer/util/sorcer.env" />
+					<include name="sorcer/util/data.formats" />
+				</fileset>
+			</classdepandjar>
+		</target>
+
+	<target name="copy-run-req-files">
+		<mkdir dir="${iGrid.home}/bin/examples/${module.run.dir}/configs" />
+		<mkdir dir="${iGrid.home}/bin/examples/${module.run.dir}/bin" />
+		<mkdir dir="${iGrid.home}/bin/examples/${module.run.dir}/policy" />
+		<mkdir dir="${iGrid.home}/bin/examples/${module.run.dir}/logs" />
+		<copy todir="${iGrid.home}/bin/examples/${module.run.dir}/configs">
+			<fileset dir="configs">
+				<include name="*" />
+			</fileset>
+		</copy>
+		<copy todir="${iGrid.home}/bin/examples/${module.run.dir}/bin">
+			<fileset dir="bin">
+				<include name="*" />
+			</fileset>
+		</copy>
+		<copy todir="${iGrid.home}/bin/examples/${module.run.dir}/policy">
+			<fileset dir="policy">
+				<include name="*" />
+			</fileset>
+		</copy>
+		<chmod dir="${iGrid.home}/bin/examples/${module.run.dir}/bin" perm="755" includes="*.sh" />
+	</target>
+
+	<target name="add-link">
+		<symlink link="${lib}/common" resource="${common.lib}" failonerror="false" />
+	</target>
+
+	<target name="delete-link">
+		<symlink action="delete" link="${lib}/common" />
+	</target>
+
+</project>

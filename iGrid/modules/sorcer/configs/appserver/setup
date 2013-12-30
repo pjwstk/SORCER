@@ -1,0 +1,11 @@
+#!/bin/sh
+
+echo "Copying SORCER appserver config files...\n"
+
+set +x 
+
+export SORCER_CONF=${SORCER_HOME}/conf
+cp  ${SORCER_CONF}/appserver/server.xml ${SORCER_HOME}/appserver/conf/
+cp  ${SORCER_CONF}/appserver/web.xml ${SORCER_HOME}/appserver/webapps/sorcer/WEB-INF
+
+echo "Appserver Installing Done\n"

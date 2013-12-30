@@ -1,0 +1,21 @@
+To attach the Logman service to your provider you will need to add a few lines to your start up script. 
+I recommend copying the start up script from the jeri-logman module and modifying it for you provider.
+
+If you dont copy the start up script as a template the changes that need to be made are:
+//Since jar ingnores the classpath, The following statement should be removed 
+	<java jar="${common.lib}/start.jar" fork="yes">
+//This is what should replace it
+	<java classname="com.sun.jini.start.ServiceStarter" fork="yes">
+//Then a classpath needs to be specified, here is an example
+	<sysproperty key="java.class.path" value="${iGrid.home}/common/jini-ext.jar${path.separator}${iGrid.home}/common/start.jar${path.separator}${iGrid.home}/common/startnow.jar${path.separator}${iGrid.home}/lib/logman.jar${path.separator}${iGrid.home}/common/serviceui-1.1.jar${path.separator}${iGrid.home}/common/swingutil1.5.jar${path.separator}${iGrid.home}/common/jsk-lib.jar" />
+//Then you need to set a system property to set the logmanager
+	<sysproperty key="java.util.logging.manager" value="org.wonderly.jini2.log.JiniLogManager" />
+//The value should be replaced with the path to your configs directory
+	<sysproperty key="org.wonderly.jini.logmanager.config.file" value="${iGrid.home}/modules/examples/arithmetic/provider/jeri-logman/configs/logging.cfg" />
+
+In addition to this incax needs logman-dl.jar in its classpath. This can be done by adding it to 
+the start up script that you use to start incax.
+
+Also the logging.cfg needs to be in your providers configs folder. You can copy the logging.cfg file from the 
+jeri-logman module and modify it for your provider. This file specifies the logging profiles that will be 
+loaded when logman starts up. You can add and remove profiles once it is started.

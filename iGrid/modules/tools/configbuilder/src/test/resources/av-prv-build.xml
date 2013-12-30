@@ -1,0 +1,201 @@
+<?xml version='1.0' encoding='ISO-8859-1' standalone='yes'?>
+
+<project name="This field serves no purpose." default="all" basedir=".">
+
+	<!-- set the vars below for your specific provider 								-->
+	<!--																			-->
+	<!-- module.name: 			used to name provider-specific jar files 			-->
+	<!-- module.package.dir:	the provider package in directory representation 	-->
+	<!--						for example, the package 							-->
+	<!--						sorcer.examples.scott.provider is 					-->
+	<!-- 						sorcer/examples/scott/provider 						-->
+	<!-- module.package:		same as above with "." for "/"						-->
+	<!--																			-->
+	<!-- ***MORE CHANGES NEED TO BE MADE IN THE CODE THAT FOLLOWS, CHECK ENTIRE		-->
+	<!--	FILE CAREFULLY															-->
+	<!--																			-->
+	<!--																			-->
+	<property name="module.name" value="av" />
+	<property name="module.package.dir" value="engineering/provider/av" />
+	<property name="module.package" value="engineering.provider.av" />
+
+
+	<!-- set global properties -->
+	<property environment="env" />
+	<import file="${env.IGRID_HOME}/modules/common-build.xml" />
+
+
+    <path id="task.classpath">
+        <fileset dir="${common.lib}/groovy"/>
+        <pathelement location="../../../target/configbuilder.jar" />
+    </path>
+
+    <target name="config">
+        <configbuilder config="${basedir}/configs/startup.config"
+                       starter="${basedir}/bin/av-prv-run.xml"/>
+        <!--
+                       perNode="1"/>-->
+    </target>
+
+	<!-- sources directory -->
+	<property name="src" value="./src" />
+
+	<!-- resources directory -->
+	<property name="resources" value="./resources" />
+
+	<!-- sources to compile -->
+	<patternset id="ant.java">
+		<include name="**/${module.package.dir}/*.java" />
+		<exclude name="**/SAVE/*.java" />
+		<exclude name="**/BAK/*.java" />
+	</patternset>
+
+	<patternset id="ant.classes">
+		<include name="**/${module.package.dir}/*.class" />
+	</patternset>
+
+	<patternset id="ant.jars">
+		<include name="${module.name}-prv.jar" />
+		<include name="${module.name}-prv-dl.jar" />
+	</patternset>
+
+	<path id="project.classpath">
+		<pathelement location="${classes}" />
+		<pathelement location="${sorcer.lib}\sorcer-prv.jar" />
+		<pathelement location="${common.servlet.api}" />
+		<pathelement location="${common.lib}\jna.jar" />
+		<pathelement location="${common.lib}\jfreechart/jcommon-1.0.17.jar" />
+		<pathelement location="${common.lib}\jfreechart/jfreechart-1.0.14.jar" />
+		<path refid="jaxp.path" />
+		<path refid="jini.path" />
+		<path refid="rio.path" />
+		<path refid="jep.path" />
+	</path>
+
+	<!-- icon -->
+	<fileset dir="${resources}" id="icon">
+		<include name="afrl-shield.jpg" />
+	</fileset>
+
+	<target name="compile" depends="prepare, copy-run-prv-files, compileSources" />
+	<target name="jars" depends="compile, provider, copy-run-prv-files" />
+	<target name="provider" depends="provider_jar, provider_dl_jar" />
+	<target name="all" depends="prepare, compile, jars, copy-run-prv-files" />
+
+	<target name="provider_jar">
+		<classdepandjar jarfile="${eng.lib}/${module.name}-prv.jar" files="true" debug="false">
+			<classpath refid="project.classpath" />
+			<in name="engineering" />
+			<in name="products" />
+			<in name="sorcer" />
+			<in name="com" />
+			<out name="sorcer.util.bdb" />
+			<out name="engineering.core" />
+			<out name="com.sleepycat"/>
+			<skip name="sorcer.tools.webster.InternalWebster"/>
+			<topclass name="${module.package}.AirVehicleProviderImpl" />
+			<!-- <skip name="engineering.provider.weights.RaymerWeights"/>
+			<topclass name="engineering.provider.weights.RaymerWeights" />
+			<topclass name="engineering.provider.tornado.TornadoProviderImpl" />
+			<topclass name="engineering.provider.tornado.MstcPerfProviderImpl" />
+			<topclass name="engineering.provider.tornado.MstcGeomProviderImpl" />
+			<topclass name="engineering.provider.wingdes.WingDesProviderImpl" />
+			<topclass name="engineering.provider.weights.WeightsProviderImpl" />
+			<topclass name="engineering.provider.weights.RaymerWeightsInterface" />
+			<topclass name="engineering.provider.weights.WeightsRemoteInterface" />-->
+			<topclass name="sorcer.jini.lookup.entry.SorcerServiceInfo" />
+			<topclass name="net.jini.lookup.entry.ServiceInfo" />
+			<topclass name="net.jini.admin.Administrable" />
+			<fileset dir="${iGrid.home}/configs">
+				<filename name="sorcer/util/sorcer.env" />
+				<filename name="sorcer/util/data.formats" />
+			</fileset>
+		</classdepandjar>
+	</target>
+
+	<target name="provider_dl_jar">
+		<classdepandjar jarfile="${eng-dl.lib}/${module.name}-prv-dl.jar" files="true" debug="false">
+			<classpath refid="project.classpath" />
+			<in name="engineering" />
+			<out name="engineering.core.AirfoilGeneratorInterface" />
+			<in name="products" />
+			<in name="sorcer" />
+			<in name="com" />
+			<out name="sorcer.util.bdb" />
+			<out name="com.sleepycat"/>
+			<skip name="sorcer.tools.webster.InternalWebster"/>
+			<topclass name="${module.package}.AirVehicleProviderImpl" />
+			<!-- <skip name="engineering.provider.weights.RaymerWeights"/>
+			 <topclass name="engineering.provider.weights.RaymerWeights" />
+
+			<topclass name="${module.package}.AirVehicleRemoteInterface" />
+			<topclass name="engineering.provider.weights.WeightsProviderImpl" />
+			<topclass name="engineering.provider.weights.WeightsRemoteInterface" />
+			<topclass name="engineering.provider.weights.RaymerWeights" />
+			<topclass name="engineering.provider.weights.RaymerWeightsInterface" />
+			<topclass name="engineering.provider.mstcgeom.MstcGeomRemoteInterface" />
+			<topclass name="engineering.provider.mstcgeom.MstcGeomInputGeneratorInterface" />
+			<topclass name="engineering.provider.mstcperf.MstcPerfRemoteInterface" />
+			<topclass name="engineering.provider.mstcperf.OptimalRangeAndAltitudeInterface" />
+			<topclass name="engineering.provider.mstcperf.OptimalRangeAndAltitude" />
+			<topclass name="engineering.provider.tornado.TornadoRemoteInterface" />
+			<topclass name="engineering.provider.tornado.TornadoProviderImpl" />
+			<topclass name="engineering.provider.aero2s.Aero2sRemoteInterface" />
+			<topclass name="engineering.provider.astros.AstrosRemoteInterface" />
+			<topclass name="engineering.provider.awave.AwaveRemoteInterface" />
+			<topclass name="engineering.provider.friction.FrictionRemoteInterface" />
+			<topclass name="engineering.provider.nastran.NastranRemoteInterface" />
+			<topclass name="engineering.provider.nastran.NastranProviderImpl" />
+			<topclass name="engineering.provider.self.SelfRemoteInterface" />
+			<topclass name="engineering.provider.wingdes.WingDesRemoteInterface" />
+			<topclass name="engineering.provider.wingdes.WingDesProviderImpl" /> -->
+			<topclass name="sorcer.jini.lookup.entry.SorcerServiceInfo" />
+			<topclass name="net.jini.lookup.entry.ServiceInfo" />
+			<topclass name="net.jini.admin.Administrable" />
+			<topclass name="sorcer.core.AdministratableProvider" />
+			<topclass name="com.artima.lookup.util.ConsistentSet" />
+			<fileset refid="icon" />
+		</classdepandjar>
+	</target>
+
+	<target name="copy-run-prv-files">
+		<mkdir dir="${iGrid.home}/bin/${module.package.dir}/configs" />
+		<mkdir dir="${iGrid.home}/bin/${module.package.dir}/bin" />
+		<mkdir dir="${iGrid.home}/bin/${module.package.dir}/policy" />
+		<mkdir dir="${iGrid.home}/bin/${module.package.dir}/logs" />
+		<mkdir dir="${iGrid.home}/classes/${module.package.dir}/policy" />
+
+		<copy todir="${iGrid.home}/bin/${module.package.dir}/configs">
+			<fileset dir="configs">
+				<include name="*" />
+			</fileset>
+		</copy>
+
+		<copy todir="${iGrid.home}/bin/${module.package.dir}/bin">
+			<fileset dir="bin">
+				<include name="*" />
+			</fileset>
+		</copy>
+
+		<copy todir="${iGrid.home}/bin/${module.package.dir}/policy">
+			<fileset dir="policy">
+				<include name="*" />
+			</fileset>
+		</copy>
+		<copy todir="${iGrid.home}/classes/${module.package.dir}/policy">
+			<fileset dir="policy">
+				<include name="*" />
+			</fileset>
+		</copy>
+		<copy todir="${iGrid.home}/classes/${module.package.dir}">
+			<fileset dir="configs">
+				<include name="provider.properties" />
+			</fileset>
+		</copy>
+
+
+		<chmod dir="${iGrid.home}/classes/${module.package.dir}" perm="755" includes="*.prv" />
+		<chmod dir="${iGrid.home}/bin/${module.package.dir}/bin" perm="755" includes="*.sh" />
+	</target>
+
+</project>

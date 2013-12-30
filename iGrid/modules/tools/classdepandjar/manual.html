@@ -1,0 +1,94 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="949.54">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 13.0px 0.0px; line-height: 16.0px; font: 14.0px Arial; color: #222222}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; line-height: 16.0px; font: 12.0px Lucida Grande; color: #333333}
+    p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; line-height: 16.0px; font: 12.0px Arial; color: #333333}
+    p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; line-height: 16.0px; font: 12.0px Arial; color: #333333; min-height: 14.0px}
+    p.p5 {margin: 0.0px 0.0px 8.0px 0.0px; line-height: 16.0px; font: 12.0px Arial; color: #333333; min-height: 14.0px}
+    p.p6 {margin: 0.0px 0.0px 8.0px 0.0px; line-height: 16.0px; font: 12.0px Arial; color: #333333}
+    p.p7 {margin: 0.0px 0.0px 0.0px 0.0px; line-height: 16.0px; font: 12.0px Andale Mono; color: #333333}
+    p.p8 {margin: 0.0px 0.0px 0.0px 0.0px; line-height: 16.0px; font: 12.0px Arial; color: #256595}
+    span.s1 {text-decoration: underline ; color: #256595}
+    span.s2 {font: 12.0px Andale Mono}
+    span.s3 {font: 12.0px Lucida Grande}
+    span.s4 {text-decoration: underline}
+    ul.ul1 {list-style-type: disc}
+  </style>
+</head>
+<body>
+<p class="p1"><b>Processing Options</b></p>
+<p class="p2">The root classes of the dependency graph can be specified by any combination of individual classes and directories of classes. Each of these options can be used any number of times, and are illustrated in the <a href="https://classdepandjar.dev.java.net/docs/usage.html#examples"><span class="s1">Examples</span></a> section of this page.</p>
+<p class="p3">In general, you only need to specify concrete classes as roots, not interface types. When analyzing classes for the class path of an application, you typically need to include the top-level class (the one with the <span class="s2">main</span> method).</p>
+<p class="p4"><br></p>
+<p class="p2"><b>class</b></p>
+<p class="p2">This option specifies the fully qualified name of an individual class to include as a root of the dependency graph. This option can be specified zero or more times. Each class you specify with this option needs to be in a package that is defined to be "inside" the graph (as described further below).</p>
+<p class="p5"><br></p>
+<p class="p2"><b>directory</b></p>
+<p class="p2">This option specifies the root directory of a tree of compiled class files, all of which are to be included as roots of the dependency graph. This option can be specified zero or more times. The directory must be one of the directories specified in <b>input_classpath</b>, or a subdirectory of one, and must contain at least one filename separator character. Each class in the tree needs to be in a package that is defined to be "inside" the graph (as described further below).</p>
+<p class="p3">The <span class="s2">&lt;prune&gt;</span> option can be used to exclude particular subtrees from the set of roots.</p>
+<p class="p4"><br></p>
+<p class="p2"><b>&lt;</b><span class="s2">prune name=</span><b>"package-prefix"&gt;</b></p>
+<p class="p2">Specifies a package namespace to exclude when selecting roots from directory trees. Within the directory trees, any classes that are in the given package or a subpackage of it are not treated as roots. Note that this option has no effect on whether the classes in question end up "inside" or "outside" the dependency graph (as defined further below); it simply controls their use as roots. This option can be specified zero or more times. Note that the argument to <span class="s2">&lt;prune&gt;</span> is a package namespace (delimited by "."), not a directory.</p>
+<p class="p6">The <span class="s2">&lt;skip&gt;</span> option (described further below) can be used to exclude specific classes from the set of roots.</p>
+<p class="p6">Starting with the root classes, a dependency graph is constructed by examining the compiled class file for a class, finding all of the classes it references, and then in turn examining those classes. The extent of the graph is determined by which packages are defined to be "inside" the graph and which are defined to be "outside" the graph. If a referenced class is in a package that is defined to be outside the graph, that class is not included in the graph, and none of classes that it references are examined. All of the root classes must be in packages that are defined to be "inside" the graph.</p>
+<p class="p6">The inside and outside packages are specified by using the following options. Each of these options may be specified zero or more times. Some variations are illustrated in the <a href="https://classdepandjar.dev.java.net/docs/usage.html#examples"><span class="s1">Examples</span></a> section of this page.</p>
+<p class="p5"><br></p>
+<p class="p2"><b>&lt;</b><span class="s2">in name=</span><b>"package-prefix"&gt;</b></p>
+<p class="p2">Specifies a namespace of "inside" packages. Any classes in this package or a subpackage of it are included in the dependency graph (and hence are to be included in your JAR file), unless they are explicitly excluded using <span class="s2">&lt;out&gt;</span> or <span class="s2">&lt;skip&gt;</span> options. This option can be specified zero or more times. If no <span class="s2">&lt;in&gt;</span> options are specified, the default is that all packages are considered to be inside packages. Note that the argument to <span class="s2">&lt;in&gt;</span> is a namespace, so none of its subpackages need to be specified as an argument to <span class="s2">&lt;in&gt;</span>.</p>
+<p class="p3">If you use this option, you will likely need to use it multiple times. For example, if your application classes are in the <span class="s2">com.corp.foo</span> namespace, and you also use some classes in the <span class="s2">com.sun.jini</span> and <span class="s2">net.jini</span> namespaces, then you might specify:</p>
+<p class="p7">&lt;in name="com.corp.foo" /&gt;<span class="Apple-converted-space"> </span></p>
+<p class="p7">&lt;in name="com.sun.jini" /&gt;</p>
+<p class="p7">&lt;in name="net.jini" /&gt;</p>
+<p class="p5"><br></p>
+<p class="p2"><b>&lt;</b><span class="s2">out name=</span><b>"package-prefix"&gt;</b></p>
+<p class="p2">Specifies a namespace of "outside" packages. Any classes in this package or a subpackage of it are excluded from the dependency graph (and hence are to be excluded from your JAR file). This option can be specified zero or more times. If you specify <span class="s2">&lt;in&gt;</span> options, then each <span class="s2">&lt;out&gt;</span> namespace should be a subspace of some <span class="s2">&lt;in&gt;</span> namespace. Note that the argument to <span class="s2">&lt;out&gt;</span> is a namespace, so none of its subpackages need to be specified as an argument to <span class="s2">&lt;out&gt;</span>.</p>
+<p class="p3">If you use this option, you will likely need to use it multiple times. For example, if you do not specify any <span class="s2">&lt;in&gt;</span> options, then all packages are considered inside the graph, including packages defined in the Java 2 SDK that you typically want to exclude, so you might exclude them by specifying:</p>
+<p class="p7">&lt;out name="java" /&gt;</p>
+<p class="p7">&lt;out name="javax" /&gt;</p>
+<p class="p2">As another example, if you have specified <span class="s2">&lt;in name="com.corp.foo" /&gt;</span> but you don't want to include any of the classes in the <span class="s2">com.corp.foo.test</span> or <span class="s2">com.corp.foo.qa</span> namespaces in the dependency graph, then you would specify:</p>
+<p class="p7">&lt;out name="com.corp.foo.test" /&gt;</p>
+<p class="p7">&lt;out name="com.corp.foo.qa" /&gt;</p>
+<p class="p5"><br></p>
+<p class="p2"><b>&lt;</b><span class="s2">skip</span><b> name="class" /&gt;</b></p>
+<p class="p2">Specifies the fully qualified name of a specific class to exclude from the dependency graph. This option allows an individual class to be considered "outside" without requiring the entire package it is defined in to be considered outside. This option can be specified zero or more times.</p>
+<p class="p5"><br></p>
+<p class="p7"><span class="s3"><b>&lt;</b></span>outer<span class="s3"><b> /&gt;</b></span></p>
+<p class="p2">By default, if a static nested class is included in the dependency graph, all references from that static nested class to its immediate lexically enclosing class are ignored, to avoid inadvertent inclusion of the enclosing class. (The default is chosen this way because the compiled class file of a static nested class always contains a reference to the immediate lexically enclosing class.) This option causes all such references to be considered rather than ignored. Note that this option is needed very infrequently.</p>
+<p class="p1"><b>Output Options and Arguments</b></p>
+<p class="p2">The following options and arguments determine the content and format of the output produced by this tool. These options do not affect the dependency graph computation, only the information displayed in the output as a result of the computation. Most of these options may be specified multiple times. Some variations are illustrated in the <a href="https://classdepandjar.dev.java.net/docs/usage.html#examples"><span class="s1">Examples</span></a> section of this page.</p>
+<p class="p7"><span class="s3"><b>&lt;</b></span>edges<span class="s3"><b> /&gt;</b></span></p>
+<p class="p2">By default, the classes which are included in the dependency graph are displayed in the output. This option specifies that instead, the classes which are excluded from the dependency graph, but which are directly referenced by classes in the dependency graph, should be displayed in the output. These classes form the outside "edges" of the dependency graph.</p>
+<p class="p3">For example, you might exclude classes from the Java 2 SDK from the dependency graph because you don't want to include them in your JAR file, but you might be interested in knowing which classes from the Java 2 SDK are referenced directly by the classes in your JAR file. The &lt;<span class="s2">edges</span> /&gt; option can be used to display this information.</p>
+<p class="p4"><br></p>
+<p class="p2"><b>&lt;</b><span class="s2">show</span><b> name="package-prefix" /&gt;</b></p>
+<p class="p2">Displays the classes that are in the specified package or a subpackage of it. This option can be specified zero or more times. If no <span class="s2">&lt;show&gt;</span> options are specified, the default is that all classes in the dependency graph are displayed (or all edge classes, if <span class="s2">&lt;edges&gt;</span> is specified). Note that the argument to <span class="s2">&lt;show&gt;</span> is a namespace, so none of its subpackages need to be specified as an argument to <span class="s2">&lt;show&gt;</span>.</p>
+<p class="p3">For example, to determine which classes from the Java 2 SDK your application depends on, you might not specify any <span class="s2">&lt;in&gt;</span> options, but limit the output by specifying:</p>
+<p class="p7">&lt;show name="java" /&gt;</p>
+<p class="p7">&lt;show name="javax" /&gt;</p>
+<p class="p5"><br></p>
+<p class="p2"><b>&lt;</b><span class="s2">hide</span><b> name="package-prefix" /&gt;</b></p>
+<p class="p2">Specifies a namespace of packages which should not be displayed. Any classes in this package or a subpackage of it are excluded from the output. This option can be specified zero or more times. If you specify <span class="s2">&lt;show&gt;</span> options, then each <span class="s2">&lt;hide&gt;</span> namespace should be a subspace of some <span class="s2">&lt;show&gt;</span> namespace. Note that the argument to <span class="s2">&lt;hide&gt;</span> is a namespace, so none of its subpackages need to be specified as an argument to <span class="s2">&lt;hide&gt;</span>.</p>
+<p class="p3">For example, to determine which non-core classes from the <span class="s2">net.jini</span> namespace you use, you might specify:</p>
+<p class="p7">&lt;show name="net.jini" /&gt;</p>
+<p class="p7">&lt;hide name="net.jini.core" /&gt;</p>
+<p class="p5"><br></p>
+<p class="p7">&lt;files /&gt;</p>
+<p class="p2">By default, fully qualified class names are displayed, with package names delimited by ".". This option causes the output to be in filename format instead, with package names delimited by filename separators and with ".class" appended. For example, using this option on Microsoft Windows platforms would produce output in the form of <span class="s2">com\corp\foo\Bar.class</span> instead of <span class="s2">com.corp.foo.Bar</span>. This option should be used to generate output suitable as input to the <span class="s2">jar</span> tool.</p>
+<p class="p3">For more information on the <span class="s2">jar</span> tool, see:</p>
+<ul class="ul1">
+  <li style="margin: 0.0px 0.0px 0.0px 0.0px; line-height: 16.0px; font: 12.0px Arial; color: #256595"><a href="http://java.sun.com/j2se/1.4/docs/tooldocs/solaris/jar.html"><span class="s4">http://java.sun.com/j2se/1.4/docs/tooldocs/solaris/jar.html</span></a></li>
+  <li style="margin: 0.0px 0.0px 0.0px 0.0px; line-height: 16.0px; font: 12.0px Arial; color: #256595"><a href="http://java.sun.com/j2se/1.4/docs/tooldocs/windows/jar.html"><span class="s4">http://java.sun.com/j2se/1.4/docs/tooldocs/windows/jar.html</span></a></li>
+  <li style="margin: 0.0px 0.0px 0.0px 0.0px; line-height: 16.0px; font: 12.0px Arial; color: #256595"><a href="http://java.sun.com/j2se/1.4/docs/guide/jar/jar.html"><span class="s4">http://java.sun.com/j2se/1.4/docs/guide/jar/jar.html</span></a></li>
+</ul>
+<p class="p5"><br></p>
+<p class="p2"><b>&lt;</b><span class="s2">tell</span><b> name="class"&gt;</b></p>
+<p class="p2">Specifies the fully qualified name of a class for which dependency information is desired. This option causes the tool to display information about every class in the dependency graph that references the specified class. This information is sent to the error stream of the tool, not to the normal output stream. This option can be specified zero or more times. If this option is used, all other output options are ignored, and the normal class output is not produced. This option is useful for debugging.</p>
+</body>
+</html>

@@ -1,0 +1,14 @@
+#!/bin/ksh
+clear
+
+if [ "$JAVACMD" = "" ] ; then 
+   # it may be defined in env - including flags!!
+   JAVACMD=${JAVA_HOME}/bin/java
+fi
+
+EXEC_COMMAND="sorcer.security.util.HTTPSServer"
+
+$JAVACMD -Djavax.net.ssl.keyStore="${IGRID_HOME}/keystore/portalKeyStore" \
+	-Djavax.net.ssl.keyStorePassword="ttu.sorcer" \
+	${EXEC_COMMAND} $*
+

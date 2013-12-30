@@ -1,0 +1,62 @@
+# FIPER Server Default Properties
+# Mike Sobolewski, sobol@crd.ge.com, (518) 387-5150
+
+applicationServer.clientProperties=/home/sobol/www/projects/fiper/jfiper/fiper/lnch/fiper.def
+
+# when  isJdbcPoolEnabled = false
+applicationServer.dbDriver=oracle.jdbc.driver.OracleDriver
+applicationServer.dbURL=jdbc:oracle:thin:@leonardo.crd.ge.com:1521:QAFIPER
+applicationServer.accessProfile.inFile=false
+
+# when  isJdbcPoolEnabled = true	
+applicationServer.driver.fiper=oracle.jdbc.driver.OracleDriver
+applicationServer.url.fiper=jdbc:oracle:thin:@leonardo.crd.ge.com:1521:QAFIPER
+applicationServer.poolSize.fiper=5
+
+applicationServer.driver.system=oracle.jdbc.driver.OracleDriver
+applicationServer.url.system=jdbc:oracle:thin:@leonardo.crd.ge.com:1521:QAFIPER
+applicationServer.poolSize.system=5
+
+applicationServer.logFile=as.log
+applicationServer.isLogged=true
+applicationServer.noPassword=false
+applicationServer.isExtended=false
+applicationServer.isMonitored=false
+
+# Debugging setup
+applicationServer.isDebugged=true
+applicationServer.debugKey=dispatch
+applicationServer.isAsserted=true
+applicationServer.isOutputLogged=true
+applicationServer.outputLog=fiperlog.txt
+
+applicationServlet.codebase=../jfiper
+applicationServlet.templateDir=/projects/fiper/web/
+applicationServlet.baseDir=/projects/fiper
+applicationServlet.dataDir=data
+applicationServlet.dataURL=http://fiper.crd.ge.com/fiper/data/
+
+protocolConnection.isExtended=true
+protocolConnection.isJdbcPoolEnabled=true
+protocolConnection.defaultPoolName=fiper
+
+notifier.isEnabled=false
+notifier.isMonitored=false
+notifier.waitingTime=10
+notifier.monitorSize=20
+
+
+aclManager.isExtended=false
+applicationServer.systemAdmin=sobol@crd.ge.com
+
+#upload directory
+dir1=repository1
+dir=repository2
+
+
+
+
+
+
+
+

@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+<!-- 
+Replace "provider.bean" with your provider name and specify property value for "provider.class."
+Also you might need to adjust the classpath (provider.classpath) for your provider 
+-->
+
+<project name="Rosen-Suzuki Optimizer" default="boot.provider" basedir=".">
+
+	<!-- system environment variables -->
+	<property environment="env" />
+	<import file="${env.IGRID_HOME}/modules/common-run.xml" />
+
+	<echo message="IGRID_HOME: ${iGrid.home}" />
+
+	<!-- set property values here -->
+	<property name="provider.name" value="crs-opti" />
+	<property name="provider.class" value="sorcer.core.provider.ServiceProvider" />
+	<property name="webster" value="${provider.webster.url}" />
+
+	<!-- provider classpath -->
+	<path id="project.classpath">
+		<pathelement location="${eng.lib}/conminoptimization.jar" />
+		<pathelement location="${sorcer.lib}/sorcer-modeling-lib.jar" />
+	</path>
+
+	<!-- boot provider -->
+	<target name="boot.provider" depends="set_native_lib">
+		<echo message=" " />
+		<echo message="native_lib = ${native_lib}" />
+		<echo message=" " />
+		<java jar="${iGrid.home}/lib/boot.jar" fork="yes">
+			<sysproperty key="java.util.logging.config.file" value="${iGrid.home}/configs/sorcer.logging" />
+			<sysproperty key="java.security.policy" value="../policy/${provider.name}-prv.policy" />
+			<sysproperty key="sorcer.provider.codebase" value="sorcer-prv-dl.jar jsk-dl.jar sorcer-modeling-dl.jar conminoptimization-dl.jar" />
+			<sysproperty key="sorcer.provider.classpath" value="${toString:project.classpath}" />
+			<sysproperty key="sorcer.provider.impl" value="${provider.class}" />
+			<sysproperty key="sorcer.provider.config" value="../configs/${provider.name}-prv.config" />
+			<sysproperty key="iGrid.home" value="${iGrid.home}" />
+			<arg value="${iGrid.home}/configs/boot-prv.config" />
+			<!-- add provider complemntary properties below -->
+			<sysproperty key="sorcer.env.file" value="${iGrid.home}/configs/sorcer.env" />
+			<sysproperty key="optimizer.data.dir" value="${iGrid.home}/modules/engineering/optimization/conmin/data/test" />
+			<sysproperty key="jna.library.path" value="${native_lib}" />
+		</java>
+		<echo message="native_lib = ${native_lib}" />
+	</target>
+
+	<!-- os dependent library -->
+	<target name="set_native_lib" depends="set_win_library_path, set_mac_library_path, set_linux_library_path">
+	</target>
+
+	<target name="set_win_library_path" depends="set_os_flags" if="isWindows">
+		<property name="native_lib" value="${iGrid.home}/lib/native/x86-winnt" />
+	</target>
+
+	<target name="set_mac_library_path" depends="set_os_flags" if="isMac">
+		<property name="native_lib" value="${iGrid.home}/lib/native/universal64-macosx" />
+	</target>
+
+	<target name="set_linux_library_path" depends="set_os_flags" if="notWindowsOrMac">
+		<property name="native_lib" value="${iGrid.home}/lib/native/amd64-linux" />
+	</target>
+
+	<target name="set_os_flags">
+		<condition property="isMac">
+			<os family="mac" />
+		</condition>
+		<condition property="isWindows">
+			<os family="windows" />
+		</condition>
+		<condition property="notWindowsOrMac">
+			<and>
+				<not>
+					<os family="windows" />
+				</not>
+				<not>
+					<os family="mac" />
+				</not>
+			</and>
+		</condition>
+	</target>
+
+</project>
+

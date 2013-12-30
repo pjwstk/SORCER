@@ -1,0 +1,1 @@
+jar -cmvf main-server-class.txt account-server.jar rmi\account\* rmi\account\data\* rmi\account\server\*

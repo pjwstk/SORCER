@@ -1,0 +1,79 @@
+<?xml version='1.0' encoding='ISO-8859-1' standalone='yes'?>
+<!-- 
+sorcer build configuration
+by Sekhar Soorianarayanan sooriana@cs.ttu.edu
+-->
+
+ <project name="SORCER" default="install" basedir=".">
+
+ <property environment="env"/>
+ <property name="CODEBASE" value="${env.APP_CODEBASE}" />
+ <property name="PDIR" value="sorcer/core/provider" />
+
+ <path id="project.classpath">
+    <pathelement path="${env.CLASSPATH}" />
+    <pathelement path="${CODEBASE}" />
+ </path>
+
+ <fileset dir=".">
+    <patternset id="java.source" >
+       <include name="benchmarks/**/*.java" />
+       <include name="**/*.java" />
+       <exclude name="**/SAVE/*.java" />
+       <exclude name="**/BAK/*.java" />
+       <exclude name="**/catalog/**/*.java" />
+       <exclude name="**/notifier/**/*.java" />
+       <exclude name="**/cache/**/*.java" />
+       <exclude name="**/persister/**/*.java" />
+       <exclude name="**/dcom/**/*.java" />
+       <exclude name="**/jobber/**/*.java" />
+       <exclude name="**/caller/**/*.java" />
+    	<exclude name="**/policer/**/*.java" />
+      <exclude name="**/tasker/**/*.java" />
+      <exclude name="**/surrogate/**/*.java" />
+      <exclude name="**/filestore/**/*.java" />
+<exclude name="**/monitor/**/*.java" />
+       <exclude name="**/autonomicprovisioner/**/*.java" />
+    </patternset>
+ </fileset>
+
+ <fileset dir="${CODEBASE}">
+    <patternset id="java.classes" >
+       <include name="${PDIR}/**/*.class" />
+       <exclude name="${PDIR}/**/SAVE/*.class" />
+       <exclude name="${PDIR}/**/BAK/*.class" />
+    </patternset>
+ </fileset>
+
+ <target name="install" depends="clean, compile" />
+  
+ <target name="clean" >
+   <delete verbose="true" failonerror="false">
+    	<fileset dir="${CODEBASE}/${PDIR}" >
+           <patternset refid="java.classes" />
+        </fileset>
+   </delete>
+ </target>
+
+  <target name="compile" >
+   <javac srcdir="." destdir="${CODEBASE}" deprecation="no" >
+    <classpath refid="project.classpath" />
+    <patternset refid="java.source" />
+   </javac>
+ </target>
+
+  <target name="compile_all" depends="clean, compile" >
+   <ant dir="catalog" />
+   <ant dir="filestore" />
+   <ant dir="notifier" />
+   <ant dir="cache" />
+   <ant dir="persister" />
+   <ant dir="../xml" />
+   <ant dir="../dispatch" />
+   <ant dir="dcom" />
+   <ant dir="jobber" />
+   <ant dir="caller" />
+   <ant dir="policer" />
+  </target>
+
+</project>

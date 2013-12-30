@@ -1,0 +1,30 @@
+#!/usr/bin/env nsh -f
+
+import static sorcer.eo.operator.context;
+import static sorcer.eo.operator.outerSig;
+import static sorcer.tools.shell.NetworkShell.nshUrl;
+import static sorcer.eo.operator.parametricTask;
+import static sorcer.eo.operator.result;
+import static sorcer.eo.operator.sig;
+import static sorcer.eo.operator.value;
+import static sorcer.vo.operator.parametricTable;
+import static sorcer.vo.operator.responseTable;
+import sorcer.core.exertion.ModelTask;
+import sorcer.model.geometry.RectModelBuilder;
+import sorcer.service.Signature;
+import sorcer.vfe.util.Table;
+import sorcer.tools.shell.NetworkShell;
+
+String dataURL = nshUrl + "/geometry/parametric_datafile.txt";
+String outputURL = nshUrl + "/geometry/response_data.txt";
+
+Signature sig = sig("getParametricModel", RectModelBuilder.class);
+
+ModelTask task = parametricTask(
+	outerSig("evaluateResponseTable", sig), 
+		context(parametricTable(dataURL, ", "), 
+				responseTable(outputURL, ", "), 
+				result("table/out")));
+	
+value(task);
+

@@ -1,0 +1,12 @@
+#!/bin/bash
+
+#SBIN_HOME=`dirname \`readlink -f $0\``
+SBIN_HOME=`dirname $0`
+echo "sorcer bin commands:"
+ls $SBIN_HOME
+ 
+
+
+
+
+

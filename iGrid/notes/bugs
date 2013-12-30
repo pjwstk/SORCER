@@ -1,0 +1,10 @@
+in engineering.maelstrom.provider.jna.JnaMaelstrom
+
+1.ServiceContext.getOutpuPaths() returns deleted paths
+	while ServiceContext.getPaths() works as expected
+	Mike/080820
+
+2. Rename Expression to ExpressionEvaluator
+
+3. Construct additionally a VariableSet with no aspect with BasicVariable
+	getValue should return a Set of Variables

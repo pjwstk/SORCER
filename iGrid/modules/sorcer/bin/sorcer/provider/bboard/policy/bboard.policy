@@ -1,0 +1,31 @@
+grant codebase "file:./../lib/bboard.jar"{
+
+	// Allow everything for now
+//	permission java.security.AllPermission;
+	permission java.net.SocketPermission "*", "connect,accept,listen";		
+	permission javax.security.auth.PrivateCredentialPermission "javax.security.auth.x500.X500PrivateCredential javax.security.auth.x500.X500Principal \"*\"", "read";
+	permission net.jini.security.AuthenticationPermission "javax.security.auth.x500.X500Principal \"*\"", "accept";	
+	permission javax.security.auth.AuthPermission "createLoginContext.GAppLogin";
+	permission java.io.FilePermission "<<ALL FILES>>" , "read,write,execute";
+	permission javax.security.auth.AuthPermission "doAsPrivileged";
+	permission net.jini.discovery.DiscoveryPermission "sorcer.DEV";
+	//permission sorcer.provider.dispatcher.MethodPermission "*";	
+	permission java.lang.RuntimePermission "getClassLoader";
+	permission net.jini.io.context.ContextPermission "net.jini.io.context.ClientSubject.getClientSubject";
+};
+
+grant principal javax.security.auth.x500.X500Principal " CN=saurabh,OU=Cs,O=TTU,L=lb,ST=tx,C=us"{
+	// Allow everything for now
+	permission java.security.AllPermission;
+};
+
+grant principal javax.security.auth.x500.X500Principal "1.2.840.113549.1.9.1=#1611626861746c614063732e7474752e656475,CN=saurabh bhatla,OU=Digital ID Class 1 - Netscape,OU=Persona Not Validated,OU=www.verisign.com/repository/RPA Incorp. by Ref.\\,LIAB.LTD(c)98,OU=VeriSign Trust Network,O=VeriSign\\, Inc."{
+	// Allow everything for now
+	permission java.security.AllPermission;
+};
+
+
+grant principal javax.security.auth.x500.X500Principal "1.2.840.113549.1.9.1=#1611626861746c614063732e7474752e656475,CN=Saurabhf Bhatla,OU=Digital ID Class 1 - Netscape,OU=Persona Not Validated,OU=www.verisign.com/repository/RPA Incorp. by Ref.\\,LIAB.LTD(c)98,OU=VeriSign Trust Network,O=VeriSign\\, Inc."{
+	// Allow everything for now
+	permission java.security.AllPermission;
+};

@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+
+<project name="Rosen-Suzuki Explorer Requestor" default="run.requestor" basedir=".">
+
+	<!-- loads system environment variables -->
+	<property environment="env" />
+	<import file="${env.IGRID_HOME}/modules/common-run.xml" />
+	<echo message="webster: ${provider.webster.url}" />
+	<property name="webster" value="${provider.webster.url}" />
+
+	<!-- set property values here -->
+	<property name="requestor.name" value="rs-explorer" />
+	<property name="requestor.class" value="sorcer.explorer.rs.RosenSuzukiExplorerRequestorMM" />
+
+	<path id="project.classpath">
+		<pathelement location="${sorcer.lib}/${requestor.name}.jar" />
+		<pathelement location="${eng.lib}/conminoptimization.jar" />
+		<path refid="sorcer.path" />
+		<path refid="jini.path" />
+		<path refid="jna.path" />
+		<path refid="jep.path" />
+	</path>
+
+	<!-- provider codeabse jars -->
+	<property name="j1" value="${webster}/${requestor.name}-dl.jar" />
+	<property name="j2" value="${webster}/sorcer-prv-dl.jar" />
+	<property name="j3" value="${webster}/sorcer-modeling-lib.jar" />
+	<property name="j4" value="${webster}/sorcer-lib.jar" />
+
+	<target name="run.requestor">
+		<java classname="${requestor.class}" fork="yes">
+			<classpath refid="project.classpath" />
+			<sysproperty key="java.util.logging.config.file" value="../configs/sorcer-mf-req.logging" />
+			<sysproperty key="java.security.policy" value="../policy/${requestor.name}-req.policy" />
+			<sysproperty key="java.rmi.server.codebase" value="${j1} ${j2} ${j3} ${j4}" />
+			<sysproperty key="sorcer.env.file" value="${iGrid.home}/configs/sorcer.env" />
+			<sysproperty key="jna.library.path" value="${local.lib}" />
+			<sysproperty key="conmin.strategy.file" value="${iGrid.home}/modules/engineering/optimization/conmin/data/conminrosenSuzukiMin.dat" />
+			<sysproperty key="dispatcher.strategy.file" value="${iGrid.home}/modules/examples/ex10b/data/rsDispatcherStrategy.dat" />
+			<sysproperty key="optimizer.data.dir" value="${iGrid.home}/modules/engineering/optimization/conmin/data/test" />
+			<arg value="intra" />
+			<arg value="api" />
+		</java>
+	</target>
+
+</project>
+
+
+

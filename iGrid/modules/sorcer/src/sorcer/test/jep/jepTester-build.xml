@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding='ISO-8859-1' standalone='yes'?>
+<!-- 
+ * Copyight (C) 2004 SORCER Lab, Texas Tech University. All rights reserved.
+ * Service-Oriented Computing Environmet: SORCER Cataloger build configuration
+ * Make sure the following variables are changed to reflect your environment:
+ *    IGRID_HOME        	iGrid location
+ *    JAVA_HOME         	JDK Location
+ *	  IGRID_WEBSTER_PORT 	The class server (webster) port
+ *    ANT_HOME          	Jakarta Ant location
+ Please see also the ../common-build.xml for classpaths, definitions and targets
+-->
+
+<project name="JEP Tester" default="all" basedir=".">
+	<property name="module.name" value="sorcer/test/jep" />
+	<!-- set global properties -->
+	<import file="../../../../../common-build.xml" />
+	<property name="src" value="./../../../../src" />
+
+	<!-- The sources to compile -->
+	<patternset id="ant.java">
+		<include name="sorcer/test/jep/**/*.java" />
+	</patternset>
+	
+	<patternset id="ant.classes">
+		<include name="sorcer/test/jep/**/*.class" />
+	</patternset>
+
+	<patternset id="ant.jars">
+		<include name="jepTester.jar" />
+	</patternset>
+
+	<path id="project.classpath">
+		<pathelement location="${classes}/" />
+		<pathelement location="${lib}/jgapp.jar" />
+		<path refid="jini.path" />
+		<path refid="rio.path" />
+		<path refid="jep.path" />
+	</path>
+
+	<target name="compile" depends="compileSources" />
+	<target name="jars" depends="jepTester" />
+	<target name="jepTester" depends="jepTester.jar" />
+	<target name="all" depends="prepare, compile, jars, copy-run-prv-files" />
+
+	<target name="jepTester.jar">
+		<classdepandjar jarfile="${lib}/jepTester.jar" files="true">
+			<classpath refid="project.classpath"/>
+			<in name="sorcer.test.jep"/>
+			<topclass name="sorcer.test.jep.JEPTester" />
+			<topclass name="sorcer.test.jep.DJepTester" />
+			<topclass name="sorcer.test.jep.ContextCondition" />
+		</classdepandjar>
+	</target>
+	
+	<target name="copy-run-prv-files">
+		<mkdir dir="${iGrid.home}/bin/sorcer/${module.name}/bin" />
+		<mkdir dir="${iGrid.home}/bin/sorcer/${module.name}/policy" />
+		<mkdir dir="${iGrid.home}/bin/sorcer/${module.name}/logs" />
+		<copy todir="${iGrid.home}/bin/sorcer/${module.name}/bin">
+			<fileset dir="bin">
+				<include name="*" />
+			</fileset>
+		</copy>
+		<copy todir="${iGrid.home}/bin/sorcer/${module.name}/policy">
+			<fileset dir="policy">
+				<include name="*" />
+			</fileset>
+		</copy>
+		<chmod dir="${iGrid.home}/bin/sorcer/${module.name}/bin" perm="755" includes="*.sh" />
+	</target>
+	
+</project>

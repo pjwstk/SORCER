@@ -1,0 +1,95 @@
+<?xml version='1.0' encoding='ISO-8859-1' standalone='yes'?>
+
+<project name="SORCER Shell" default="all" basedir=".">
+	<property name="module.name" value="shell" />
+	<!-- set global properties -->
+	<import file="../../common-build.xml" />
+	<property name="src" value="./src" />
+
+	<!-- The sources to compile -->
+	<patternset id="ant.java">
+		<include name="sorcer/tools/shell/**/*.java" />
+		<exclude name="**/SAVE/*.java" />
+		<exclude name="**/BAK/*.java" />
+	</patternset>
+
+	<patternset id="ant.classes">
+		<include name="sorcer/tools/shell/**/*.class" />
+	</patternset>
+
+	<path id="project.classpath">
+		<pathelement location="${classes}" />
+		<path refid="jini.path" />
+		<path refid="rio.path" />
+		<pathelement location="${sorcer-ext.lib}/webster.jar" />
+	</path>
+
+	<target name="all" depends="local-prepare, compile, shell.jar, copy-run-prv-files" />
+	<target name="compile" depends="compileSources" />
+
+	<target name="shell.jar" depends="compile, local-prepare">
+		<copy tofile="${build.temp}/shell.mf" file="configs/shell.mf" filtering="yes" overwrite="yes" />
+		<classdepandjar jarfile="${sorcer-ext.lib}/shell.jar" files="true" debug="false" manifest="${build.temp}/shell.mf">
+			<classpath refid="project.classpath" />
+			<in name="sorcer.tools.shell" />
+			<in name="sorcer.core" />
+			<in name="sorcer.service" />
+			<in name="sorcer.util" />
+			<in name="sorcer.jini.lookup" />
+			<out name="sorcer.util.bdb.objects" />
+			<topclass name="sorcer.tools.shell.NetworkShell" />
+			<topclass name="sorcer.tools.shell.ShellStarter" />
+			<topclass name="sorcer.jini.lookup.AttributesUtil" />
+			<fileset dir="${iGrid.home}/modules/tools/shell/src">
+				<include name="sorcer/tools/shell/cmds/static-imports.txt" />
+			</fileset>
+		</classdepandjar>
+	</target>
+
+	<target name="copy-run-prv-files">
+		<mkdir dir="${iGrid.home}/bin/${module.name}/configs" />
+		<mkdir dir="${iGrid.home}/bin/${module.name}/bin" />
+		<mkdir dir="${iGrid.home}/bin/${module.name}/policy" />
+		<mkdir dir="${iGrid.home}/bin/${module.name}/logs" />
+
+		<copy todir="${iGrid.home}/bin/${module.name}/configs">
+			<fileset dir="configs">
+				<include name="*" />
+			</fileset>
+		</copy>
+
+		<copy todir="${iGrid.home}/bin/${module.name}/bin">
+			<fileset dir="bin">
+				<include name="*" />
+			</fileset>
+		</copy>
+
+		<copy todir="${iGrid.home}/bin/${module.name}/policy">
+			<fileset dir="policy">
+				<include name="*" />
+			</fileset>
+		</copy>
+
+		<chmod dir="${iGrid.home}/bin/${module.name}/bin" perm="755" includes="*.sh" />
+		<chmod dir="${iGrid.home}/bin/${module.name}/bin" perm="755" includes="nsh" />
+		<chmod dir="${iGrid.home}/bin/${module.name}/bin" perm="755" includes="*.xrt" />
+	</target>
+
+	<target name="local-prepare">
+		<filter token="SORCER_BUILD" value="${DSTAMP}" />
+		<filter token="SORCER_VERSION" value="${sorcer-version}" />
+		<mkdir dir="${build.temp}" />
+		<mkdir dir="docs" />
+		<echo file="${default_manifest}">Manifest-Version: 1.0
+	            SORCER-Build: ${DSTAMP}
+	        </echo>
+		<echo file="${sorcer_manifest}">Manifest-Version: 1.0
+	            Class-Path: jsk-lib.jar jsk-platform.jar
+	            SORCER-Build: ${DSTAMP}
+	        </echo>
+		<echo file="${default_preferred_list}">PreferredResources-Version: 1.0
+	            Preferred: false
+	        </echo>
+	</target>
+
+</project>

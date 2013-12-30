@@ -1,0 +1,187 @@
+<?xml version='1.0' encoding='ISO-8859-1' standalone='yes'?>
+<!-- 
+ * Copyight (C) 2004 SORCER Lab, Texas Tech University. All rights reserved.
+ * Service-Oriented Computing Environmet: SORCER Cataloger build configuration
+ * Make sure the following variables are changed to reflect your environment:
+ *    IGRID_HOME        	iGrid location
+ *    JAVA_HOME         	JDK Location
+ *	  IGRID_WEBSTER_PORT 	The class server (webster) port
+ *    ANT_HOME          	Jakarta Ant location
+ Please see also the ../common-build.xml for classpaths, definitions and targets
+-->
+
+<project name="SORCER Cataloger" default="all" basedir=".">
+	<property name="module.name" value="cataloger" />
+	<!-- set global properties -->
+	<import file="../../../../../../common-build.xml" />
+	<property name="src" value="../../../../" />
+	<property name="resources" value="${iGrid.home}/modules/sorcer/resources" />
+
+	<!-- The sources to compile -->
+	<patternset id="ant.java">
+		<include name="sorcer/core/provider/cataloger/**/*.java" />
+	</patternset>
+
+	<path id="project.classpath">
+		<pathelement location="${classes}/" />
+		<path refid="jini.path" />
+		<path refid="rio.path" />
+	</path>
+
+	<patternset id="ant.classes">
+		<include name="sorcer/core/provider/cataloger/**/*.class" />
+	</patternset>
+
+	<fileset dir="${resources}" id="icons">
+		<include name="sorcer-ico.png" />
+	</fileset>
+
+	<target name="compile" depends="compileSources, copy-config-files" />
+	<target name="jars" depends="cataloger.jars, copy-run-prv-files" />
+	<target name="cataloger.jars" depends="cataloger.jar, cataloger-dl.jar, cataloger-ui.jar" />
+	<target name="all" depends="prepare, compile, jars, copy-run-prv-files" />
+
+	<target name="cataloger.jar" depends="compileSources">
+		<classdepandjar jarfile="${sorcer.lib}/cataloger.jar" files="true">
+			<classpath refid="project.classpath" />
+			<in name="sorcer.core.provider.cataloger" />
+			<in name="sorcer.service" />
+			<topclass name="sorcer.core.provider.cataloger.ServiceCataloger" />
+		</classdepandjar>
+	</target>
+
+	<target name="cataloger-dl.jar">
+		<classdepandjar jarfile="${sorcer-dl.lib}/cataloger-dl.jar" files="true">
+			<manifest>
+				<attribute name="Implementation-Title" value="${product.title}" />
+				<attribute name="Implementation-Version" value="${product.name}" />
+				<attribute name="SORCER-Version" value="${product.version}" />
+				<attribute name="SORCER-Build" value="${DSTAMP}" />
+			</manifest>
+			<classpath refid="project.classpath" />
+			<!-- Put the full package as much as possible for a smaller jar file -->
+			<in name="sorcer.core.provider" />
+			<topclass name="sorcer.core.provider.Cataloger" />
+			<fileset refid="icons" />
+		</classdepandjar>
+	</target>
+	
+	<target name="cataloger-dl2.jar">
+		<classdepandjar jarfile="${sorcer-dl.lib}/cataloger-dl.jar" files="true">
+			<manifest>
+				<attribute name="Implementation-Title" value="${product.title}" />
+				<attribute name="Implementation-Version" value="${product.name}" />
+				<attribute name="SORCER-Version" value="${product.version}" />
+				<attribute name="SORCER-Build" value="${DSTAMP}" />
+			</manifest>
+			<classpath refid="project.classpath" />
+			<!-- Put the full package as much as possible for a smaller jar file -->
+			<in name="sorcer.core" />
+			<in name="sorcer.service" />
+			<in name="sorcer.jini.lookup.entry" />
+			<out name="net.jini.core" />
+			<out name="net.jini.activation" />
+			<out name="net.jini.config" />
+			<out name="net.jini.constraint" />
+			<out name="net.jini.export" />
+			<out name="net.jini.id" />
+			<out name="net.jini.iiop" />
+			<out name="net.jini.io" />
+			<out name="net.jini.jeri" />
+			<out name="net.jini.jrmp" />
+			<out name="net.jini.loader" />
+			<out name="net.jini.security" />
+			<out name="net.jini.url" />
+			<out name="com.sun.jini.discovery" />
+			<out name="sorcer.ui" />
+			<out name="sorcer.core.dispatch" />
+			<out name="sorcer.core.context" />
+			<out name="sorcer.core.exertion" />
+			<out name="sorcer.core.invoker" />
+			<out name="sorcer.util" />
+			<out name="sorcer.util.bdb" />
+			<out name="net.jini" />
+			<out name="org.jini" />
+			<out name="com.sun.jini" />
+			<topclass name="sorcer.core.proxy.ProviderProxy" />
+			<topclass name="sorcer.service.Service" />
+			<topclass name="sorcer.service.Provider" />
+			<topclass name="sorcer.core.AdministratableProvider" />
+			<topclass name="sorcer.jini.lookup.entry.SorcerServiceInfo" />
+			<topclass name="sorcer.core.RemoteContextManagement" />
+			<!-- Add provider specific class here, but not the class implementation -->
+			<topclass name="sorcer.core.Cataloger" />
+			<fileset refid="icons" />
+		</classdepandjar>
+	</target>
+
+	<target name="cataloger-prefgen">
+		<java jar="${jini.lib}/preferredlistgen.jar" fork="true">
+			<arg line="-cp" />
+			<arg path="${sorcer.lib}/sorcer-prv.jar:${common.lib}/jaxrpc.jar:${rio.lib}/rio-ui.jar:${jini.lib}/jsk-platform.jar:${jini.lib}/jsk-lib.jar:${jini.lib}/outrigger.jar" />
+			<arg line="-jar" />
+			<arg path="${sorcer-dl.lib}/cataloger-dl.jar" />
+			<arg line="-default false" />
+			<arg line="-api sorcer.service.Provider" />
+			<arg line="-api sorcer.core.Cataloger" />
+			<arg line="-api sorcer.service.Context" />
+			<arg line="-api sorcer.service.Context$1" />
+			<arg line="-api sorcer.service.Strategy" />
+			<arg line="-api sorcer/core/dispatch/-" />
+			<arg line="-api sorcer/core/invoker/-" />
+			<arg line="-api sorcer/core/exertion/-" />
+			<arg line="-api sorcer/core/context/-" />
+			<arg line="-api sorcer/core/loki/-" />
+			<arg line="-api sorcer/util/bdb/-" />
+			<arg line="-api net/jini/-" />
+			<arg line="-api com/sun/jini/outrigger/-" />
+			<arg line="-api com/sun/jini/admin/-" />
+			<arg line="-api com/sun/jini/resource/-" />
+			<arg line="-api com/sun/jini/start/-" />
+			<arg line="-api com/sun/jini/proxy/-" />
+		</java>
+	</target>
+
+	<target name="cataloger-ui.jar" depends="compileSources">
+		<classdepandjar jarfile="${sorcer.lib}/cataloger-ui.jar" files="true">
+			<classpath refid="project.classpath" />
+			<in name="sorcer" />
+			<out name="javax" />
+			<out name="java" />
+			<out name="sorcer.util.bdb" />
+			<out name="sorcer.tools.webster" />
+			<topclass name="sorcer.core.provider.cataloger.ui.CatalogerUI" />
+			<topclass name="sorcer.ui.serviceui.UIFrameFactory" />
+			<fileset dir="./" includes="html/" />
+			<fileset refid="icons" />
+		</classdepandjar>
+	</target>
+
+	<target name="copy-run-prv-files">
+		<mkdir dir="${iGrid.home}/bin/sorcer/${module.name}/configs" />
+		<mkdir dir="${iGrid.home}/bin/sorcer/${module.name}/bin" />
+		<mkdir dir="${iGrid.home}/bin/sorcer/${module.name}/policy" />
+		<mkdir dir="${iGrid.home}/bin/sorcer/${module.name}/logs" />
+
+		<copy todir="${iGrid.home}/bin/sorcer/${module.name}/configs">
+			<fileset dir="configs">
+				<include name="*" />
+			</fileset>
+		</copy>
+
+		<copy todir="${iGrid.home}/bin/sorcer/${module.name}/bin">
+			<fileset dir="bin">
+				<include name="*" />
+			</fileset>
+		</copy>
+
+		<copy todir="${iGrid.home}/bin/sorcer/${module.name}/policy">
+			<fileset dir="policy">
+				<include name="*" />
+			</fileset>
+		</copy>
+
+		<chmod dir="${iGrid.home}/bin/sorcer/${module.name}/bin" perm="755" includes="*.sh" />
+	</target>
+
+</project>

@@ -1,0 +1,57 @@
+#!/bin/bash
+
+echo "running srun_mstcgeom..."
+srun_mstcgeom -w
+sleep 1
+
+echo "running srun_nastran..."
+srun_nastran -w
+sleep 1
+
+echo "running srun_self..."
+srun_self -w
+sleep 1
+
+echo "running srun_friction..."
+srun_friction -w
+sleep 1
+
+echo "running srun_tornado..."
+srun_tornado -w
+sleep 1
+
+echo "running srun_astros..."
+srun_astros -w
+sleep 1
+
+echo "running srun_aero2s..."
+srun_aero2s -w
+sleep 1
+
+echo "running srun_aeropost..."
+srun_aeropost -w
+sleep 1
+
+echo "running srun_wingdes..."
+srun_wingdes -w
+sleep 1
+
+echo "running srun_awave..."
+srun_awave -w
+sleep 1
+
+echo "running srun_mstcperf..."
+srun_mstcperf -w
+sleep 1
+
+echo "running srun_esav_mdl..."
+srun_esav_mdl -w 
+sleep 1
+
+echo "running srun_gho_mdl..."
+srun_gho_mdl -w 
+
+
+
+
+

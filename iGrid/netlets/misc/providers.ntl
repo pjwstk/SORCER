@@ -1,0 +1,40 @@
+import sorcer.arithmetic.provider.Multiplier;
+import sorcer.arithmetic.provider.MultiplierImpl;
+
+/*
+obj = new MultiplierImpl();
+println "\n"
+println obj
+println interfaces(obj);
+*/
+
+/*
+obj = instance(sig(null, MultiplierImpl.class));
+println "\n"
+println obj
+println interfaces(obj);
+*/
+
+/*
+provider = provider(sig("multiply", Multiplier.class));
+println "\n"
+println provider
+println interfaces(provider)
+*/
+
+
+/*
+provider = provider(sig("multiply", Multiplier.class, "Multiplier1"));
+//provider = provider(sig("multiply", Multiplier.class, "Arithmetic"));
+//provider = provider(sig("multiply", Multiplier.class, attributes(name("Multiplier1"))));
+println "\n"
+println provider
+println interfaces(provider)
+*/
+
+/*
+providers = providers(sig("multiply", Multiplier.class));
+println "\n"
+for (provider in providers) println provider
+for (provider in providers) println interfaces(provider)
+*/

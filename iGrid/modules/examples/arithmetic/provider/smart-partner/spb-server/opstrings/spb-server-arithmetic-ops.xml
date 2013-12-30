@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<!DOCTYPE opstring SYSTEM "java://org/jini/rio/dtd/rio_opstring.dtd" [
+    <!ENTITY Local.IP SYSTEM "java://java.net.InetAddress.getLocalHost().getHostAddress()" >
+    <!ENTITY Local.Port "9000" >
+    <!ENTITY CodeServerURL "http://&Local.IP;:&Local.Port;/" >
+    <!ENTITY group SYSTEM "java://java.lang.System.getProperty(user.name)">    
+]>
+
+<opstring>
+    <OperationalString Name="SPB Server Arithmetic">
+        <!-- Declares the codebase to download JARs from for all services 
+             in this OperationalString -->
+        <Codebase>&CodeServerURL;</Codebase>
+        
+        <Groups>
+            <!-- Uncomment out the following line if you would like to use a 
+                 group name that is your user name. The value is obtained from
+                 the ENTITY group declaration above -->
+            <!--<Group>&group;</Group>-->
+	      <Group>sorcer.DEV</Group>
+        </Groups>
+
+        <ServiceBean Name="SPB Server Arithmetic" 
+                     MatchOnName="yes">
+            <Interfaces>
+                <Interface>sorcer.arithmetic.ArithmeticRemote</Interface>
+                <Resources ComputeHttpmd="yes">
+                   	<JAR>server-arithmetic-spb.jar</JAR>
+                   	<JAR>arithmetic-ui.jar</JAR>
+                    <JAR>rio-api.jar</JAR>
+                    <JAR>jsk-lib.jar</JAR>
+                </Resources>
+            </Interfaces>
+
+            <ImplementationClass>sorcer.core.provider.bean.ServiceProviderBean
+                <Resources ComputeHttpmd="yes">
+                    <JAR>sorcer-spb.jar</JAR>
+                    <JAR>server-arithmetic-spb.jar</JAR>
+                    <JAR>arithmetic-ui.jar</JAR>
+                    <JAR>jsk-lib.jar</JAR>
+                </Resources>
+            </ImplementationClass>                       
+            
+            <Configuration>
+                <Component Name="sorcer.core.provider.ServiceProvider">
+                	<Parameter Name="name">
+                		<![CDATA[
+                			"SPB RMI Server Arithmetic"
+                		]]>
+					</Parameter>
+					
+					<Parameter Name="description">
+                		<![CDATA[
+                			"Example of an SPB RMI server proxy provider"
+                		]]>
+					</Parameter>
+					
+					<Parameter Name="location">
+                		<![CDATA[
+                			"SORCER Lab CP310 CS TTU"
+                		]]>
+					</Parameter>
+						
+					<Parameter Name="interfaces">
+						<![CDATA[
+							new String[] { "sorcer.arithmetic.ArithmeticRemote" }
+						]]>
+					</Parameter>
+						
+					<Parameter Name="server">
+						<![CDATA[
+							new sorcer.arithmetic.PartnerArithmometer()
+						]]>
+					</Parameter>
+					
+					<Parameter Name="serverExporter">
+						<![CDATA[
+							new net.jini.jrmp.JrmpExporter(0)
+						]]>
+					</Parameter>
+					
+					<Parameter Name="iconName">
+						<![CDATA[
+							"sorcer.jpg"
+						]]>
+					</Parameter>
+					
+					<Parameter Name="entries">
+						<![CDATA[
+							new net.jini.core.entry.Entry[] { 
+								sorcer.arithmetic.ui.ArithmeticUI.getUIDescriptor(), 
+								new net.jini.lookup.entry.Comment("It uses sorcer.arithmetic.Arithmometer for smart proxying"), 
+								new net.jini.lookup.entry.Location("3", "310", "CP TTU") }
+						]]>
+					</Parameter>
+					
+                </Component>
+            </Configuration>
+
+            <!--<ServiceLevelAgreements>                
+                <SystemRequirements>
+                    <Utilization ID="System" High=".8" />
+                    <Utilization ID="CPU" High=".8" />
+                    <Utilization ID="Memory" High=".8" />
+                </SystemRequirements>
+            </ServiceLevelAgreements>-->
+
+            <!--<Logging>
+                <Logger Name="sorcer.core.provider" Level="FINE">
+                    <Handler ClassName="java.util.logging.ConsoleHandler" 
+                             Level="FINE"/>
+                </Logger>
+            </Logging>-->
+
+            <Maintain>1</Maintain>
+            
+            <FaultDetectionHandler
+                ClassName="org.jini.rio.resources.client.HeartbeatFaultDetectionHandler">
+                <Configuration>                    
+                    <Component Name="org.jini.rio.resources.client.HeartbeatFaultDetectionHandler">
+                        <Parameter Name="heartbeatPeriod" Value="5000"/>
+                        <Parameter Name="retryCount" Value="1"/>
+                    </Component>
+                </Configuration>
+            </FaultDetectionHandler>
+
+            <Comment>Arithmetic Service Provider Bean (SPB) example</Comment>
+        </ServiceBean>        
+
+    </OperationalString>
+</opstring>

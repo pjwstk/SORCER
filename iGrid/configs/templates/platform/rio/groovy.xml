@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<platform>
+    <!--
+    Groovy jars to load into the common classloader.
+    -->
+    <capability name="Groovy" common="yes">
+        <version>1.7.4</version>
+        <classpath>${iGrid.home}/lib/common/groovy/groovy-all-1.7-4.jar</classpath>
+    </capability>    
+</platform>

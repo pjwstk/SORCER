@@ -1,0 +1,9 @@
+FileFiter >> BasicFileFilter
+
+example of file sorcer/test/eval/paramTest.dat
+AvusParams.java
+
+ContextNode>getItemValue(itemName) gets filters from map by itemName
+
+Make subclass of FileFilter
+Pattern - inner class of BasicFileFilter

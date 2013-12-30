@@ -1,0 +1,14 @@
+#!/bin/sh
+
+VBROKER_BASE=/projects/sorcer/jsorcer/inprise
+VBROKER_JAVA_BASE=${VBROKER_BASE}/visibroker_java/4.1.1
+VBROKER_JAVA_BIN=${VBROKER_JAVA_BASE}/bin
+VBROKER_JAVA=${VBROKER_JAVA_BIN}/vbj
+
+#VBROKER_JAVA_LIB=${VBROKER_JAVA_BASE}/lib
+#VBROKER_JAVA_CPATH=${VBROKER_JAVA_LIB}/vbjorb.jar:${VBROKER_JAVA_LIB}/vbjapp.jar:${VBROKER_JAVA_LIB}/ins.jar:${VBROKER_JAVA_LIB}/vbsec.jar:${VBROKER_JAVA_LIB}/vbejb.jar
+
+#${JAVA} -classpath ${VBROKER_JAVA_CPATH}:${CLASSPATH} sorcer.service.xml.JobMediatorImpl
+
+${VBROKER_JAVA} -J-Djava.security.policy=policy sorcer.service.xml.JobMediatorImpl
+

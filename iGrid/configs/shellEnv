@@ -1,0 +1,78 @@
+#!/bin/bash
+
+
+
+# test to see if this file has been sourced already
+#
+if [ "x$SHELL_ENV_SOURCED" == "x" ]; then
+
+	export SHELL_ENV_SOURCED=1
+
+
+	# IGRID_HOME must be set
+	#
+	if [ "x$IGRID_HOME" == "x" ]; then
+		echo "*** error: IGRID_HOME is not set; exiting in 5 seconds."
+		sleep 5
+		exit 1
+	fi
+	
+	
+	# IGRID_HOME must exist
+	#
+	if [ ! -d $IGRID_HOME ]; then
+		echo "*** error: the igrid home does not exist at $IGRID_HOME; exiting in 5 seconds."
+		sleep 5
+		exit 1
+	fi
+	
+	
+	# LIBRARY_HOME must exist
+	#
+	export LIBRARY_HOME=$IGRID_HOME/../Library
+	if [ ! -d $LIBRARY_HOME ]; then
+		echo "*** error: the sorcer library does not exist at $LIBRARY_HOME; exiting in 5 seconds."
+		sleep 5
+		exit 1
+	fi
+	
+	
+	
+	# set os flags
+	#
+	UNAME_S=`uname -s`
+	export IS_MAC=0
+	export IS_LINUX=0
+	export IS_WIN=0
+	export IS_CYGWIN=0
+	if [ $UNAME_S == "Darwin" ]; then
+		IS_MAC=1
+	fi
+	if [ $UNAME_S == "Linux" ]; then
+		IS_LINUX=1
+	fi
+
+	export IS_CYGWIN=`uname -s | awk 'BEGIN{flag=0} {if ($0~/CYGWIN/) {flag=1}} END{print flag}'`
+
+	if [ $IS_CYGWIN -eq 1 ]; then
+		export CYGWIN_HOME_UNIX=$LIBRARY_HOME/cygwin
+		#echo "CYGWIN_HOME_UNIX=$CYGWIN_HOME_UNIX"
+		export CYGWIN_HOME=`$CYGWIN_HOME_UNIX/bin/cygpath -ds $CYGWIN_HOME_UNIX`
+		#echo "CYGWIN_HOME=$CYGWIN_HOME"
+		
+		export CYGWIN=nodosfilewarning
+		export IS_WIN_64_BIT=`uname -a | awk 'BEGIN{flag=0}; {if ($0~/64/) flag=1} END{print flag}'`
+		if [ ! -d $CYGWIN_HOME ]; then
+			echo "*** error: the cygwin home does not exist at $CYGWIN_HOME; exiting in 5 seconds."
+			sleep 5
+			exit 1
+		fi	
+	fi
+	#echo "going to source minClasspath"
+	source $IGRID_HOME/configs/minClasspath
+	#echo "done sourcing minClasspath"
+	#echo "33) CLASSPATH=$CLASSPATH"
+	export SBIN_HOME=$IGRID_HOME/sbin
+	export PATH=$SBIN_HOME:$PATH
+
+fi

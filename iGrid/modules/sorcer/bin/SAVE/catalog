@@ -1,0 +1,54 @@
+#!/bin/ksh
+#
+# Startup script for the SORCER Catalog
+# Mike Sobolewski, sobol@crd.ge.com
+# 
+# Mike Lapinski, changed path to catalog as per version 04.
+#
+# pidfile: ${SORCER_HOME}/bin/run/catalog.pid
+# config: ${SORCER_HOME}/classes/sorcer/catalog/catalog.conf
+
+# Source function library.
+. ${SORCER_HOME}/bin/functions
+
+# See how we were called.
+if  [ "$2" = "" ] || [ "$2" = rmi ]  ; then
+    case "$1" in
+      start)
+	    echo "Starting catalog server in RMI mode: "
+	    echo ${APP_CODEBASE}/sorcer/core/provider/catalog/catalog.srv
+	    startproc ${APP_CODEBASE}/sorcer/core/provider/catalog/catalog.srv
+	    echo
+	    ;;
+      stop)
+	    echo "Shutting down catalog RMI server: "
+	    killproc catalog.srv
+	    echo
+	    ;;
+      restart)
+	    $0 stop
+	    $0 start
+	    ;;
+      *)
+	    echo "Usage: $0 {start|stop|restart} [jini|rmi]"
+	    exit 1
+    esac
+else
+    case "$1" in 
+      start)
+            echo "Starting catalog server in JINI mode: "
+	    echo ${APP_CODEBASE}/sorcer/core/provider/catalog/catalog.prv
+	    startproc ${APP_CODEBASE}/sorcer/core/provider/catalog/catalog.prv
+	    echo
+	    ;;
+      stop)
+           echo "Shutting down catalog JINI server: "
+	   killproc catalog.prv
+	   echo
+	   ;;
+      *)
+      	    echo "Usage: $0 {start|stop|restart} [jini|rmi]"
+	    exit 1
+esac
+fi
+exit 0

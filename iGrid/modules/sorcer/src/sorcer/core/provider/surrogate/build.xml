@@ -1,0 +1,90 @@
+<?xml version='1.0' encoding='ISO-8859-1' standalone='yes'?>
+<!-- 
+sorcer build configuration
+by Ravi Malladi
+-->
+
+ <project name="SORCER" default="install" basedir=".">
+
+ <property environment="env"/>
+ <property name="CODEBASE" value="${env.APP_CODEBASE}" />
+ <property name="PDIR" value="sorcer/core/provider/surrogate" />
+ <property name="IGRID_HOME" value="${env.IGRID_HOME}" />
+
+ <path id="project.classpath">
+    <pathelement path="${env.CLASSPATH}" />
+    <pathelement location="${IGRID_HOME}/lib/IPinterconnect.jar" />
+    <pathelement location="${IGRID_HOME}/lib/madison-boot.jar" />
+    <pathelement location="${IGRID_HOME}/lib/madison-impl.jar" />
+    <pathelement location="${IGRID_HOME}/lib/surrogate.jar" />
+    <pathelement path="${CODEBASE}" />
+ </path>
+
+ <fileset dir=".">
+    <patternset id="java.source" >
+       <include name="**/SurrogateProvider.java" />
+       <include name="**/SurrogateProxy.java" />
+       <include name="**/SurrogateService.java" />
+       <exclude name="**/backup/*.java" />
+       <exclude name="**/latest_Jun9/*.java" />
+    </patternset>
+ </fileset>
+
+ <fileset dir="${CODEBASE}">
+    <patternset id="java.classes" >
+       <include name="${PDIR}/**/*.class" />
+    </patternset>
+ </fileset>
+
+ <target name="install" depends="clean, compile,
+ sorcer-surrogate-dl.jar, sorcer-surrogate.jar " />
+  
+ <target name="clean" if="${CODEBASE}/${PDIR}">
+   <delete verbose="true" >
+    	<fileset dir="${CODEBASE}/${PDIR}" >
+           <patternset refid="java.classes" />
+        </fileset>
+   </delete>
+ </target>
+
+  <target name="compile" >
+   <javac srcdir="." destdir="${CODEBASE}" deprecation="no" >
+    <classpath refid="project.classpath" />
+    <patternset refid="java.source" />
+   </javac>
+ </target>
+
+  <target name="sorcer-surrogate.jar">
+            <classdepandjar
+     jarfile="${IGRID_HOME}/lib/sorcer-surrogate.jar" files="true" manifest="sorcer-surrogate.mf">
+	    	        
+	    <classpath refid="project.classpath"/>
+            <in  name="sorcer"/>
+            <in  name="net.jini"/>
+	    <in  name="com.sun" />
+            <topclass name=
+                  "sorcer.core.provider.surrogate.SurrogateProvider"
+                  />
+
+            <fileset dir="${IGRID_HOME}/lib"
+	    	    includes="sorcer-surrogate-dl.jar" />
+
+ 	    </classdepandjar>
+  </target>
+
+  <target name="sorcer-surrogate-dl.jar">
+            <classdepandjar
+     jarfile="${IGRID_HOME}/lib/sorcer-surrogate-dl.jar" files="true" >
+	    	        
+	    <classpath refid="project.classpath"/>
+            <in  name="sorcer"/>
+            <in  name="net.jini"/>
+	    <in  name="com.sun" />
+            <topclass name=
+                  "sorcer.core.provider.surrogate.SurrogateProvider"
+                  />
+       
+ 	    </classdepandjar>
+  </target>
+
+</project>

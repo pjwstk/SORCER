@@ -1,0 +1,95 @@
+Service-ORiented Computing Environment - SORCER is a dynamically federated metacomputing system
+that has been built at the SORCER lab at SORCERsoft.org - http://sorcersoft.org
+
+The following enviroment variables define the SORCER runtime environment:
+IGRID_HOME - the environment variable pointing to your iGrid workspace (sandbox).
+JAVA_HOME  - a JDK installation directory
+JINI_HOME - a Sun Jini 2.1 installation directory
+ANT_HOME - an Apache Ant location
+IGRID_WEBSTER - a class server hostname used by startup scripts
+IGRID_WEBSTER_PORT - a class server port used by startup scripts
+
+For details how to setup the iGrid runtime environment see the iGrid/README file.
+
+The core SORCER service include:
+1. 	Cataloger iGrid/modules/sorcer/src/sorcer/core/provider/catalog - 
+	a service provider maintaing a dynamic catalog of availabe runtime SORCER services.
+2.  Jobber iGrid/modules/sorcer/src/sorcer/core/provider/jobber -
+	a service provider coordinating exectution of service-oriented programs: 
+	SORCER service tasks and jobs.
+3.  Persister iGrid/modules/sorcer/src/sorcer/core/provider/persister -
+	a repository for service-oriented programs: tasks, jobs and service contexts.
+4.  Monitor iGrid/modules/sorcer/src/sorcer/core/provider/monitor
+5.  Autonomic Provisioner iGrid/modules/sorcer/src/sorcer/core/provider/autonomicprovisioner
+6.  Notifier iGrid/modules/sorcer/src/sorcer/core/provider/notifier
+7. 	Auditor iGrid/modules/sorcer/src/sorcer/core/provider/auditor
+8.  Policer iGrid/modules/sorcer/src/sorcer/core/provider/policer -
+	a Java policy store for all SORCER service providers.
+9. Caller iGrid/modules/sorcer/src/sorcer/core/grid/provider/caller -
+    a generic service executing a service task by calling a system call on 
+    a provided command (executable).
+10. Tasker iGrid/modules/sorcer/src/sorcer/core/grid/provider/tasker -
+    a generic service (compute service) execiting any service task 
+    with is own service method - inserted by requestor its dynamic code.
+11. Grider iGrid/modules/sorcer/src/sorcer/core/grid/provider/grider -
+	a service grid dispatcher that coordinates job excution with taskers, 
+	callers, and other service providers.
+12. File Store iGrid/modules/sorcer/src/sorcer/core/filestore -
+	a file store service provider
+13. Surrogate Provider iGrid/modules/sorcer/src/sorcer/core/surrogate
+
+STEP I Build the iGrid Environment
+Build iGrid with Apache Ant: 
+Directly from Eclipse, select iGrid/iGrid-bild.xml and "Run As/Ant Build"
+or
+at the commnad line: ant -f $IGRD_HOME/iGrid-bild.xml
+
+STEP II Start Class Server and Jini if needed
+Before you start any service you need to start a class server (webster).
+The class server listens on IGRID_WEBSTER_PORT that should be set in your environment.
+For UNIX, see $IGRID_HOME/configs/.iGrid.env that is sourced from .cshrc
+
+Start the webster using Apache Ant in $IGRID_HOME/bin/webster:
+Directly from Eclipse, select iGrid/bin/webster/webster-run.xml and "Run As/Ant Build"
+or executing on the command line either:
+ant -f $IGRID_HOME/bin/webster/webster-run.xml
+or 
+$iGrid_HOME/bin/webster/startweb.sh
+or 
+$iGrid_HOME/bin/webster/startweb.bat
+
+If needed start Jini 2.1 directly from Eclipse, 
+select iGrid/bin/jini/jini-run.xml and "Run As/1 Ant Build"
+Usally the Jini infrustructure services are availabe on your local are network,
+thus there is no need to run your own Jini sevices.
+
+STEP III Start Cataloger 
+Directly from Eclipse, select iGrid/bin/sorcer/catalog/bin/jeri-cataloger-run.xml and "Run As/Ant Build"
+or executing on the command line either:
+ant -f $iGrid_HOME/bin/sorcer/catalog/bin/jeri-cataloger-run.xml
+or 
+$iGrid_HOME/bin/sorcer/catalog/bin/jeri-cataloger-prv.sh
+or 
+$iGrid_HOME/bin/sorcer/catalog/bin/jeri-cataloger-prv.bat
+
+STEP IV Start Jobber
+Directly from Eclipse, select iGrid/bin/sorcer/jobber/bin/jeri-jobber-run.xml and  "Run As/Ant Build"
+or executing on the command line either:
+ant -f $iGrid_HOME/bin/sorcer/jobber/bin/jeri-jobber-run.xml
+or 
+$i$iGrid_HOME/bin/sorcer/jobber/bin/jeri-jobber-prv.sh
+or 
+$iGrid_HOME/bin/sorcer/jobber/bin/jeri-jobber-prv.bat
+
+STEP V Start SORCER Service Browser
+Directly from Eclipse, select iGrid/bin/browser/bin/sorcer-browser-run.xml and  "Run As/Ant Build"
+Inspect carefully the published service in the SORCER Service brovser: 
+their interfaces, methods, and service attirbutes their including service types.
+
+STEP VI Study a few examples of SORCER service providers and requestors
+Start for example with many avalable exampleas of arithmnetic service providers 
+in iGrid/modules/example/ex1-ex5 and iGrid/modules/example/arithmetic
+
+STEP VII
+To parallize exection with SORCER Grid (SGrid) read the README file in 
+iGrid/modules/sorcer/src/sorcer/core/grid

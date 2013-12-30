@@ -1,0 +1,28 @@
+#!/usr/bin/env nsh -f
+
+import sorcer.explorer.rs.RosenSuzukiDispatcher;
+import sorcer.vfe.Modeling
+import sorcer.vfe.util.VarInfoList
+import engineering.optimization.conmin.provider.ConminStrategy;
+import sorcer.core.context.model.explore.Exploration
+import sorcer.core.context.model.explore.ExploreContext
+import sorcer.core.context.model.opti.Optimization
+
+
+ExploreContext exploreContext = new ExploreContext("Rosen-Suzuki");
+VarInfoList designInfo = varsInfo(varInfo("x1", 1.0d), varInfo("x2", 1.0d), varInfo("x3", 1.0d), varInfo("x4", 1.0d));
+exploreContext.setDesignVarsInfo(designInfo);
+ConminStrategy cmnStrategy=new ConminStrategy(spFile("conmin.strategy.file"));
+exploreContext.setObjectivesInfo(null);
+exploreContext.setConstraintsInfo(null);
+exploreContext.setObjectivesGradientInfo(null);
+exploreContext.setConstraintsGradientInfo(null);
+exploreContext.setOptimizerStrategy(cmnStrategy);
+
+// specify the explore dispatcher
+exploreContext.setDispatcherSignature(sig(null, RosenSuzukiDispatcher.class));
+
+// use service providers as specified by signatures
+exploreContext.setModelSignature(sig("register", Modeling.class));
+exploreContext.setOptimizerSignature(sig("register", Optimization.class));
+task("opti", op("explore", Exploration.class), exploreContext);

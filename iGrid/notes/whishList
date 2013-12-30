@@ -1,0 +1,64 @@
+Features needed in the SORCER environment
+
+Please add your ideas to make SORCER better!!!
+
+1. Exception handling via ControlContext (Done)
+2. URL handling for data exchange (Done)
+3. Variable/Evaluator/Filter framework (Done)
+4. Provider/Requestor DB support
+5. Notifications (complement reporting exceptions, tracing, and logging)
+6. Exertion editor (declartive form)(done)
+7. Version Control Manager
+8. Exertion Execution Monitor
+9. Persistent store for exertions - EO programming reuse
+10. Exertion Sync Monitor (for CONCURRENT type flow, currently SEQUENTIAL and PARALLEL) 
+11. SLa Monitor for QoS
+12. HTTP connectivity for working with firewalls
+13. Security - Subject, proxy verification, service browser destroy/view
+14. Remote logging improved - service UI with a socket handler(Done)
+15. Rearrange and reduce dependencies in system jars files (Partial)
+16. Remove dependency on jGApp (jgapp.jar)(Done)
+17. SORCER Books: Progarmer's Manual, Reference Manual, Application Development in SORCER
+18. Keep number of space worker constant (renew died workers)
+19. Show in SSB number of space workers if any
+20. Create a few engineering collaborating providers - teaching demo
+21. SeviceContext implementing List interface with args positioning
+22. A tool for creating patterns for a file filter (select file, filter type, line index, and field index)
+23. Persistent service ID (persist it as received from the lookup service)
+24. Cleanup usage of properties: deployment vs. SORCER environment(Done for now)
+25. Shared contexts (Space context)
+26. Rebalance Jobber with Spacer (PUSH Jobber and PULL Spacer)
+27. Separate functionality in classes ServiceTasker, ServiceJobber, and Spacer
+28. Autonomic provisioning + QoS
+29. Security issues
+30. Service UI for Exertion Execution Monitor
+31. UI for context editor (script, list , tree)
+32. UI for task editor
+33. UI for Job editor
+34. UI for variable development
+35. UI for Model development (UMLet)
+36. ServiceContext management: list (search by path/regex and annotations (mark), script, tree SU editors)
+37. Security issues
+
+38. Persistent UUID for providers
+39. Webster PUT/DELETE/SET (SET for FileFilter with remote setValue)
+40. Webster conditional GET (for filter use cached value when files do not change)
+    If-Modified-Since, Last-Modified, HTTP/1.1 304 Not Modified
+41. Jobber memory retention - test (test it with all types of dispatchers)
+42. FileFilter#setValue/getValue- improvements (version from FIPER?)
+43. Stress testing: space, cataloger for failure recovery (self-healing)
+44. Documented examples: RS analysis, parametric, optimization
+45. Selected test cases in JUnit for regression testing
+46. ModelManger in its own thread
+47. Version of Table with double[] instead of List<Object> for differentiators
+48. Get/write result in a uniform way: Table( parametric model), VarsInfo (response. optimization models)
+49. Reimplement PUT for parametric models in Table
+50. EBNF grammars for VO and MD programming
+51. Cataloger with multiple attributes and interfaces with relevant signature extensions
+52. FD and SOA as default configuration
+53. Efficient FD gradients with FileFilters, new FieFilter pattern matching get/set value
+54. Document Filters and Evaluator and how to create new ones
+55. Parallel FD - multithreded FD differentiator for the calculation point and all needed perturbations
+56. Webster boot does not work with ex7 parametric model
+
+

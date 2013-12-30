@@ -1,0 +1,70 @@
+# SORCER Server Default Properties
+# Mike Sobolewski, sobol@cs.ttu.edu, 
+# Sekhar Soorianarayanan, sooriana@cs.ttu.edu, 
+
+applicationServer.clientProperties=/db/users/sooriana/www/projects/iGrid/sorcer/appserver/webapps/sorcer/WEB-INF/classes/sorcer/lnch/sorcer.def
+	
+applicationServer.accessProfile.inFile=false
+
+#poolx=poolName|InitialContext.Factory|JNDIProvider.url|dataSource.name|poolSize
+pool0=sorcer|com.sun.jndi.fscontext.RefFSContextFactory|file:///research/sorcer/dbas|jdbcproperties|2
+pool1=system|com.sun.jndi.fscontext.RefFSContextFactory|file:///research/sorcer/dbas|jdbcproperties|2
+	
+#dbrolex=roleName|poolName|permissions 
+dbrole1=system|system|select:update:insert:delete
+dbrole2=public|system|select
+dbrole3=admin|system|
+dbrole4=root|system|
+dbrole6=originator|sorcer|select:update:insert:delete
+dbrole7=publisher|sorcer|select:update:insert:delete
+dbrole8=reviewer|sorcer|select:update:insert:delete
+dbrole9=approver|sorcer|select:update:insert:delete
+dbrole10=updater|sorcer|select:update:insert:delete
+dbrole11=viewer|sorcer|select
+dbrole12=looker|sorcer|select
+protocolConnection.defaultDbRole=originator
+
+
+applicationServer.logFile=as.log
+applicationServer.isLogged=true
+applicationServer.isExtended=false
+applicationServer.isMonitored=false
+applicationServer.useSSO=false
+
+# Debugging setup
+applicationServer.isDebugged=true
+applicationServer.debugKey=dispatch
+applicationServer.isAsserted=true
+applicationServer.isOutputLogged=true
+applicationServer.outputLog=sorcerlog.txt
+
+applicationServlet.codebase=../classes
+applicationServlet.templateDir=/research/sorcer/web
+applicationServlet.baseDir=/research/sorcer
+applicationServlet.dataDir=data
+applicationServlet.dataURL=http://www.sorcer.cs.ttu.edu/sorcer/data/
+
+protocolConnection.isExtended=true
+
+cache.useFileNotifier = false
+
+notifier.isEnabled=false
+notifier.isMonitored=false
+notifier.waitingTime=60
+notifier.monitorSize=20
+
+aclManager.isExtended=false
+applicationServer.systemAdmin=sooriana@cs.ttu.edu
+
+#upload directory
+dir1=repository1
+dir=repository2
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,27 @@
+In this examaple a plain SorcerProvider is used with a SmartArithmometer proxy. 
+Compare it with Arithmometer and SemismartArithmometer cases.
+
+The SmartArithmometer class implements the SmartProxy interface, 
+so the SmartArithmometer proxy can use the ProviderAdministrable 
+interface of SorcerProvider and additionally the third-party Averager remote 
+object objects.
+
+Also a SmartArithmometer proxy owns the registering provider proxy
+as its inner proxy and can communicate directly with the registering provider,
+for example via the standard "About" provider's service UI that is accesible 
+via the inner proxy of this SmartArithmometer proxy.
+
+Since this SmartArithmometer extends its primary 
+functionalty by the third-party Averager remote oprations, it differs from 
+fat and semismart proxies implemented by Arithmometer and SemismartArithmometer. 
+Thus this smart proxy can communicate back to its registering 
+provider and also to the third-party Averager remote object objects.
+Note that these remote Averager objects can be exported by a registering 
+provider or any other existing provider in the SORCER environmet.
+
+In summary, the business logic of a smart proxy can be distributed between 
+a smart proxy itself, a registering provider, and third-party providers.
+If the smart proxy busness logic is contained in the proxy itself, the proxy is called 
+fat. In the case of using admin proxy by a smart proxy, the proxy
+is called semismart. Finally, if the proxy uses admin proxy and its inner proxy
+to complement its functionality, the proxy is call fully smart or simply smart proxy.

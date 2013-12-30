@@ -1,0 +1,74 @@
+#!/bin/bash
+
+# set IS_CYGWIN
+#
+export IS_CYGWIN=`uname -s | awk 'BEGIN{flag=0} {if ($0~/CYGWIN/) {flag=1}} END{print flag}'`
+PATH_DELIMITER=":"
+#echo "minClasspath: BEFORE: IGRID_HOME=$IGRID_HOME"
+
+if [ $IS_CYGWIN -eq 1 ]; then
+	export IGRID_HOME=`cygpath -ds $IGRID_HOME`
+	export RIO_HOME=`cygpath -ds $RIO_HOME`
+	export JAVA_HOME=`cygpath -ds $JAVA_HOME`
+	PATH_DELIMITER=";"
+fi
+#echo "minClasspath: AFTER: IGRID_HOME=$IGRID_HOME"
+
+# linux and mac
+#
+export CLASSPATH=${IGRID_HOME}/classes$PATH_DELIMITER${IGRID_HOME}/lib/common/jna.jar
+export CLASSPATH=$CLASSPATH$PATH_DELIMITER${IGRID_HOME}/lib/river/lib/jsk-platform.jar
+export CLASSPATH=$CLASSPATH$PATH_DELIMITER${IGRID_HOME}/lib/river/lib/jsk-lib.jar
+export CLASSPATH=$CLASSPATH$PATH_DELIMITER${IGRID_HOME}/lib/common/jep-2.4.1a.jar
+export CLASSPATH=$CLASSPATH$PATH_DELIMITER${IGRID_HOME}/lib/common/sun-util.jar
+export CLASSPATH=$CLASSPATH$PATH_DELIMITER${IGRID_HOME}/lib/common/jfreechart/jcommon-1.0.17.jar
+export CLASSPATH=$CLASSPATH$PATH_DELIMITER${IGRID_HOME}/lib/common/jfreechart/jfreechart-1.0.14.jar
+export CLASSPATH=$CLASSPATH$PATH_DELIMITER${IGRID_HOME}/lib/common/commons-math3-3.2/commons-math3-3.2.jar
+export CLASSPATH=$CLASSPATH$PATH_DELIMITER${RIO_HOME}/lib/rio-platform-5.0-M4.jar
+export CLASSPATH=$CLASSPATH$PATH_DELIMITER${RIO_HOME}/lib/rio-start-5.0-M4.jar
+export CLASSPATH=$CLASSPATH$PATH_DELIMITER${RIO_HOME}/lib/logging/slf4j-jdk14-1.7.5.jar
+export CLASSPATH=$CLASSPATH$PATH_DELIMITER${RIO_HOME}/lib/rio-lib-5.0-M4.jar
+
+export CLASSPATH=$CLASSPATH$PATH_DELIMITER${IGRID_HOME}/../Products/classes
+
+#echo "11) CLASSPATH=$CLASSPATH"
+
+# jre
+#
+if [ -d $JAVA_HOME ]; then
+	export CLASSPATH=$CLASSPATH$PATH_DELIMITER$JAVA_HOME/jre/lib/rt.jar
+	export CLASSPATH=$CLASSPATH$PATH_DELIMITER$JAVA_HOME/jre/lib/resources.jar
+fi
+
+# windows
+#
+#export CLASSPATH_WIN=".:${IGRID_HOME}\classes:${IGRID_HOME}\lib\common\jna.jar:${IGRID_HOME}\lib\river\lib\jsk-platform.jar:${IGRID_HOME}\lib\river\lib\jsk-lib.jar:${IGRID_HOME}\lib\rio\rio.jar:${IGRID_HOME}\lib\common\jini-core.jar:${IGRID_HOME}\lib\common\jini-ext.jar:${IGRID_HOME}\lib\common\jep-2.4.1a.jar:${IGRID_HOME}\lib\common\sun-util.jar"
+export CLASSPATH_WIN="$IGRID_HOME\classes;$IGRID_HOME\lib\common\jna.jar;$IGRID_HOME\lib\river\lib\jsk-platform.jar;$IGRID_HOME\lib\river\lib\jsk-lib.jar;$IGRID_HOME\lib\rio\rio.jar;$IGRID_HOME\lib\common\jini-core.jar;$IGRID_HOME\lib\common\jini-ext.jar;$IGRID_HOME\lib\common\jep-2.4.1a.jar;$IGRID_HOME\lib\common\sun-util.jar;$IGRID_HOME\lib\common\jfreechart\jcommon-1.0.17.jar;$IGRID_HOME\lib\common\jfreechart\jfreechart-1.0.14.jar;$IGRID_HOME\lib\common\commons-math3-3.2\commons-math3-3.2.jar"
+#set CLASSPATH=%IGRID_HOME%\classes;%IGRID_HOME%\lib\common\jna.jar;%IGRID_HOME%\lib\river\lib\jsk-platform.jar;%IGRID_HOME%\lib\river\lib\jsk-lib.jar;%IGRID_HOME%\lib\rio\rio.jar;%IGRID_HOME%\lib\common\jini-core.jar;%IGRID_HOME%\lib\common\jini-ext.jar;%IGRID_HOME%\lib\common\jep-2.4.1a.jar;%IGRID_HOME%\lib\common\sun-util.jar
+
+
+# cywin classpath (switch out ; and put in :)
+#
+export CLASSPATH_SBIN=$CLASSPATH
+export IGRID_HOME_SBIN=$IGRID_HOME
+export RIO_HOME_SBIN=$RIO_HOME
+if [ $IS_CYGWIN -eq 1 ]; then
+	#export CLASSPATH=`echo $CLASSPATH | awk '{gsub(/:/,";", $0); print $0}'`
+	
+	#export CLASSPATH_SBIN=`cygpath -pds $CLASSPATH`
+	export CLASSPATH_SBIN=$CLASSPATH
+	
+	#export IGRID_HOME_SBIN=`cygpath -ds $IGRID_HOME`
+	export IGRID_HOME_SBIN=$IGRID_HOME
+	
+	#export RIO_HOME_SBIN=`cygpath -ds $RIO_HOME`
+	export RIO_HOME_SBIN=$RIO_HOME
+	
+	#export JAVA_HOME_SBIN=`cygpath -ds $JAVA_HOME`
+	export JAVA_HOME_SBIN=$JAVA_HOME
+
+	#export ANT_HOME_SBIN=`cygpath -ds $ANT_HOME`
+	export ANT_HOME_SBIN=$ANT_HOME
+fi
+
+#echo "22) CLASSPATH=$CLASSPATH"

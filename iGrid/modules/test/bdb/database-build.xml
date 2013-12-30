@@ -1,0 +1,55 @@
+<?xml version='1.0' encoding='ISO-8859-1' standalone='yes'?>
+
+<project name="variable-eval" default="all" basedir=".">
+	<!-- set global properties -->
+	<import file="../../common-build.xml" />
+	<property name="src" value="./src" />
+
+	<!-- The sources to compile -->
+	<patternset id="ant.java">
+		<include name="sorcer/util/bdb/**/*.java" />
+	</patternset>
+
+	<path id="project.classpath">
+		<pathelement location="${classes}/" />
+		<pathelement location="${sorcer.lib}/sorcer-prv.jar" />
+		<pathelement location="${common.lib}/jna.jar" />
+		<pathelement location="${common.lib}/je-4.1.10.jar" />
+		<path refid="jini.path" />
+		<path refid="rio.path" />
+		<path refid="jep.path" />
+	</path>
+
+	<target name="compile-test" description="Compiles this module's source files and outputs the classes to iGrid/classes">
+		<javac srcdir="${src}" destdir="${classes}" debug="true" target="1.6" source="1.6" nowarn="on">
+			<exclude name="**/SAVE/*.java" />
+			<exclude name="**/BAK/*.java" />
+			<classpath refid="project.classpath" />
+			<patternset refid="ant.java" />
+			<compilerarg value="-Xlint:none" />
+			<!-- <compilerarg value="-Xlint:unchecked" /> -->
+		</javac>
+	</target>
+
+	<target name="all" depends="dependents, compile-test, jars" />
+	<target name="jars" depends="database-test.jar" />
+
+	<target name="database-test.jar">
+		<classdepandjar jarfile="${sorcer.lib}/database-test.jar" files="true">
+			<classpath refid="project.classpath" />
+			<in name="sorcer.util.bdb" />
+			<topclass name="sorcer.util.bdb.provider.ExerterDatabaseRunner" />
+		</classdepandjar>
+	</target>
+
+	<target name="dependents">
+		<property name="sorcer.example.ex1" value="${iGrid.home}/modules/examples/ex1" />
+		<ant antfile="whoIsIt-prv-build.xml" dir="${sorcer.example.ex1}" target="jars" inheritAll="false" />
+		
+		<property name="sorcer.example.ex6" value="${iGrid.home}/modules/examples/ex6" />
+		<ant antfile="arithmetic-prv-build.xml" dir="${sorcer.example.ex6}" target="jars" inheritAll="false" />
+		
+		<!-- Add your module here. Please use the same antcall syntax as
+			all the other modules-->
+	</target>
+</project>

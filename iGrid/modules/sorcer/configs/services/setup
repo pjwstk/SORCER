@@ -1,0 +1,11 @@
+#!/bin/sh
+
+echo "Copying SORCER services config files...\n"
+
+SORCER_CONF=${SORCER_HOME}/conf
+export SORCER_CONF
+
+cp  ${SORCER_CONF}/services/sorcer.env ${APP_CODEBASE}/sorcer/util/
+cp  ${SORCER_CONF}/services/sorcer.attributes ${APP_CODEBASE}/sorcer/util/
+
+echo "Installing services Done\n"

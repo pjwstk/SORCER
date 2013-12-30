@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='ISO-8859-1' standalone='yes'?>
+<!-- 
+ * Copyright 2010 the original author or authors.
+ * Copyright 2010 SorcerSoft.org.
+ *  
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+-->
+
+<!-- Project sorcer -->
+<project name="examples" default="build-examples" basedir=".">
+	<!-- Import common buildfile. Leave this alone -->
+	<import file="../common-build.xml" />
+
+	<!-- Set this to the name of your module. This has to be unique, 
+	and it is used to test the modules below -->
+	<property name="module.name" value="examples" />
+	<property name="ex1" value="./ex1" />
+	<property name="ex2" value="./ex2" />
+	<property name="ex3" value="./ex3" />
+	<property name="ex4" value="./ex4" />
+	<property name="ex5" value="./ex5" />
+	<property name="ex6" value="./ex6" />
+	<property name="ex6qos" value="ex6qos" />
+	<property name="ex7" value="./ex7" />
+	<property name="ex10a" value="./ex10a" />
+	<property name="ex10b" value="./ex10b" />
+	<property name="ex11" value="./ex11" />
+
+	<!-- Compile the the educational examples -->
+	<target name="build-examples">
+		<echo message="Compiling SORCER examples ...." />
+		<ant antfile="whoIsIt-prv-build.xml" dir="${ex1}" target="all" inheritAll="false" />
+		<ant antfile="whoIsIt-req-build.xml" dir="${ex1}" target="all" inheritAll="false" />
+		<ant antfile="worker-prv-build.xml" dir="${ex2}" target="all" inheritAll="false" />
+		<ant antfile="worker-req-build.xml" dir="${ex2}" target="all" inheritAll="false" />
+		<ant antfile="worker-req-build.xml" dir="${ex3}" target="all" inheritAll="false" />
+		<ant antfile="worker-req-build.xml" dir="${ex4}" target="all" inheritAll="false" />
+		<ant antfile="arithmetic-prv-build.xml" dir="${ex6}" target="all" inheritAll="false" />
+		<ant antfile="arithmetic-req-build.xml" dir="${ex6}" target="all" inheritAll="false" />
+		<ant antfile="arithmetic-exertlet-build.xml" dir="${ex6}" target="all" inheritAll="false" />
+		<ant antfile="rs-model-build.xml" dir="${ex7}" target="all" inheritAll="false" />
+		<ant antfile="rs-all-build.xml" dir="${ex10a}" target="all" inheritAll="false" />
+		<ant antfile="rs-all-build.xml" dir="${ex10b}" target="all" inheritAll="false" />
+		<ant antfile="rs-model-accessor-build.xml" dir="${ex11}" target="all" inheritAll="false" />
+	</target>
+
+	<!-- Run JUnit test as specified in local Ant scripts -->
+	<target name="test-all" depends="build-examples">
+		<echo message="Testing SORCER examples ...." />
+		<ant antfile="worker-req-build.xml" dir="${ex2}" target="all-test" inheritAll="false" />
+		<ant antfile="rs-explorer-build.xml" dir="${ex10a}" target="all-test" inheritAll="false" />
+	</target>
+
+</project>

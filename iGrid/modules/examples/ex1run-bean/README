@@ -1,0 +1,14 @@
+Examples for service components (beans) running with 
+a required code server (webster) - webster-beans (WB).
+A webster is required for both a service provider and requestor.
+The functionality of providers and requestors is similar 
+as in the example ex1boot-bean.
+
+For prerequisites and how to run Ant scripts see the README file in the ex1 directory.
+
+Start a webster by running the Ant script
+${IGRID_HOME}/bin/webster/bin/webster-run.xml 
+before you run Ant provider scripts:
+whoIsItBean1-prv-run.xml and whoIsItBean2-prv-run.xml
+then requestor scripts:
+whoIsItBean1-req-run.xml and whoIsItBean2-req-run.xml

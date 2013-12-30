@@ -1,0 +1,76 @@
+#!/bin/sh
+
+# s. burton
+
+# set os flags 
+#
+UNAME_S=`uname -s`
+export IS_MAC=0
+export IS_LINUX=0
+export IS_WIN=0
+export IS_CYGWIN=0
+MATLAB_ARG=""
+ 
+if [ $UNAME_S == "Darwin" ]; then
+	IS_MAC=1
+fi
+if [ $UNAME_S == "Linux" ]; then
+	IS_LINUX=1
+fi
+export IS_CYGWIN=`uname -s | awk 'BEGIN{flag=0} {if ($0~/CYGWIN/) {flag=1}} END{print flag}'`
+if [ $IS_CYGWIN -eq 1 ]; then
+	export CYGWIN_HOME_UNIX=$LIBRARY_HOME/cygwin		
+	export CYGWIN_HOME=`$CYGWIN_HOME_UNIX/bin/cygpath -d $CYGWIN_HOME_UNIX`
+	export CYGWIN=nodosfilewarning
+fi
+
+# set the matlab root for the version of matlab you desire
+#
+if [ $IS_MAC -eq 1 ]; then
+	MATLAB_ROOT=/Applications/MATLAB_R2012a.app
+fi
+if [ $IS_LINUX -eq 1 ]; then
+	MATLAB_ROOT=/apps/global/mathworks/matlab/r2012a/rhel5/x86_64
+fi
+if [ $IS_CYGWIN -eq 1 ]; then
+	MATLAB_ROOT=`cygpath -ds "C:/Program Files/MATLAB/R2012a"`
+	#MATLAB_ROOT=/cygdrive/c/Program Files/MATLAB/R2012a
+	MATLAB_ARG=" -wait"
+fi	
+echo "***note: using MATLAB_ROOT=$MATLAB_ROOT"
+echo "         change this script if it is wrong"
+echo "         and do not commit to svn."
+
+MATLAB_EXE=$MATLAB_ROOT/bin/matlab
+
+# build classpath.txt (start matlab in same directory
+# as classpath.txt)
+#
+source $IGRID_HOME/configs/minClasspath
+
+# write classpath.txt file for matlab
+#
+echo $CLASSPATH | awk 'BEGIN{RS=":"} {print $0}' > classpath.txt
+cat $MATLAB_ROOT/toolbox/local/classpath.txt >> classpath.txt
+
+# switch paths to dos format for matlab; re-write classpath.txt
+#
+if [ $IS_CYGWIN -eq 1 ]; then
+	export IGRID_HOME=$IGRID_HOME_SBIN`
+	export RIO_HOME=$RIO_HOME_SBIN`
+	export CLASSPATH=$CLASSPATH_SBIN
+	echo $CLASSPATH | awk 'BEGIN{RS=";"} {print $0}' > classpath.txt
+	cat $MATLAB_ROOT/toolbox/local/classpath.txt >> classpath.txt
+	
+	MATLAB_EXE="cmd /C $MATLAB_EXE"
+	echo "MATLAB_EXE=$MATLAB_EXE"
+fi
+
+
+
+# start matlab
+#
+$MATLAB_EXE $MATLAB_ARG
+
+rm classpath.txt
+

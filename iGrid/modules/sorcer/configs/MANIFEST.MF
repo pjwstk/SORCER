@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Created-By: SORCERsoft.org
+Class-Path: jsk-dl.jar jsk-lib.jar
+

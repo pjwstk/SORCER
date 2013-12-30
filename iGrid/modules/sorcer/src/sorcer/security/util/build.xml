@@ -1,0 +1,52 @@
+<?xml version='1.0' encoding='ISO-8859-1' standalone='yes'?>
+<!-- 
+sorcer build configuration
+by Sekhar Soorianarayanan sooriana@cs.ttu.edu
+-->
+
+ <project name="SORCER" default="install" basedir=".">
+
+ <property environment="env"/>
+ <property name="CODEBASE" value="${env.APP_CODEBASE}" />
+ <property name="PDIR" value="sorcer/security/util" />
+
+ <path id="project.classpath">
+    <pathelement path="${env.CLASSPATH}" />
+    <pathelement path="${env.CODEBASE}" />
+ </path>
+
+ <fileset dir=".">
+    <patternset id="java.source" >
+       <include name="benchmarks/**/*.java" />
+       <include name="**/*.java" />
+       <exclude name="**/SAVE/*.java" />
+       <exclude name="**/BAK/*.java" />       
+    </patternset>
+ </fileset>
+
+ <fileset dir="${CODEBASE}">
+    <patternset id="java.classes" >
+       <include name="${PDIR}/**/*.class" />
+       <exclude name="${PDIR}/**/SAVE/*.class" />
+       <exclude name="${PDIR}/**/BAK/*.class" />
+    </patternset>
+ </fileset>
+ 
+ <target name="install" depends="clean, compile" />
+  
+ <target name="clean" if="${CODEBASE}/${PDIR}" >
+   <delete verbose="false" >
+    	<fileset dir="${CODEBASE}/${PDIR}" >
+           <patternset refid="java.classes" />
+        </fileset>
+   </delete>
+ </target>
+
+  <target name="compile" >
+   <javac srcdir="." destdir="${CODEBASE}" deprecation="no" >
+    <classpath refid="project.classpath" />
+    <patternset refid="java.source" />
+   </javac>
+ </target>
+
+</project>

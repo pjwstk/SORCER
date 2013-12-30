@@ -1,0 +1,126 @@
+/*
+ * Copyright 2010 the original author or authors.
+ * Copyright 2010 SorcerSoft.org.
+ *  
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+ 
+ package sorcer.provider.dispatcher;
+
+import java.io.*;
+import java.util.*;
+import net.jini.core.entry.*;
+import net.jini.lookup.entry.*;
+import sorcer.base.*;
+import sorcer.core.*;
+import sorcer.core.provider.*;
+import sorcer.util.*;
+import jgapp.util.*;
+import jgapp.rmi.InputStreamAdapter;
+import jgapp.rmi.OutputStreamProxy;
+import jgapp.dm.rmi.RemoteFileStore;
+import jgapp.util.GAppPrincipal;
+import jgapp.security.GAppACL;
+import jgapp.dm.util.DocumentDescriptor;
+import jgapp.dbas.InvalidTransactionException;
+import net.jini.lease.LeaseRenewalManager;
+
+import java.net.URL;
+
+import sorcer.core.*;
+import sorcer.base.*;
+import sorcer.util.*;
+import jgapp.util.Util;
+import sorcer.core.provider.caller.CallerUtil;
+import sorcer.core.util.SorcerUtil;
+import java.net.URI;
+
+import net.jini.core.lookup.ServiceItem;
+import net.jini.core.lookup.ServiceTemplate;
+import net.jini.discovery.LookupDiscovery;
+
+import net.jini.lookup.LookupCache;
+import net.jini.lookup.ServiceDiscoveryEvent;
+import net.jini.lookup.ServiceDiscoveryManager;
+
+import net.jini.lookup.ui.MainUI;
+import sorcer.core.entry.UIDescriptorFactory;
+import sorcer.core.serviceui.UIFrameFactory;
+import net.jini.core.event.*;
+import sorcer.core.provider.SorcerProvider;
+import sorcer.core.provider.autonomicprovisioner.AutonomicProvisioner;
+import sorcer.core.provider.autonomicprovisioner.ProvisionerException;
+
+import java.rmi.*; 
+import java.rmi.server.*; 
+import com.sun.jini.start.LifeCycle;
+
+import java.security.*;
+import javax.security.auth.*;
+import javax.security.auth.login.*;
+import net.jini.export.ServerContext;
+import net.jini.io.context.ClientSubject;
+import net.jini.io.context.ClientHost;
+import java.net.InetAddress;
+import javax.security.auth.x500.X500Principal;
+import net.jini.security.AccessPermission;
+
+public class MethodPermission extends AccessPermission implements Serializable{
+    Subject subject = null;
+    String methodname;
+    public MethodPermission(String method){
+	super(method);
+	System.out.println(this.getClass()+"::>> -------- Inside MethodPermission Constructor----"+method);
+	methodname=method;
+	/*
+	try{
+	    AccessControlContext context = AccessController.getContext();
+	    subject = Subject.getSubject(context);
+	    System.out.println(this.getClass()+"::>>> SUBJECT=="+subject);
+	}catch(Exception ex){
+	    System.out.println(this.getClass()+"::>>>Error in getting current Subject");
+	    ex.printStackTrace();
+	}
+	*/
+	
+    }
+    /*
+    public boolean implies(Permission permission){
+	MethodPermission mp = (MethodPermission) permission;
+	System.out.println(this.getClass()+"::>>> ---- Inside implies method ----"+methodname+mp.getName());
+	if(methodname.equals(mp.getName())){
+	    System.out.println(this+"::>> ------ Returning TRUE ----");
+	    return true;
+	}else{
+	    System.out.println(this+"::>> ------ Returning FALSE ----");
+	    return true;
+	}
+	
+	if(mp.subject==null){
+	    System.out.println(this+"::>> ------- Subject was null returning false ----");
+	    return false;
+	}else{
+	    System.out.println(this+"::>>> ------ Subject was not null... continuing ---");
+	    Principal principal = (X500Principal)subject.getPrincipals(X500Principal.class);
+	    if(("".equals(principal.getName()))){
+		System.out.println(this+"::>> ------ Returning TRUE ----");
+		return true;
+	    }else{
+		System.out.println(this+"::>> ------ Returning FALSE ----");
+		return false;
+	    }	    
+	}
+    }
+*/
+    
+}

@@ -1,0 +1,87 @@
+grant {
+	permission java.lang.RuntimePermission "createSecurityManager";
+	permission java.lang.RuntimePermission "getProtectionDomain";
+	permission java.lang.RuntimePermission "createClassLoader";
+	permission java.lang.RuntimePermission "getClassLoader";
+	permission java.lang.RuntimePermission "setContextClassLoader";
+	permission java.lang.RuntimePermission "accessClassInPackage.sun.security.provider";
+	permission java.lang.RuntimePermission "accessClassInPackage.sun.security.util";
+	permission java.lang.RuntimePermission "accessClassInPackage.sun.net.www";
+	permission java.lang.RuntimePermission "accessClassInPackage.sun.net.www.protocol.d";
+	permission java.lang.RuntimePermission "accessClassInPackage.sun.reflect";
+	permission java.lang.RuntimePermission "accessClassInPackage.sorcer.core.grid.provider.caller";
+	permission java.lang.RuntimePermission "setIO";
+	permission java.lang.RuntimePermission "exitVM";
+	permission java.lang.RuntimePermission "modifyThreadGroup";
+	permission java.lang.RuntimePermission "modifyThread";
+	permission java.lang.RuntimePermission "accessDeclaredMembers";
+	
+	permission java.security.SecurityPermission "getDomainCombiner";
+	permission java.security.SecurityPermission "createAccessControlContext";
+	permission java.security.SecurityPermission "getPolicy";
+	permission java.security.SecurityPermission "setPolicy";
+	permission java.security.SecurityPermission "getProperty.net.jini.security.policy.PolicyFileProvider.basePolicyClass";
+	permission java.security.SecurityPermission "setProperty.net.jini.security.policy.PolicyFileProvider.basePolicyClass";
+	permission java.security.SecurityPermission "getProperty.sorcer.core.provider.policer.PolicyFileProvider.basePolicyClass";
+	permission java.security.SecurityPermission "getProperty.policy.expandProperties";
+	permission java.security.SecurityPermission "getProperty.policy.ignoreIdentityScope";
+	permission java.security.SecurityPermission "getProperty.policy.allowSystemProperty";
+	permission java.security.SecurityPermission "getProperty.com.sun.jini.start.servicePolicyProvider";
+	permission java.security.SecurityPermission "getProperty.com.sun.jini.start.AggregatePolicyProvider";
+	permission java.security.SecurityPermission "getProperty.com.sun.jini.start.AggregatePolicyProvider.mainPolicyClass";
+	permission java.security.SecurityPermission "getProperty.net.jini.security.policy.DynamicPolicyProvider.basePolicyClass";
+	permission java.security.SecurityPermission "getProperty.policy.url.1";
+	permission java.security.SecurityPermission "getProperty.policy.url.2";
+	permission java.security.SecurityPermission "getProperty.policy.url.3";
+	permission java.security.SecurityPermission "getProperty.auth.policy.url.1";
+	
+	permission java.io.FilePermission "../configs/jeri-caller-prv.config", "read";
+	permission java.io.FilePermission "../configs/jeri-caller-prv.properties", "read";
+	permission java.io.FilePermission "/home/grad2/dincleza/iGrid/classes/sorcer/base/Provider.class", "read";
+	permission java.io.FilePermission "/home/grad2/dincleza/iGrid/classes/core/util/Log.class", "read";
+	permission java.io.FilePermission "/home/grad2/dincleza/iGrid/common/mckoidb.jar", "read";
+	permission java.io.FilePermission "/home/grad2/dincleza/iGrid/common/mkjdbc.jar", "read";
+	permission java.io.FilePermission "/home/grad2/dincleza/iGrid/common/jini-ext.jar", "read";
+	permission java.io.FilePermission "/home/grad2/dincleza/iGrid/common/sun-util.jar", "read";
+	permission java.io.FilePermission "/home/grad2/dincleza/iGrid/common/serviceui-1.1.jar", "read";
+	permission java.io.FilePermission "/home/grad2/dincleza/iGrid/common/jaxrpc.jar", "read";
+	permission java.io.FilePermission "/home/grad2/dincleza/iGrid/lib/caller.jar", "read";
+	permission java.io.FilePermission "/home/grad2/dincleza/iGrid/lib/sorcer.jar", "read";
+	permission java.io.FilePermission "/home/grad2/dincleza/iGrid/configs/sorcer.env", "read";		
+	permission java.io.FilePermission "/home/grad2/dincleza/iGrid/configs/startup-prv.config", "read";
+	//permission java.io.FilePermission "./proth2", "read";
+	permission java.io.FilePermission "sorcer.attributes", "read";
+	permission java.io.FilePermission "../logs/sorcer0.log", "read,write";
+	permission java.io.FilePermission "../logs/sorcer1.log", "read,write";
+	permission java.io.FilePermission "../logs/sorcer2.log", "read,write";
+	permission java.io.FilePermission "<<ALL FILES>>", "execute";
+		
+	permission java.util.PropertyPermission "*", "read,write";
+	
+	permission java.net.SocketPermission "224.0.1.84", "connect,accept,resolve";
+	permission java.net.SocketPermission "224.0.1.85", "connect,accept,resolve";
+	permission java.net.SocketPermission "*.cs.ttu.edu", "connect,accept,listen,resolve";
+	permission java.net.SocketPermission "*.cs.ttu.edu:1024-", "connect,accept,listen,resolve";
+	permission java.net.SocketPermission "129.118.164.70:1024-", "accept,resolve";
+	permission java.net.SocketPermission "129.118.1.125", "accept,resolve";
+	permission java.net.SocketPermission "127.0.0.1", "accept,resolve";
+	
+	permission net.jini.security.GrantPermission "java.security.AllPermission \"all permissions\", \"all actions\"";
+	
+	permission net.jini.security.AccessPermission "notify";
+	permission net.jini.security.AccessPermission "getProxyVerifier";
+	
+	permission net.jini.discovery.DiscoveryPermission "*";
+	permission net.jini.discovery.DiscoveryPermission "sorcer.POL";
+	
+	permission com.sun.jini.reggie.RegistrarPermission "register";
+	permission com.sun.jini.reggie.RegistrarPermission "lookup";
+	permission com.sun.jini.reggie.RegistrarPermission "notify";
+	
+	permission com.sun.jini.thread.ThreadPoolPermission "getSystemThreadPool";
+	permission com.sun.jini.thread.ThreadPoolPermission "getUserThreadPool";
+	
+	permission javax.security.auth.AuthPermission "getSubject";
+	
+	permission java.util.logging.LoggingPermission "control";
+};

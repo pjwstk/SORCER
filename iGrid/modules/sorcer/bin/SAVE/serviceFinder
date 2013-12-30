@@ -1,0 +1,40 @@
+#!/bin/sh 
+
+unset SORCER_HOME 
+unset SORCER_CODEBASE
+unset SORCER_RMI_HOST
+unset SORCER_RMI_PORT
+unset SORCER_HTTP_HOST
+unset SORCER_HTTP_PORT
+unset SORCER_PORTAL_HOST 
+unset SORCER_PORTAL_PORT
+
+unset SORCER_BASEDIR
+unset CODEBASE
+unset BUILD_TOOL
+unset XML_HOME
+
+unset J2EE_HOME
+
+unset JAVA_HOME
+unset JAVAC
+
+unset JINI_HOME
+unset RIO_HOME
+unset ANT_HOME
+unset TOMCAT_DIST
+
+unset CVSROOT
+
+unset JINICLASSES
+
+unset XMLCLASSES
+
+unset CLASSPATH
+
+
+#HTTP_CODEBASE="http://${SORCER_HTTP_HOST}:${SORCER_HTTP_PORT}/fiper/jfiper/finder-1.0/lib/"
+#-c $HTTP_CODEBASE &
+
+cd /research/fiper/jfiper/finder-1.0/bin
+./finder -j /research/fiper/jfiper/jini/jini1_1 

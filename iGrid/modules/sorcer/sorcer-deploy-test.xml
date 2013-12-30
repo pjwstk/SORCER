@@ -1,0 +1,186 @@
+<?xml version='1.0' encoding='ISO-8859-1' standalone='yes'?>
+<project name="sorcer-deploy-test" default="all" basedir=".">
+	<import file="../../modules/common-build.xml" />
+    <property name="src" value="./src" />
+    <property name="junit.src" value="./src" />
+
+    <patternset id="ant.java">
+        <include name="sorcer/**/*.java" />
+        <!-- Exclude security related dispatcher for now -->
+        <exclude name="sorcer/core/grid/provider/dispatcher/**/*.java" />
+        <exclude name="sorcer/core/provider/logger/log/*.java" />
+        <exclude name="sorcer/core/provider/logger/log/**/*.java" />
+        <exclude name="sorcer/test/**/*.java" />
+        <exclude name="**/SAVE/*.java" />
+        <exclude name="sorcer/xml/*.java" />
+        <exclude name="**/BAK/*.java" />
+    </patternset>
+
+    <!-- The JUnit sources to be compiled -->
+    <patternset id="junit-ant.java">
+        <include name="junit/sorcer/**/deploy/*.java" />
+    </patternset>
+
+    <!-- The classpath for this project, refers back to classpath not set in common buildfile -->
+    <path id="project.classpath">
+        <pathelement location="${classes}" />
+        <pathelement location="${support.lib}/junit.jar" />
+        <pathelement location="${sorcer-ext.lib}/webster.jar" />
+        <pathelement location="${blitz.lib}/lockmgr.jar" />
+        <pathelement location="${common.lib}/spki.jar" />
+        <pathelement location="${servlet.api}" />
+        <pathelement location="${common.lib}/classes12.zip" />
+        <pathelement location="${common.lib}/commons-fileupload-1.0.jar" />
+        <pathelement location="${rio.home}/lib-dl/cybernode-api${rio.version}.jar" />
+        <pathelement location="${rio.home}/lib-dl/monitor-api${rio.version}.jar" />
+        <pathelement location="${common.lib}/jffp.jar" />
+        <pathelement location="${common.lib}/org.sadun.util.jar" />
+        <pathelement location="${common.lib}/Jama-1.0.2.jar" />
+        <pathelement location="${common.lib}/je-4.1.21.jar" />
+        <pathelement location="${common.lib}/jfreechart/jfreechart-1.0.14.jar" />
+        <pathelement location="${common.lib}/jfreechart/jcommon-1.0.17.jar" />
+        <pathelement location="${support.lib}/junit-addons-1.4.jar" />
+        <path refid="jaxp.path" />
+        <path refid="jini.path" />
+        <path refid="rio.path" />
+        <path refid="surrogate.path" />
+        <path refid="scaf.path" />
+        <path refid="mckoi.path" />
+        <path refid="jep.path" />
+        <path refid="swing.layout.path" />
+    </path>
+
+    <target name="clean">
+        <delete includeemptydirs="true" quiet="true">
+            <fileset dir="../../classes" includes="**/*" />
+            <fileset dir="./reports" includes="**/*" />
+        </delete>
+    </target>
+
+    <target name="all" depends="compile, junit-compile, sorcer-deploy-tests"/>
+    <target name="sorcer-deploy-tests" depends="compile, junit-compile">
+        <parallel>
+            <sequential>
+                <!--<ant antfile="${iGrid.home}/bin/iGrid-Rio-boot.xml" dir="${iGrid.home}/bin" target="boot" inheritAll="false" />-->
+                <antcall target="run-deploy-tests"/>
+                <antcall target="iGrid-rio-destroy" />
+            </sequential>
+        </parallel>
+    </target>
+
+    <target name="ensure-test-name" unless="test">
+        <fail message="You must run this target with -Dtest=TestName"/>
+    </target>
+
+    <target name="iGrid-rio-destroy">
+        <java classname="sorcer.util.ServiceDestroyer" fork="yes">
+            <classpath>
+                <pathelement location="${sorcer.lib}/prv-destroyer.jar" />
+                <pathelement location="${jini.lib}/jsk-platform.jar" />
+                <pathelement location="${jini.lib}/jsk-lib.jar" />
+                <pathelement location="${sorcer.lib}/sorcer-prv.jar" />
+                <path refid="rio.path" />
+                <pathelement location="${rio.home}/lib-dl/cybernode-api${rio.version}.jar" />
+                <pathelement location="${rio.home}/lib-dl/monitor-api${rio.version}.jar" />
+                <pathelement location="${rio.home}/lib/logging/jul/slf4j-jdk14-${slf4j.version}.jar" />
+                <pathelement location="${java.home}/../lib/tools.jar" />
+            </classpath>
+            <sysproperty key="java.security.policy" value="${iGrid.home}/policy/iGrid.policy" />
+            <sysproperty key="java.protocol.handler.pkgs" value="net.jini.url|sorcer.util.bdb.sos|org.rioproject.url" />
+            <sysproperty key="java.rmi.server.RMIClassLoaderSpi" value="org.rioproject.rmi.ResolvingLoader" />
+            <arg value="monitor" />
+            <arg value="cybernode" />
+            <arg value="jvm:start-sorcer-web" />
+        </java>
+    </target>
+	
+    <target name="test"
+            description="Runs a specific SORCER JUnit test"
+            depends="ensure-test-name, compile, junit-compile, copy-prv-config-files">
+        <junit fork="yes"
+               showoutput="yes"
+               outputtoformatters="true">
+            <classpath>
+                <path refid="junit.path" />
+                <!--<path refid="jini.path" />-->
+                <path refid="rio.path" />
+                <pathelement location="${jini.lib}/jsk-lib.jar" />
+                <pathelement location="${jini.lib}/jsk-platform.jar" />
+                <pathelement location="${rio.lib}/resolver-api${rio.version}.jar" />
+                <pathelement location="${rio.home}/lib-dl/monitor-api${rio.version}.jar" />
+                <pathelement location="${rio.home}/lib-dl/cybernode-api${rio.version}.jar" />
+                <pathelement location="${rio.home}/lib/logging/jul/slf4j-jdk14-${slf4j.version}.jar" />
+                <pathelement location="${java.home}/../lib/tools.jar" />
+                <pathelement location="../../classes"/>
+            </classpath>
+            <sysproperty key="IGRID_HOME" value="${iGrid.home}" />
+            <sysproperty key="iGrid.home" value="${iGrid.home}" />
+            <sysproperty key="sorcer.env.file" value="${iGrid.home}/configs/sorcer.env" />
+            <sysproperty key="iGrid.home" value="${iGrid.home}" />
+            <sysproperty key="java.protocol.handler.pkgs" value="sorcer.util.url|org.rioproject.url" />
+            <sysproperty key="java.rmi.server.RMIClassLoaderSpi" value="org.rioproject.rmi.ResolvingLoader" />
+            <sysproperty key="java.rmi.server.useCodebaseOnly" value="false" />
+            <sysproperty key="Djava.util.logging.config.file" value="${rio.home}/config//logging/rio-logging.properties" />
+            <batchtest>
+                <fileset dir="${iGrid.home}/modules/sorcer/src">
+                    <include name="**/${test}.java"/>
+                </fileset>
+            </batchtest>
+            <formatter type="brief" usefile="false"/>
+        </junit>
+    </target>
+
+    <target name="run-deploy-tests" depends="copy-prv-config-files, create-reports-dir">
+        <property name="test.reports" value="./reports" />
+        <junit fork="yes"
+               showoutput="true"
+               outputtoformatters="true">
+            <classpath>
+                <path refid="junit.path" />
+                <path refid="jini.path" />
+                <path refid="rio.path" />
+                <pathelement location="${rio.lib}/resolver-api${rio.version}.jar" />
+                <pathelement location="${rio.home}/lib-dl/monitor-api${rio.version}.jar" />
+                <pathelement location="${rio.home}/lib-dl/cybernode-api${rio.version}.jar" />
+                <pathelement location="${rio.home}/lib/logging/jul/slf4j-jdk14-${slf4j.version}.jar" />
+                <pathelement location="${java.home}/../lib/tools.jar" />
+                <pathelement location="../../classes"/>
+            </classpath>
+            <sysproperty key="IGRID_HOME" value="${iGrid.home}" />
+            <sysproperty key="iGrid.home" value="${iGrid.home}" />
+            <sysproperty key="sorcer.env.file" value="${iGrid.home}/configs/sorcer.env" />
+            <sysproperty key="iGrid.home" value="${iGrid.home}" />
+            <sysproperty key="java.protocol.handler.pkgs" value="net.jini.url|sorcer.util.bdb.sos|org.rioproject.url" />
+            <sysproperty key="java.rmi.server.RMIClassLoaderSpi" value="org.rioproject.rmi.ResolvingLoader" />
+            <sysproperty key="java.rmi.server.useCodebaseOnly" value="false" />
+            <batchtest fork="yes" todir="${test.reports}">
+                <fileset dir="${iGrid.home}/modules/sorcer/src">
+                    <include name="**/deploy/*Test*.java"/>
+                    <exclude name="**/iGridStartupTest.java"/>
+                </fileset>
+            </batchtest>
+            <formatter type="plain" />
+        </junit>
+    </target>
+
+    <target name="copy-prv-config-files">
+        <mkdir dir="${iGrid.home}/bin/sorcer/test/arithmetic/configs" />
+        <copy todir="${iGrid.home}/bin/sorcer/test/arithmetic/configs">
+            <fileset dir="src/junit/sorcer/core/provider/configs">
+                <include name="*" />
+            </fileset>
+        </copy>
+        <mkdir dir="${iGrid.home}/bin/sorcer/test/deploy/configs" />
+        <copy todir="${iGrid.home}/bin/sorcer/test/deploy/configs">
+            <fileset dir="src/junit/sorcer/core/deploy/configs">
+                <include name="*" />
+            </fileset>
+        </copy>
+    </target>
+	
+	<target name="create-reports-dir">
+		<mkdir dir="${iGrid.home}/modules/sorcer/reports" />
+	</target>
+
+</project>
+

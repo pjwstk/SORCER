@@ -1,0 +1,15 @@
+# .bashrc
+
+# Source global definitions
+if [ -f /etc/bashrc ]; then
+	. /etc/bashrc
+fi
+
+# User specific aliases and functions
+
+export JAVA_HOME=/usr/java/jdk1.6.0_10
+export ANT_HOME=/home/sobolemw/apache-ant-1.7.0
+
+export IGRID_HOME=/home/sobolemw/workspace/iGrid-08
+
+export PATH=.:$JAVA_HOME/bin:$ANT_HOME/bin:$PATH

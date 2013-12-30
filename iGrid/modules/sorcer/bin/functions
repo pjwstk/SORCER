@@ -1,0 +1,110 @@
+#!/bin/ksh
+#
+# functions	This file contains functions to be used by most or all
+#		shell scripts in the ${SORCER_HOME}/bin directory.
+#
+# Hacked by:    Mike Sobolewski, sobol@crd.ge.com
+#
+
+# First set up a default search path.
+#export PATH="/sbin:/usr/sbin:/bin:/usr/bin"
+
+# A function to start a program.
+startproc() {
+	nicelevel=0
+	while [ "$1" != "${1##-}" -o "$1" != "${1##+}" ]; do 
+	echo loop
+	  case $1 in
+	    '')    echo '$0: Usage: startproc [+/-nicelevel] {program}'
+	           return 1 ;;
+	    -*|+*) nicelevel=$1
+		   echo nicelevel $nicelevel
+	           shift ;;
+	     *)    nicelevel=0 ;;
+	  esac
+	done
+
+	# Check if the process has alredy started
+	if [ -f ${SORCER_HOME}/bin/run/${1##/*/}.pid ] ; then 
+	    echo The proces $0 is already running
+	    return 1
+	fi
+
+	# Start it up.
+	nice -n $nicelevel ${1:+"$@"} &
+}
+
+# A function to stop a program.
+killproc() {
+	# Test syntax.
+	if [ $# = 0 ]; then
+		echo "Usage: killproc {program} [signal]"
+		return 1
+	fi
+
+	notset=0
+	# check for second arg to be kill level
+	if [ "$2" != "" ] ; then
+		killlevel=$2
+	else
+		notset=1
+		killlevel="-9"
+	fi
+
+        # Save basename.
+        base=`basename $1`
+
+        # Find pid.
+        pidlist=`pidofproc $base`
+	pid=
+	for apid in $pidlist ; do
+	    pid="$pid $apid"
+	done
+
+        # Kill it.
+        if [ "$pid" != "" ] ; then
+		kill $killlevel $pid
+	else
+	      echo "FAILED $base shutdown"
+	fi
+
+        # Remove pid file if any.
+	if [ -f ${SORCER_HOME}/bin/run/$base.pid ] ; then
+	    echo `cat ${SORCER_HOME}/bin/run/$base.pid`
+	fi
+
+	if [ "$notset" = "1" ]; then
+            rm -f ${SORCER_HOME}/bin/run/$base.pid
+	fi
+
+	return $pid
+}
+
+# A function to find the pid of a program.
+pidofproc() {
+	# Test syntax.
+	if [ $# = 0 ] ; then
+		echo "Usage: pidofproc {program}"
+		return 1
+	fi
+
+	# Try in "${SORCER_HOME}/bin/run/*.pid" files
+	if [ -f ${SORCER_HOME}/bin/run/$1.pid ] ; then
+	        pid=`head -1 ${SORCER_HOME}/bin/run/$1.pid`
+	        if [ "$pid" != "" ] ; then
+	                echo $pid
+	                return 0
+	        fi
+	fi
+}
+
+# A function to report the runnig SORCER environmet processes
+sorcerStatus() {
+	echo SORCER_HOME $SORCER_HOME
+	echo SORCER_CODEBASE $SORCER_CODEBASE
+	echo SORCER_RMI_HOST $SORCER_RMI_HOST:$SORCER_RMI_PORT
+	echo SORCER_HTTP_HOST $SORCER_HTTP_HOST:$SORCER_HTTP_PORT
+	echo SORCER_PORTAL_HOST $SORCER_PORTAL_HOST:$SORCER_PORTAL_PORT
+	echo
+	ls -1 ${SORCER_HOME}/bin/run
+}

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="no"?>
+<!DOCTYPE opstring SYSTEM "java://org/jini/rio/dtd/rio_opstring.dtd" [
+    <!ENTITY Local.IP SYSTEM "java://java.net.InetAddress.getLocalHost().getHostAddress()" >
+    <!ENTITY Local.Port "9000" >
+    <!ENTITY CodeServerURL "http://&Local.IP;:&Local.Port;/" >
+    <!ENTITY group SYSTEM "java://java.lang.System.getProperty(user.name)">
+]>
+
+<opstring>
+    <OperationalString Name="SPB RMI Server Arithmetic">
+
+        <Codebase>&CodeServerURL;</Codebase>
+        
+        <Groups>
+            <!--<Group>&group;</Group>-->
+	        <Group>sorcer.DEV</Group>
+        </Groups>            
+
+        <ServiceBean Name="SPB Server Arithmetic" MatchOnName="yes">
+            <Interfaces>
+                  <Interface>sorcer.arithmetic.ArithmeticRemote</Interface>
+                <Resources ComputeHttpmd="yes">
+                   	<JAR>server-arithmetic-spb.jar</JAR>
+                   	<JAR>arithmetic-ui.jar</JAR>
+                    <JAR>rio-api.jar</JAR>
+                    <JAR>jsk-lib.jar</JAR>
+                </Resources>
+            </Interfaces>
+
+            <ImplementationClass>sorcer.arithmetic.RemoteArithmometer
+                <Resources>
+                    <JAR>server-arithmetic-spb.jar</JAR>
+                    <JAR>arithmetic-ui.jar</JAR>
+                    <JAR>jsk-lib.jar</JAR>
+                </Resources>
+            </ImplementationClass>
+
+            <Logging>
+                <Logger Name="org.jini.rio.qos.ScalingPolicyHandler" Level="ALL">
+                    <Handler ClassName="java.util.logging.ConsoleHandler" 
+                             Level="ALL"/>
+                </Logger>
+            </Logging>
+	    
+	    <Maintain>1</Maintain>
+
+	    <MaxPerMachine>1</MaxPerMachine>
+
+        <Comment>Arithmetic Service Provider Bean (SPB) example</Comment>
+
+        </ServiceBean>
+
+    </OperationalString>
+</opstring>

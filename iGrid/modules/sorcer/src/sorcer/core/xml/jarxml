@@ -1,0 +1,29 @@
+#!/bin/sh 
+#clear
+printf "[Run] Jarring SORCER XML service related files...\n"
+
+JARFILE="sorcerxml.jar"
+PWD=`pwd`
+cd ../../../jsorcer
+
+jar -cvf $PWD/$JARFILE \
+sorcer/service/xml/*.class \
+sorcer/service/DataNode.class \
+sorcer/service/DataNodeException.class \
+sorcer/service/ServiceContext.class \
+sorcer/service/ServiceJob.class \
+sorcer/service/ServiceTask.class \
+sorcer/service/TaskException.class \
+sorcer/service/ServiceMethod.class \
+sorcer/service/HashtableContext.class \
+sorcer/service/JobExecutor.class \
+sorcer/service/util/ServiceProviderAccessor.class \
+sorcer/util/SORCER.class \
+sorcer/util/Env.class \
+jgapp/util/Util.class \
+jgapp/util/GApp.class \
+jgapp/util/CSVStringTokenizer.class \
+jgapp/util/Launcher.class \
+jgapp/util/Invoker.class \
+jgapp/util/AssertionError.class \
+jgapp/servlets/ServiceServlet_Stub.class

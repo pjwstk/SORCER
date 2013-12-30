@@ -1,0 +1,18 @@
+#!/bin/bash
+
+printf "\n\n*** sbin help ***\n\n"
+printf "please invoke function with '-h' for more information\n\n"
+printf "functions:\n"
+printf "==========\n\n"
+printf "scu:\t\tclient utils - print provider methods, sorcer properties, etc.\n"
+printf "spc:\t\tprovider client - run provider service methods\n"
+printf "smc:\t\tmodel client - query and execute optimization models\n"
+
+printf "senv:\t\tprints environment variables seen by jvm\n"
+printf "sprop:\t\tlist java system properties\n"
+printf "srun_*:\t\tthese functions run various sorcer\n\t\tant files to start sorcer services\n"
+printf "sls:\t\tlist all sbin functions/scripts\n"
+
+printf "smat:\t\tstart matlab with sorcer env\n"
+printf "sec:\t\tstart eclipse sorcer env\n"
+printf "\n"

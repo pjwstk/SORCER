@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<platform>
+
+	<!-- Engineering jars to load into the common classloader. -->
+	<capability name="Plotting" common="yes">
+		<version>1.0.17</version>
+		<manufacturer>AFRL/WPAFB</manufacturer>
+		<classpath>${iGrid.home}/lib/common/jfreechart/jcommon-1.0.17.jar 
+		${iGrid.home}/lib/common/jfreechart/jfreechart-1.0.14.jar</classpath>
+	</capability>
+
+</platform>

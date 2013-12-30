@@ -1,0 +1,3 @@
+Committed revision 33 on July 9, 2008
+svn copy -m "Tagging Release 8.1" file:///home/svn/sorcer/iGrid-08 file:///home/svn/sorcer/sorcer-release-8.1
+

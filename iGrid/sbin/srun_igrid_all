@@ -1,0 +1,15 @@
+#!/bin/bash
+
+#echo "starting webster..."
+#srun_webster -w
+
+echo "starting service browser..."
+srun_browse -w
+
+echo "starting igrid..."
+srun_igrid -w
+
+
+
+
+

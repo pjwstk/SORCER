@@ -1,0 +1,8 @@
+#!/bin/sh
+
+echo "Copying SORCER dbas config files...\n"
+
+export SORCER_CONF=${SORCER_HOME}/conf
+cp  ${SORCER_CONF}/dbas/as.* ${APP_CODEBASE}/sorcer/dbas/
+
+echo "Installing dbas Done\n"

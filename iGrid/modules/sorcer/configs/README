@@ -1,0 +1,60 @@
+######################################################
+#	Sekhar Soorianarayanan
+#	03/21/04
+#	All configuration information for sorcer
+######################################################
+
+
+Configurations for SORCER
+==========================
+Depending on what you are going to use, you have to update the configurations.
+Pls find below the NEEDED BY section. You may ignore other configurations and
+concentrate on only the stuffs which you require.
+
+
+Here's come info regarding different configuration files.
+========================================================
+1) appserver
+	+----server.xml  //server.xml for tomcat. Define server context here  
+	+----web.xml	 //web.xml    for your individual servlets. Define servlet configs here 
+	+----setup     	 //Call this script and it will put your xmls in right location
+
+NEEDED BY : 	TOMCAT
+IMPORTANT :	UPDATE /research/sorcer/etc/env/README and update the ports reserved for you
+		before configuring your tomcat for any specific ports
+
+2) dbas		//Both these files are required if you want to communicate to database
+	+----as.access
+	+----as.def
+
+NEEDED BY : 	Application Servlet
+		Persister Service
+		Service Servlet
+
+3) services
+	+-----sorcer.env
+	+-----provider.config
+	+-----provider.properties
+
+NEEDED BY :	All Providers
+
+
+4) webclient
+	+-----sorcer.def
+
+This is for web based user agents. More precisely if you are using a applets in broeser.
+
+NEEDED BY :	All Web-Clients
+		File Store Service
+
+
+5) jaas :
+	+-----jaas.config
+
+NEEDED BY :	REQUESTORS LOGIN MODULE
+
+
+6) otherConfigs :
+	+---- **
+
+Legacy configurations which might be of some use in future

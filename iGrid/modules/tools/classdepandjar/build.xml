@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="ISO-8859-1" standalone="yes"?>
+<!-- 
+ Copyright 2005 Sun Microsystems, Inc.
+ Copyright 2006 GigaSpaces Technologies, Inc.
+ 
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+ 
+        http://www.apache.org/licenses/LICENSE-2.0
+ 
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
+ -->
+<!-- 
+ Make sure the following variables are changed to reflect your environment:
+     ANT_HOME          Location where Ant is installed
+     JINI_HOME         Location where Jini is installed
+-->
+<project name="buildtools" default="all" basedir=".">
+    <!-- allow user to override values without editing this file -->
+    <property environment="env"/>
+    <property file=".ant.properties"/>
+    <property file="${user.home}/.ant.properties"/>    	
+    <property name="project.home" value="${basedir}"/>
+    <property name="jini.home" value="${env.JINI_HOME}"/>
+    <property name="ant.home" value="${env.ANT_HOME}"/>
+    <property name="lib" value="${project.home}/lib"/>    
+    <property name="docs" value="${project.home}/docs" />
+	
+    <property name="classes" value="./build/classes" />
+    <property name="src" value="./src"/>        
+
+    <fileset dir="${src}">
+        <patternset id="ant.java">
+            <include name="org/jini/rio/tools/ant/*.java"/>
+	    <include name="com/sun/jini/tool/**/*.java"/>
+            <exclude name="**/SAVE/*.java"/>
+            <exclude name="**/BAK/*.java"/>
+        </patternset>
+    </fileset>
+
+    <fileset dir="${src}">
+        <patternset id="ant.classes">
+            <include name="org/jini/rio/tools/ant/*.class"/>
+            <include name="com/sun/jini/tool/**/*.class"/>
+            <exclude name="**/SAVE/*.class"/>
+            <exclude name="**/BAK/*.class"/>
+        </patternset>
+    </fileset>
+
+    <path id="jinitool.path">
+        <pathelement location="${jini.home}/lib/tools.jar" />
+    </path>
+
+    <path id="ant.path">
+        <pathelement location="${ant.home}/lib/ant.jar"/>
+    </path>
+
+    <path id="project.classpath">
+        <pathelement location="./"/>
+        <path refid="jinitool.path"/>
+        <path refid="ant.path"/>
+    </path>
+
+    <path id="javadocs.classpath">
+        <pathelement location="${lib}/classdepandjar.jar"/>
+        <pathelement location="${ant.home}/lib/ant.jar"/>
+    </path>
+
+    <target name="all" depends="prepare, jars"/>
+
+    <target name="clean" depends="prepare, clean-jars, clean-classes"/>
+    <target name="clean-classes">
+        <delete verbose="true">
+            <fileset dir="${classes}">
+                <patternset refid="ant.classes"/>
+            </fileset>
+        </delete>
+    </target>
+
+    <target name="clean-jars">        
+            <delete verbose="true">
+                <fileset dir="${lib}">
+                    <include name="classdepandjar.jar"/>
+                </fileset>
+            </delete>
+    </target>
+    
+    <target name="prepare">
+        <mkdir dir="${lib}"/>
+        <mkdir dir="${docs}" />
+        <mkdir dir="${docs}/api"/>
+        <mkdir dir="${classes}"/>
+    </target>
+
+    <target name="compile" depends="prepare">
+        <javac srcdir="${src}"
+               destdir="${classes}"
+               deprecation="yes"
+               encoding="cp1252"
+               source="1.4"
+               target="1.4">
+            <classpath refid="project.classpath"/>
+            <patternset refid="ant.java"/>
+        </javac>
+    </target>
+
+    <target name="docs" depends="prepare, compile" >
+        <javadoc packagenames="org.jini.rio.tools.ant.*"
+                 maxmemory="100M"
+                 sourcepath="${src}"
+                 destdir="${docs}/api"
+                 Author="true"
+                 Version="true"
+                 Use="true"
+                 windowtitle="Classdepandjar Utility"
+                 doctitle="&lt;h1&gt;Classdepandjar Utility&lt;/h1&gt;"
+                 bottom="&lt;center&gt;&lt;i&gt;Copyright (c) 2005 Sun Microsystems,Inc.&lt;br&gt;Copyright (c) 2006 GigaSpaces Technologies, Inc.&lt;br&gt;All Rights Reserved.&lt;/i&gt;&lt;/center&gt;">
+
+            <group title="Classdepandjar Utility" packages="org.jini.rio.tools.ant.*" />
+            <classpath refid="javadocs.classpath"/>
+        </javadoc>
+    </target>
+
+        <target name="jars" depends="compile">
+        <jar jarfile="${lib}/classdepandjar.jar" >
+            <fileset dir="${classes}">
+                <patternset refid="ant.classes"/>
+            </fileset>
+            <fileset dir="${src}" >
+                <include name="com/sun/jini/tool/resources/*.properties" />
+            </fileset>
+        </jar>
+    </target>
+
+</project>

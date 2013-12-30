@@ -1,0 +1,554 @@
+<!-- 
+ * Copyright 2010 the original author or authors.
+ * Copyright 2010 SorcerSoft.org.
+ *  
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * Service-Oriented Computing Environmet: iGrid build configuration
+ * Make sure the following variables are changed to reflect your environment:
+ *    IGRID_HOME        iGrid location
+ *    JAVA_HOME         JDK Location
+ *    ANT_HOME          Jakarta Ant location
+ Please see also the <module name>-build.xml files in modules that import this file.
+ 
+Build files that import this file need to have the following patternsets defined
+ant.java - module source files
+ant.classes - module class files
+ant.jars - module jar files
+
+A "src" property should be set and point to the directory containing the module's source code.
+-->
+<project>
+
+	<!-- Product version info -->
+	<property name="product.version" value="13.5.0" />
+	<property name="product.name" value="SORCERsoft.org-${product.version}" />
+	<property name="product.title" value="SORCER v.${product.version}" />
+
+	<!--project xmlns:artifact="antlib:org.apache.maven.artifact.ant"-->
+	<tstamp />
+	<property environment="env" />
+	<property name="iGrid.home" value="${env.IGRID_HOME}" />
+	<property name="java.home" value="${env.JAVA_HOME}" />
+	<property name="jini.home" value="${env.JINI_HOME}" />
+	<!--property name="rio.home" value="${env.RIO_HOME}" /-->
+	<property name="rio.home" value="${iGrid.home}/rio" />
+	<property name="ant.home" value="${env.ANT_HOME}" />
+	<property name="iGrid.config" value="${iGrid.home}/configs" />
+	<property name="lib" value="${iGrid.home}/lib" />
+	<property name="jini.lib" value="${lib}/river/lib" />
+	<property name="jini-dl.lib" value="${lib}/river/lib-dl" />
+	<property name="jini-ext.lib" value="${lib}/river/libe-ext" />
+	<property name="rio.lib" value="${rio.home}/lib" />
+	<property name="rio-dl.lib" value="${rio.home}/lib-dl" />
+	<property name="blitz.lib" value="${lib}/common/blitz" />
+	<property name="eng.lib" value="${lib}/eng/lib" />
+	<property name="eng-dl.lib" value="${lib}/eng/lib-dl" />
+	<property name="eng-ext.lib" value="${lib}/eng" />
+	<property name="common.lib" value="${lib}/common" />
+	<property name="local.lib" value="${lib}/local" />
+	<property name="sorcer.lib" value="${lib}/sorcer/lib" />
+	<property name="sorcer-dl.lib" value="${lib}/sorcer/lib-dl" />
+	<property name="sorcer-ext.lib" value="${lib}/sorcer/lib-ext" />
+	<property name="support.lib" value="${common.lib}/buildsupport" />
+	<property name="classes" value="${iGrid.home}/classes" />
+	<property name="docs" value="${iGrid.home}/docs" />
+	<property name="servlet.api" value="${common.lib}/servlet-api.jar" />
+	<property name="stax.home" value="${env.STAX_HOME}" />
+	<property name="sorcer.trunk" value="." />
+	<property name="build.dir" value="${sorcer.trunk}/build" />
+	<property name="build.temp" value="${build.dir}/temp" />
+	<property name="default_preferred_list" value="${build.dir}/preferred.list" />
+	<property name="default_manifest" value="${build.dir}/manifest.mf" />
+	<property name="sorcer_manifest" value="${build.dir}/sorcer-manifest.mf" />
+	<property name="sorcer-title" value="SORCERsoft.org" />
+	<property name="sorcer-version" value="v4.0" />
+
+	<!-- Declare versions as properties -->
+	<property name="rio.version" value="-5.0-M4"/>
+	<property name="groovy.version" value="2.1.3"/>
+	<property name="river.version" value="-2.2.1"/>
+	<property name="slf4j.version" value="1.7.5"/>
+
+	<!--path id="maven-ant-tasks.classpath" path="${common.lib}/buildsupport/maven-ant-tasks-2.1.3.jar" /-->
+	<!--typedef resource="org/apache/maven/artifact/ant/antlib.xml" uri="antlib:org.apache.maven.artifact.ant" classpathref="maven-ant-tasks.classpath" /-->
+
+	<!-- Verify that IGRID_HOME is set -->
+	<!-- <echo message="IGRID_HOME: ${iGrid.home}" /> -->
+
+	<!-- define boot classpath -->
+	<path id="boot.classpath">
+		<pathelement location="${iGrid.home}/lib/boot.jar" />
+		<pathelement location="${jini.lib}/start.jar" />
+		<pathelement location="${common.lib}/groovy/groovy-all-${groovy.version}.jar" />
+		<pathelement location="${rio.lib}/rio-platform${rio.version}.jar" />
+	</path>
+
+	<!-- define startup classpath -->
+	<path id="startup.classpath">
+		<pathelement location="${jini.lib}/start.jar" />
+		<pathelement location="${jini.lib}/jsk-lib.jar" />
+		<pathelement location="${sorcer.lib}/sorcer-prv.jar" />
+		<pathelement location="${jini.lib}/serviceui.jar" />
+		<pathelement location="${common.lib}/groovy/groovy-all-${groovy.version}.jar" />
+		<pathelement location="${common.lib}/je-4.1.21.jar" />
+		<pathelement location="${rio.lib}/rio-platform${rio.version}.jar" />
+	</path>
+
+	<path id="sorcer.path">
+		<pathelement location="${sorcer.lib}/sorcer-prv.jar" />
+		<!--pathelement location="${sorcer.lib}/sorcer-vfe-lib.jar" /-->
+		<pathelement location="${sorcer.lib}/sorcer-lib.jar" />
+		<pathelement location="${sorcer.lib}/sorcer-modeling-lib.jar" />
+		<pathelement location="${common.lib}/je-4.1.21.jar" />
+		<pathelement location="${common.lib}/groovy/groovy-all-${groovy.version}.jar" />
+	</path>
+
+	<path id="jini.path">
+		<pathelement location="${jini.lib}/jsk-lib.jar" />
+		<pathelement location="${jini.lib}/jsk-platform.jar" />
+		<pathelement location="${jini.lib}/jsk-resources.jar" />
+		<pathelement location="${jini.lib}/serviceui.jar" />
+		<pathelement location="${jini.lib}/tools.jar" />
+		<pathelement location="${jini.lib}/start.jar" />
+		<pathelement location="${jini.lib}/outrigger.jar" />
+	</path>
+
+	<path id="rio.path">
+		<pathelement location="${rio.home}/lib/rio-lib${rio.version}.jar" />
+		<pathelement location="${rio.home}/lib-dl/rio-api${rio.version}.jar" />
+		<pathelement location="${rio.home}/lib/rio-platform${rio.version}.jar" />
+		<pathelement location="${common.lib}/groovy/groovy-all-${groovy.version}.jar" />
+	</path>
+
+	<path id="jaxp.path">
+		<pathelement location="${common.lib}/jaxp.jar" />
+		<pathelement location="${common.lib}/crimson.jar" />
+		<pathelement location="${common.lib}/xalan.jar" />
+		<pathelement location="${ant.home}/lib/xml-apis.jar" />
+		<pathelement location="${common.lib}/jsr173_07_api.jar" />
+		<pathelement location="${common.lib}/jsr173_07_ri.jar" />
+		<pathelement location="${common.lib}/stax-utils-20040422.zip" />
+		<pathelement location="${common.lib}/jaxrpc.jar" />
+	</path>
+
+	<path id="surrogate.path">
+		<pathelement location="${common.lib}/madison-boot.jar" />
+		<pathelement location="${common.lib}/madison-impl.jar" />
+		<pathelement location="${common.lib}/surrogate.jar" />
+		<pathelement location="${common.lib}/IPinterconnect.jar" />
+	</path>
+
+	<path id="scaf.path">
+		<pathelement location="${common.lib}/base-core.jar" />
+		<pathelement location="${common.lib}/base-opt.jar" />
+		<pathelement location="${common.lib}/pcsc-wrapper-2.0.jar" />
+		<pathelement location="${common.lib}/apduio.jar" />
+		<pathelement location="${common.lib}/api.jar" />
+		<pathelement location="${common.lib}/javacardframework.jar" />
+	</path>
+
+	<path id="mckoi.path">
+		<pathelement location="${common.lib}/mckoidb.jar" />
+		<pathelement location="${common.lib}/mkjdbc.jar" />
+	</path>
+
+	<path id="derby.path">
+		<pathelement location="${common.lib}/derby.jar" />
+		<pathelement location="${common.lib}/derbyrun.jar" />
+		<pathelement location="${common.lib}/derbytools.jar" />
+	</path>
+
+	<path id="junit.path">
+		<pathelement location="${support.lib}/junit.jar" />
+		<pathelement location="${support.lib}/junit-addons-1.4.jar" />
+	</path>
+
+	<path id="activation.path">
+		<pathelement location="${common.lib}/activation.jar" />
+	</path>
+
+	<path id="jndi.path">
+		<pathelement location="${common.lib}/jndi.jar" />
+		<pathelement location="${common.lib}/providerutil.jar" />
+		<pathelement location="${common.lib}/fscontext.jar" />
+	</path>
+
+	<path id="jna.path">
+		<pathelement location="${common.lib}/jna.jar" />
+	</path>
+
+	<path id="jep.path">
+		<pathelement location="${common.lib}/jep-2.4.1a.jar" />
+		<pathelement location="${common.lib}/ext-1.1.1a.jar" />
+	</path>
+
+	<path id="jfreechart.path">
+		<pathelement location="${common.lib}/jfreechart/jcommon-1.0.17.jar" />
+		<pathelement location="${common.lib}/jfreechart/jfreechart-1.0.14.jar" />
+	</path>
+
+	<path id="swing.layout.path">
+		<pathelement location="${common.lib}/swing-layout-1.0.jar" />
+	</path>
+
+	<path id="project.classpath">
+		<!-- should be defined in the module importing this build XML file accordingly -->
+		<pathelement location="${classes}" />
+		<path refid="jini.path" />
+		<path refid="rio.path" />
+	</path>
+
+	<taskdef name="classdep" classname="org.jini.rio.tools.ant.ClassDepTask">
+		<classpath location="${support.lib}/ant-ext.jar" />
+	</taskdef>
+
+	<taskdef name="classdepandjar" classname="org.jini.rio.tools.ant.ClassDepAndJarTask">
+		<classpath location="${support.lib}/classdepandjar.jar" />
+	</taskdef>
+
+	<path id="task.classpath">
+		<pathelement location="${support.lib}/configbuilder.jar" />
+		<path refid="jini.path"/>
+		<path refid="rio.path"/>
+	</path>
+
+	<taskdef name="configbuilder" classname="sorcer.tools.configbuilder.ConfigBuilder" classpathref="task.classpath"/>
+
+	<target name="clean" depends="prepare, clean-jars, clean-classes, clean-docs" description="Deletes classes and jar files for this module along with all Javadoc html files" />
+	<target name="clean-classes" description="Deletes classes for this module from iGrid/classes">
+		<delete verbose="true">
+			<fileset dir="${classes}">
+				<patternset refid="ant.classes" />
+			</fileset>
+		</delete>
+	</target>
+
+	<target name="clean-jars" description="Deletes jar files for this module from iGrid/lib">
+		<delete verbose="true" failonerror="false">
+			<fileset dir="${lib}">
+				<patternset refid="ant.jars" />
+			</fileset>
+		</delete>
+	</target>
+
+	<target name="prepare" description="Creates bin, configs, docs, logs, and policy directories for this module">
+		<tstamp />
+		<filter token="SORCER_BUILD" value="${DSTAMP}" />
+		<filter token="SORCER_VERSION" value="${sorcer-version}" />
+		<mkdir dir="bin" />
+		<mkdir dir="configs" />
+		<mkdir dir="policy" />
+		<mkdir dir="docs" />
+		<mkdir dir="logs" />
+		<!--mkdir dir="${build.dir}"/>
+		<echo file="${default_manifest}">Manifest-Version: 1.0
+		            SORCER-Build: ${DSTAMP}
+		        </echo>
+		<echo file="${sorcer_manifest}">Manifest-Version: 1.0
+		            Class-Path: jsk-lib.jar jsk-platform.jar
+		            SORCER-Build: ${DSTAMP}
+		        </echo>
+
+		<echo file="${default_preferred_list}">PreferredResources-Version: 1.0
+		            Preferred: false
+		</echo-->
+	</target>
+
+	<target name="copy-run-files" description="Copies the files needed to run this module to iGrid/bin">
+		<mkdir dir="${iGrid.home}/bin/${module.name}/configs" />
+		<mkdir dir="${iGrid.home}/bin/${module.name}/bin" />
+		<mkdir dir="${iGrid.home}/bin/${module.name}/policy" />
+		<mkdir dir="${iGrid.home}/bin/${module.name}/opstrings" />
+		<copy todir="${iGrid.home}/bin/${module.name}/configs">
+			<fileset dir="configs">
+				<include name="*" />
+			</fileset>
+		</copy>
+		<copy todir="${iGrid.home}/bin/${module.name}/bin">
+			<fileset dir="bin">
+				<include name="*" />
+			</fileset>
+		</copy>
+		<copy todir="${iGrid.home}/bin/${module.name}/policy">
+			<fileset dir="policy">
+				<include name="*" />
+			</fileset>
+		</copy>
+		<!-- This filterset command lets you use tokens in your opstrings that 
+		     get replaced by the matching values set in your sorcer.env.
+		     Example: @provider.webster.interface@ will be replaced with the webster host interface
+		     @provider.webster.port@ with the appropriate port. 
+		     Overwrite has to be true for the filtering to work properly! -->
+		<copy todir="${iGrid.home}/bin/${module.name}/opstrings" overwrite="true">
+			<filterset begintoken="@" endtoken="@">
+				<filtersfile file="${iGrid.config}/sorcer.env" />
+			</filterset>
+			<fileset dir="opstrings">
+				<include name="*" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="docs" depends="prepare" description="Generates API documentation for this module and places it in iGrid/docs">
+		<mkdir dir="${docs}/api" />
+		<javadoc packagenames="sorcer.*" maxmemory="250M" destdir="${docs}/api" Author="true" Version="true" Use="true" windowtitle="Service-Oriented Computing Environment: SORCER" doctitle="&lt;h1&gt;Service-Oriented Computing Environment: SORCER&lt;/h1&gt;" bottom="&lt;i&gt;Copyright (c) 2005 Texas Tech University, All Rights Reserved.&lt;/i&gt;" useexternalfile="yes" breakiterator="yes" classpathref="project.classpath">
+			<fileset dir="${src}">
+				<patternset refid="ant.java" />
+			</fileset>
+			<group title="SORCER" packages="sorcer.*" />
+			<!--<link href="http://docs.oracle.com/javase/1.4.2/docs/api/" />
+			<link href="http://docs.oracle.com/javase/1.5.0/docs/api/" />
+			<link href="http://docs.oracle.com/javase/6/docs/api/" />
+			<link href="http://docs.oracle.com/javase/7/docs/api/" /> -->
+		</javadoc>
+	</target>
+
+	<target name="doccheck" depends="prepare" description="Identifies empty comments and other ommissions and irregularities in your Javadoc comments.">
+		<mkdir dir="${docs}/doccheck" />
+		<javadoc destdir="${docs}/doccheck" packagenames="sorcer.*" sourcepath="${src}" classpathref="project.classpath">
+			<doclet name="com.sun.tools.doclets.doccheck.DocCheck" path="${support.lib}/doccheck.jar">
+			</doclet>
+		</javadoc>
+	</target>
+
+	<target name="docbook" depends="prepare" description="Creates DocBook code from your javadocs, helpful if you want to print reference handbooks of your API.">
+		<mkdir dir="${docs}/docbook" />
+		<javadoc destdir="${docs}/docbook" packagenames="sorcer.*" sourcepath="${src}" classpathref="project.classpath">
+			<doclet name="org.dbdoclet.doclet.docbook.DocBookDoclet" path="${support.lib}/dbdoclet/dbdoclet.jar">
+				<param name="-id" value="java" />
+				<param name="-stylename" value="strict" />
+				<param name="-version" />
+			</doclet>
+		</javadoc>
+	</target>
+
+	<target name="docrtf" depends="prepare">
+		<javadoc packagenames="sorcer.*" sourcepath="${src}" classpathref="project.classpath">
+			<doclet name="RTFDoclet" path="${support.lib}/RTFDoclet.jar">
+				<param name="-filename" value="${docs}/doc.rtf" />
+			</doclet>
+		</javadoc>
+	</target>
+
+	<target name="clean-docs" description="Removes all generated Java API docs">
+		<delete dir="${docs}" />
+	</target>
+
+	<target name="compile" description="Compiles this module's source files and outputs the classes to iGrid/classes">
+		<javac srcdir="${src}" destdir="${classes}" debug="true" target="1.6" source="1.6" nowarn="on" includeantruntime="true">
+			<exclude name="**/SAVE/*.java" />
+			<exclude name="**/BAK/*.java" />
+			<classpath refid="project.classpath" />
+			<patternset refid="ant.java" />
+			<compilerarg value="-Xlint:none" />
+			<!-- <compilerarg value="-Xlint:unchecked" /> -->
+		</javac>
+	</target>
+
+	<!-- Determining if the OS is MacOS -->
+	<condition property="isMac">
+		<os family="mac" />
+	</condition>
+
+	<!-- Determining if the OS is Windows -->
+	<condition property="isWindows">
+		<os family="windows" />
+	</condition>
+
+	<!-- Determining if the OS is non Windows or MacOS -->
+	<condition property="notWindowsOrMac">
+		<and>
+			<not>
+				<os family="windows" />
+			</not>
+			<not>
+				<os family="mac" />
+			</not>
+		</and>
+	</condition>
+
+	<!-- Compiling Source -->
+	<target name="compileSources" depends="compileMac, compileWindows, compileNonWindowsOrMac">
+		<echo message="Compiling Sources" />
+	</target>
+
+	<!-- MacOS specific source compilation -->
+	<!--<target name="compileMac" if="isMac" depends="prepare, copy-config-files" description="Compiles this module's source files and outputs the classes to iGrid/classes">-->
+	<target name="compileMac" if="isMac" depends="copy-config-files" description="Compiles this module's source files and outputs the classes to iGrid/classes">
+		<javac srcdir="${src}" destdir="${classes}" debug="true" target="1.6" source="1.6" fork="true" memoryinitialsize="256m" memorymaximumsize="1g" includeantruntime="true">
+			<exclude name="**/SAVE/*.java" />
+			<exclude name="**/BAK/*.java" />
+			<classpath refid="project.classpath" />
+			<patternset refid="ant.java" />
+			<compilerarg value="-Xlint:none" />
+			<!-- <compilerarg value="-Xlint:unchecked" /> -->
+		</javac>
+	</target>
+
+	<!-- Windows source compilation -->
+	<!--<target name="compileWindows" if="isWindows" depends="prepare, copy-config-files" description="Compiles this module's source files and outputs the classes to iGrid/classes">-->
+	<target name="compileWindows" if="isWindows" depends="copy-config-files" description="Compiles this module's source files and outputs the classes to iGrid/classes">
+		<javac srcdir="${src}" destdir="${classes}" debug="true" target="1.6" source="1.6" includeantruntime="true">
+			<exclude name="**/SAVE/*.java" />
+			<exclude name="**/BAK/*.java" />
+			<classpath refid="project.classpath" />
+			<patternset refid="ant.java" />
+			<compilerarg value="-Xlint:none" />
+			<!-- <compilerarg value="-Xlint:unchecked" /> -->
+		</javac>
+	</target>
+
+	<!-- Non Windows or MacOS source compilation -->
+	<!--<target name="compileNonWindowsOrMac" if="notWindowsOrMac" depends="prepare, copy-config-files" description="Compiles this module's source files and outputs the classes to iGrid/classes">-->
+	<target name="compileNonWindowsOrMac" if="notWindowsOrMac" depends="copy-config-files" description="Compiles this module's source files and outputs the classes to iGrid/classes">
+		<echo message="doing compileNonWindowsOrMac; src = ${src}" />
+		<javac srcdir="${src}" destdir="${classes}" debug="true" target="1.6" source="1.6" includeantruntime="true">
+			<exclude name="**/SAVE/*.java" />
+			<exclude name="**/BAK/*.java" />
+			<classpath refid="project.classpath" />
+			<patternset refid="ant.java" />
+			<compilerarg value="-Xlint:none" />
+			<!-- <compilerarg value="-verbose" /> -->
+			<!-- <compilerarg value="-Xlint:unchecked" /> -->
+		</javac>
+	</target>
+
+	<target name="copy-provider-config-files">
+		<copy file="${iGrid.home}/configs/sorcer.env" todir="${basedir}/configs" />
+		<copy file="${iGrid.home}/configs/data.formats" todir="${basedir}/configs" />
+	</target>
+
+	<target name="copy-config-files">
+		<mkdir dir="${iGrid.home}/classes/sorcer/util" />
+		<copy file="${iGrid.home}/configs/sorcer.env" todir="${iGrid.home}/classes/sorcer/util" />
+		<copy file="${iGrid.home}/configs/data.formats" todir="${iGrid.home}/classes/sorcer/util" />
+		<copy file="${iGrid.home}/modules/sorcer/html/netlets.html" todir="${iGrid.home}/classes/sorcer/ui/netlets" />
+		<copy file="${iGrid.home}/modules/sorcer/html/icon-info16.png" todir="${iGrid.home}/classes/sorcer/ui/exertlet" />
+		<copy file="${iGrid.home}/configs/static-imports.txt" todir="${iGrid.home}/classes/sorcer/ui/exertlet" />
+	</target>
+
+	<target name="precompile">
+		<groovyc destdir="${classes}">
+			<src>
+				<path location="${groovySrc}" />
+				<path location="${src}" />
+			</src>
+			<classpath>
+				<path refid="project.classpath" />
+			</classpath>
+
+			<javac debug="on" source="1.5" target="1.5" includeantruntime="true">
+				<patternset refid="java.source" />
+				<compilerarg value="-Xlint:unchecked" />
+			</javac>
+
+		</groovyc>
+	</target>
+
+	<target name="test-precompile">
+		<groovyc destdir="${test-classes}">
+			<src>
+				<path location="${testSrc}" />
+				<path location="${groovyTestSrc}" />
+			</src>
+			<classpath>
+				<path refid="project.classpath" />
+			</classpath>
+
+			<javac debug="on" source="1.5" target="1.5" includeantruntime="true">
+				<patternset refid="java.source" />
+				<compilerarg value="-Xlint:unchecked" />
+			</javac>
+		</groovyc>
+	</target>
+
+	<!-- JUnit testing -->
+	<!-- A "junit.src" property should be set and point to 
+	the directory containing the module's junit sources.-->
+
+	<target name="doc-junit" depends="prepare">
+		<mkdir dir="${junit.src}" />
+		<javadoc destdir="${junit.src}" packagenames="sorcer.*" classpathref="project.classpath">
+			<doclet name="com.objectfab.tools.junitdoclet.JUnitDoclet" path="${support.lib}/junitdoclet.jar">
+			</doclet>
+			<fileset dir="${src}">
+				<patternset refid="ant.java" />
+			</fileset>
+		</javadoc>
+	</target>
+
+	<target name="junit-compile">
+		<javac srcdir="${junit.src}" destdir="${classes}" debug="true" includeantruntime="true">
+			<classpath>
+				<path refid="project.classpath" />
+				<path location="${support.lib}/junit.jar" />
+			</classpath>
+			<patternset refid="junit-ant.java" />
+		</javac>
+	</target>
+
+	<target name="junit-test" depends="junit-compile">
+		<junit printsummary="no" fork="yes" haltonfailure="no">
+			<formatter type="plain" usefile="no" />
+            <sysproperty key="java.protocol.handler.pkgs" value="net.jini.url|sorcer.util.bdb.sos|org.rioproject.url" />
+            <sysproperty key="java.rmi.server.RMIClassLoaderSpi" value="org.rioproject.rmi.ResolvingLoader" />
+			<sysproperty key="java.awt.headless" value="true" />
+			<batchtest>
+				<fileset dir="${junit.src}">
+					<include name="junit/**/*Test*.java" />
+					<exclude name="**/deploy/**/*"/>
+				</fileset>
+			</batchtest>
+			<classpath>
+				<path refid="project.classpath" />
+				<path location="${support.lib}/junit.jar" />
+			</classpath>
+		</junit>
+	</target>
+
+	<target name="run-test-reports" depends="junit-compile">
+		<property name="test.reports" value="./reports" />
+		<!-- <junit fork="yes" printsummary="yes" haltonfailure="no" maxmemory="1024m" showoutput="yes"> -->
+		<!-- <junit fork="no" printsummary="withOutAndErr" haltonfailure="no" showoutput="no" > -->
+		<junit fork="no" printsummary="yes" haltonfailure="no" showoutput="no">
+			<batchtest fork="yes" todir="${test.reports}">
+				<fileset dir="${junit.src}">
+					<!-- <include name="junit/**/*Test*.java" /> -->
+					<include name="**/junit/**/*Test*.java" />
+                    <exclude name="junit/**/deploy/*" />
+				</fileset>
+			</batchtest>
+			<formatter type="xml" />
+			<classpath>
+				<path refid="project.classpath" />
+				<path refid="rio.path" />
+				<path location="${support.lib}/junit.jar" />
+				<path location="${rio.home}/lib/logging/slf4j-jdk14-${slf4j.version}.jar" />
+			</classpath>
+			<sysproperty key="IGRID_HOME" value="${iGrid.home}" />
+			<sysproperty key="iGrid.home" value="${iGrid.home}" />
+			<sysproperty key="sorcer.env.file" value="${iGrid.home}/configs/sorcer.env" />
+			<sysproperty key="iGrid.home" value="${iGrid.home}" />
+			<sysproperty key="java.protocol.handler.pkgs" value="sorcer.util.url|org.rioproject.url" />
+			<sysproperty key="java.rmi.server.RMIClassLoaderSpi" value="org.rioproject.rmi.ResolvingLoader" />
+			<sysproperty key="java.rmi.server.useCodebaseOnly" value="false" />
+		</junit>
+		<!--junitreport todir="${test.reports}">
+			<fileset dir="${test.reports}">
+				<include name="TEST-*.xml" />
+			</fileset>
+		</junitreport-->
+	</target>
+
+</project>

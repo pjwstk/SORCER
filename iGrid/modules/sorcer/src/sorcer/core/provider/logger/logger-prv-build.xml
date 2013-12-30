@@ -1,0 +1,133 @@
+<?xml version='1.0' encoding='ISO-8859-1' standalone='yes'?>
+<!-- 
+ * Copyight (C) 2006 SORCER Lab, Texas Tech University. All rights reserved.
+ * Service-Oriented Computing Environmet: SORCER Policer build configuration
+ * Make sure the following variables are changed to reflect your environment:
+ *    IGRID_HOME        	iGrid location
+ *    JAVA_HOME         	JDK Location
+ *	  IGRID_WEBSTER_PORT 	The class server (webster) port
+ *    ANT_HOME          	Jakarta Ant location
+ Please see also the ../common-build.xml for classpaths, definitions and targets
+-->
+
+<project name="SORCER Logger" default="all" basedir=".">
+	<property name="module.name" value="logger" />
+	<!-- set global properties -->
+	<import file="../../../../../../common-build.xml" />
+	<property name="src" value="../../../../" />
+	<property name="resources" value="${iGrid.home}/modules/sorcer/resources" />
+
+	<!-- The sources to compile -->
+	<patternset id="ant.java">
+		<include name="sorcer/core/provider/logger/*.java" />
+		<include name="sorcer/core/provider/logger/**/*.java" />
+	</patternset>
+
+	<path id="project.classpath">
+		<pathelement location="${classes}/" />
+		<path refid="jini.path" />
+		<path refid="rio.path" />
+		<path refid="jaxp.path" />
+	</path>
+
+
+	<patternset id="ant.classes">
+		<include name="sorcer/core/provider/logger/**/*.class" />
+		<include name="sorcer/core/provider/logger/**/**/*.class" />
+	</patternset>
+
+	<fileset dir="${resources}" id="icons">
+		<include name="sorcer-ico.png" />
+	</fileset>
+
+	<path id="javadocs.classpath">
+		<pathelement location="${jini.lib}/serviceui.jar" />
+		<pathelement location="${support.lib}/ant-ext.jar" />
+		<pathelement location="${support.lib}/ant.jar" />
+	</path>
+
+	<target name="compile" depends="compileSources" />
+	<target name="jars" depends="logger, copy-run-prv-files" />
+	<target name="logger" depends="logger.jar, logger-dl.jar, logger-ui.jar" />
+	<target name="all" depends="prepare, compile, jars, copy-run-prv-files" />
+
+
+	<target name="logger.jar">
+		<classdepandjar jarfile="${sorcer.lib}/logger.jar" files="true">
+			<classpath refid="project.classpath" />
+			<in name="sorcer.core.provider.logger" />
+			<out name="sorcer.service" />
+			<topclass name="sorcer.core.RemoteLogger" />
+			<topclass name="sorcer.core.provider.logger.RemoteHandler" />
+			<topclass name="sorcer.core.provider.logger.LoggingConfig" />
+			<topclass name="sorcer.core.provider.logger.ServiceLogger" />
+			<topclass name="sorcer.core.provider.logger.LogFileHandler" />
+
+			<out name="javax" />
+			<out name="javax.security" />
+			<out name="java" />
+			<out name="sun" />
+			<out name="org.apache" />
+			<out name="org.w3c" />
+			<out name="net.jini" />
+			<out name="com.sun.jini" />
+			<out name="org.xml" />
+		</classdepandjar>
+	</target>
+
+	<target name="logger-dl.jar">
+		<classdepandjar jarfile="${sorcer-dl.lib}/logger-dl.jar" files="true">
+			<manifest>
+				<attribute name="Implementation-Title" value="${product.title}" />
+				<attribute name="Implementation-Version" value="${product.name}" />
+				<attribute name="SORCER-Version" value="${product.version}" />
+				<attribute name="SORCER-Build" value="${DSTAMP}" />
+			</manifest>
+			<classpath refid="project.classpath" />
+			<in name="sorcer.core" />
+			<topclass name="sorcer.core.RemoteContextManagement" />
+			<topclass name="sorcer.core.RemoteLogger" />
+			<fileset refid="icons" />
+		</classdepandjar>
+	</target>
+
+	<target name="logger-ui.jar">
+		<classdepandjar jarfile="${sorcer-dl.lib}/logger-ui.jar" files="true">
+			<classpath refid="project.classpath" />
+			<in name="sorcer" />
+			<out name="javax" />
+			<out name="java" />
+			<out name="sorcer.util.bdb" />
+			<topclass name="sorcer.core.provider.logger.ui.LoggerFrameUI" />
+			<topclass name="sorcer.ui.serviceui.UIComponentFactory" />
+		</classdepandjar>
+	</target>
+
+	<target name="copy-run-prv-files">
+		<mkdir dir="${iGrid.home}/bin/sorcer/${module.name}/configs" />
+		<mkdir dir="${iGrid.home}/bin/sorcer/${module.name}/bin" />
+		<mkdir dir="${iGrid.home}/bin/sorcer/${module.name}/policy" />
+		<mkdir dir="${iGrid.home}/bin/sorcer/${module.name}/logs" />
+
+		<copy todir="${iGrid.home}/bin/sorcer/${module.name}/configs">
+			<fileset dir="configs">
+				<include name="*" />
+			</fileset>
+		</copy>
+
+		<copy todir="${iGrid.home}/bin/sorcer/${module.name}/bin">
+			<fileset dir="bin">
+				<include name="*" />
+			</fileset>
+		</copy>
+
+		<copy todir="${iGrid.home}/bin/sorcer/${module.name}/policy">
+			<fileset dir="policy">
+				<include name="*" />
+			</fileset>
+		</copy>
+
+		<chmod dir="${iGrid.home}/bin/sorcer/${module.name}/bin" perm="755" includes="*.sh" />
+	</target>
+
+</project>

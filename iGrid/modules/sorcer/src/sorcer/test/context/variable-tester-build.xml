@@ -1,0 +1,52 @@
+<?xml version='1.0' encoding='ISO-8859-1' standalone='yes'?>
+<!-- 
+ * Copyight (C) 2004 SORCER Lab, Texas Tech University. All rights reserved.
+ * Service-Oriented Computing Environmet: SORCER Cataloger build configuration
+ * Make sure the following variables are changed to reflect your environment:
+ *    IGRID_HOME        	iGrid location
+ *    JAVA_HOME         	JDK Location
+ *	  IGRID_WEBSTER_PORT 	The class server (webster) port
+ *    ANT_HOME          	Jakarta Ant location
+ Please see also the ../common-build.xml for classpaths, definitions and targets
+-->
+
+<project name="variables" default="all" basedir=".">
+	<!-- set global properties -->
+	<import file="../../../../../common-build.xml" />
+	<property name="src" value="./../../../../src" />
+
+	<!-- The sources to compile -->
+	<patternset id="ant.java">
+		<include name="sorcer/test/context/VariableTester.java" />
+		<include name="sorcer/test/context/ResponseVariable2.java" />
+	</patternset>
+
+	<patternset id="ant.classes">
+		<include name="sorcer/test/context/VariableTester.class" />
+		<include name="sorcer/test/context/ResponseVariable2.class" />
+	</patternset>
+
+	<path id="project.classpath">
+		<pathelement location="${classes}/" />
+		<pathelement location="${lib}/jgapp.jar" />
+		<path refid="jini.path" />
+		<path refid="rio.path" />
+		<path refid="jep.path" />
+	</path>
+
+	<target name="prepare" />
+
+	<target name="compile" depends="compileSources" />
+	<target name="jars" depends="variableTester" />
+	<target name="variableTester" depends="variableTester.jar" />
+	<target name="all" depends="prepare, compile, jars" />
+
+	<target name="variableTester.jar">
+		<classdepandjar jarfile="${lib}/variableTester.jar" files="true">
+			<classpath refid="project.classpath"/>
+			<in name="sorcer.test.context"/>
+			<topclass name="sorcer.test.context.VariableTester" />
+			<topclass name="sorcer.test.context.ResponseVariable2" />
+		</classdepandjar>
+	</target>
+</project>

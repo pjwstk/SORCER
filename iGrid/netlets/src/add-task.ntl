@@ -1,0 +1,8 @@
+#!/usr/bin/env nsh -f
+
+import sorcer.arithmetic.provider.Adder;
+
+task("f4", sig("add", Adder.class),
+	context("multiply", 
+		input(path("arg/x1"), 10.0d), 
+		input(path("arg/x2"), 50.0d)));

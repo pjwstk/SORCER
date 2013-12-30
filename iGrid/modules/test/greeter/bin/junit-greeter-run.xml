@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+
+<project name="JUnit Greeter" default="run-junit-GreeterTest" basedir=".">
+
+	<!-- set global properties -->
+	<import file="../../../common-run.xml" />
+
+	<path id="project.classpath">
+		<pathelement location="${classes}" />
+		<pathelement location="${support.lib}/classdepandjar.jar" />
+		<pathelement location="${support.lib}/junit.jar" />
+		<pathelement location="${support.lib}/fit.jar" />
+	</path>
+
+	<!-- Run with the Greeter test runner class -->
+	<target name="run-GreeterTester">
+		<java classname="junit.sorcer.greeter.JUnitGreeterTester" fork="yes">
+			<jvmarg value="-ea" />
+			<classpath refid="project.classpath" />
+		</java>
+	</target>
+
+	<!-- Run GreeterTest using its main() -->
+	<target name="run-main-GreeterTest">
+		<java classname="junit.sorcer.greeter.GreeterTest" fork="yes">
+			<jvmarg value="-ea" />
+			<classpath refid="project.classpath" />
+		</java>
+	</target>
+
+	<!-- Run the test case with JUnit runner -->
+	<target name="run-junit-Runner-GreeterTest">
+		<java classname="org.junit.runner.JUnitCore" fork="yes">
+			<jvmarg value="-ea" />
+			<arg line="greeter.one.junit.GreeterTest" />
+			<classpath refid="project.classpath" />
+		</java>
+	</target>
+
+	<!-- Run the JUnit Ant task -->
+	<target name="run-junit-GreeterTest">
+		<junit printsummary="yes" fork="yes" haltonfailure="yes">
+			<formatter type="plain" />
+			<classpath refid="project.classpath" />
+			<test name="greeter.one.junit.GreeterTest" haltonfailure="no" outfile="../logs/result.test">
+				<formatter type="xml" />
+			</test>
+		</junit>
+	</target>
+
+</project>
+
+
+

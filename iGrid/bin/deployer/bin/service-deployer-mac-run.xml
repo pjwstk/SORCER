@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+
+<project name="SSD" default="Service Deployer" basedir=".">
+	<!-- load system environment variables -->
+	<property environment="env" />
+	<import file="${env.IGRID_HOME}/modules/common-run.xml" />
+
+	<target name="Service Deployer">
+		<java classname="org.rioproject.tools.ui.Main" fork="yes" maxmemory="1g">
+			<jvmarg value="-Xdock:name=Service Deployer" />
+			<jvmarg value="-Xdock:icon=../../images/sorcer-dock.png" />
+			<classpath>
+				<pathelement location="${sorcer.lib}/sorcer-prv.jar" />
+				<pathelement location="${rio.lib}/rio-ui.jar" />
+			</classpath>
+			<sysproperty key="iGrid.home" value="${iGrid.home}" />
+			<sysproperty key="RIO_HOME" value="${rio.home}" />
+			<sysproperty key="java.protocol.handler.pkgs" value="net.jini.url|sorcer.util.bdb.sos|org.rioproject.url" />
+			<sysproperty key="java.rmi.server.RMIClassLoaderSpi" value="org.rioproject.rmi.ResolvingLoader" />
+			<sysproperty key="java.security.policy" value="../policy/deployer.policy" />
+		</java>
+	</target>
+
+</project>

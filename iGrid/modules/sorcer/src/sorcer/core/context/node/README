@@ -1,0 +1,25 @@
+Federated Variable-Evaluator (FVE) Design Pattern
+
+Basic FVE classes in:
+package sorcer.core.context.eval
+
+Evaluation Service in:
+package sorcer.core.provider.eval
+
+Test Cases in: 
+sorcer.test.context.VariableTester.java
+
+Various design variables in:
+package engineering.core.design
+
+Generic optimization task and related classes in:
+engineering.core.optimization
+
+Conmin optimizer in:
+engineering.optimization.provider
+its service UI in:
+engineering.optimization.provider.ui
+
+Conmin requestor in:
+engineering.optimization.requestor
+

@@ -1,0 +1,15 @@
+#!/bin/sh
+
+POLICY=${RIO_HOME}/policy
+RIO=${RIO_HOME}/lib
+FIPER=${FIPER_HOME}/lib
+APPS=${RIO_HOME}/rio-apps/lib
+IMAGES=${RIO_HOME}/rio-apps/images
+JINI=${CODEBASE}
+FIPER_XML=${FIPER_HOME}/xml
+#XML=${RIO_HOME}/rio-apps/xml
+# CHAT=~/dev/chat/lib
+
+#java -jar -Dcom.sun.rio.tools.webster.debug -Dcom.sun.rio.tools.webster.root=$RIO\;$APPS\;$JINI\;$XML\;$JWS\;$IMAGES\;$CHAT -Dcom.sun.rio.tools.webster.port=9000 -Djava.security.policy=$POLICY\policy.all $RIO/webster.jar
+
+java -jar -Dcom.sun.rio.tools.webster.debug -Dcom.sun.rio.tools.webster.root=$RIO\;$APPS\;$JINI\;$JWS\;$IMAGES\;$FIPER\;$FIPER_XML -Dcom.sun.rio.tools.webster.port=9000 -Djava.security.policy=$POLICY\policy.all $RIO/webster.jar &

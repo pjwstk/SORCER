@@ -1,0 +1,119 @@
+# Context Type Attributes
+#
+# Used by engineering tools, applications and utilites
+# Note: All Modifies must be in alphabetical order
+# Example: dnt|application|format|a.b.c.e.f.g
+#
+sorcer.unknown=dnt|*|unknown|*
+engineering.responsevariable=dnt|engineering|object|ResponseVariable
+engineering.responsevariableTxt=dnt|engineering|text|ResponseVariable
+sorcer.job=dnt|sorcer|object|ServiceJob
+sorcer.variables=dnt|sorcer|object|Variable.Array
+sorcer.variable=dnt|sorcer|object|Variable
+sorcer.variableTxt=dnt|sorcer|text|Variable
+sorcer.contextvariable=dnt|sorcer|object|ContextVariable
+engineering.response.job=dnt|engineering|object|ServiceJob.Response
+engineering.gradient.job=dnt|engineering|object|ServiceJob.Gradient
+
+
+# MeshProvider
+engineering.text.mesh=dnt|engineering|text|mesh
+engineering.ansys.mesh=dnt|ansys|text|mesh.prep7
+engineering.ansys.translation=dnt|ansys|text|translation
+
+# Optimization
+engineering.design.realdesignvariables=dnt|engineering|object|RealDesignVariable.Array
+engineering.design.responsevariables=dnt|engineering|object|ResponseVariable.Array
+
+engineering.design.objs=dnt|design|object|Objective.Array
+engineering.design.objsTxt=dnt|design|text|Objective.Array
+engineering.design.obj=dnt|design|object|Objective
+engineering.design.objTxt=dnt|design|text|Objective
+engineering.design.strategyTxt=dnt|design|text|Strategy
+engineering.design.dotstrategy=dnt|design|object|DotStrategy
+
+engineering.design.constrs=dnt|design|object|Constraint.Array
+engineering.design.constrsTxt=dnt|design|text|Constraint.Array
+engineering.design.constr=dnt|design|object|Constraint
+engineering.design.constrTxt=dnt|design|text|Constraint
+
+
+
+#    
+engineering.gradient.strategyTxt=dnt|design|text|gradientStrategy
+engineering.gradient.strategy=dnt|design|object|gradientStrategy
+engineering.gradient.gradient=dnt|design|object|gradient
+engineering.optim.designvariableTxt=dnt|optim|text|designvariable
+
+# Response Provider
+engineering.resp.input=dnt|resp|text|input
+engineering.resp.output=dnt|resp|text|output
+engineering.resp.vect1=dnt|resp|text|input1
+engineering.resp.vect2=dnt|resp|text|input2
+engineering.resp.vect3=dnt|resp|test|input3
+engineering.resp.ppout=dnt|resp|test|ppout
+engineering.resp.trefftzcdi=dnt|resp|object|trefftzPlane
+
+
+# BCProvider
+engineering.text.boundarycondition=dnt|engineering|text|boundaryCondition
+engineering.object.boundarycondition=dnt|engineering|object|boundaryCondition
+engineering.text.discretedomain = dnt|engineering|text|discretedomain
+
+#PatranProvider
+engineering.patran.neutral.geometry=dnt|patran|text|discretized.geometry.neutral
+
+# numericalanalysis
+engineering.numericalanalysis.doeMatrix=dnt|numericalanalysis|text|doeTable
+engineering.numericalanalysis.paramMatrix=dnt|numericalanalysis|text|paramTable
+
+# avusProvider
+engineering.avus.bcTxt   = dnt|avus|text|boundaryCondition
+engineering.avus.jobTxt  = dnt|avus|text|jobFile
+engineering.avus.gridTxt = dnt|avus|text|grid
+engineering.avus.oldrestart = dnt|avus|binary|oldrestart
+engineering.avus.tapTxt     = dnt|avus|text|tap
+engineering.avus.tripTxt    = dnt|avus|text|trip
+
+# astros
+engineering.astros.inputTxt       = dnt|astros|text|input
+engineering.astros.outputTxt      = dnt|astros|text|output
+
+# caddb
+engineering.caddb.idx             = dnt|caddb|binary|idx
+engineering.caddb.d01             = dnt|caddb|binary|d01
+
+# ansys
+engineering.ansys.db              = dnt|ansys|binary|database
+engineering.ansys.prep7           = dnt|ansys|text|prep7
+engineering.mesh                  = dnt|*|text|mesh
+engineering.ansys.mesh            = dnt|ansys|text|mesh
+engineering.ansys.mac             = dnt|ansys|text|macro
+engineering.service.properties    = dnt|ansys|text|service properties
+engineering.ansys.rst             = dnt|ansys|binary|rst
+engineering.ansys.rth             = dnt|ansys|binary|rth
+engineering.ansys.mode            = dnt|ansys|binary|mode
+engineering.ansys.apdl            = dnt|ansys|text|apdl
+engineering.ansys.output          = dnt|ansys|*|out
+engineering.ansys.text.batch      = dnt|ansys|text|batch
+
+engineering.ansys.text.output.stress	= dnt|ansys|text|output.stress
+engineering.ansys.text.output.volume  = dnt|ansys|text|output.volume
+engineering.ansys.text.load	        = dnt|ansys|text|natural.prep7.solu
+engineering.ansys.text.bc.nat	        = dnt|ansys|text|natural.prep7.solu
+engineering.ansys.text.mat  	        = dnt|ansys|text|materials.prep7
+engineering.ansys.text.bc.all         = dnt|ansys|text|bc.prep7.solu
+engineering.ansys.text.bc.dof         = dnt|ansys|text|bc.essential.prep7.solu
+engineering.ansys.text.bc.ce	        = dnt|ansys|text|bc.essential.prep7
+engineering.ansys.text.solu           = dnt|ansys|text|solu
+engineering.ansys.text.post1.stress 	= dnt|ansys|text|post1.stress
+engineering.ansys.text.post1.volume 	= dnt|ansys|text|post1.volume
+
+# script
+engineering.script.text.strat		= dnt|script|text|strategy
+engineering.script.text.script	= dnt|script|text|script
+
+engineering.ansys.mesh.prep7=dnt|ansys|text|mesh.prep7
+
+# Combustor MDO
+engineering.MDO.SQL.input            	= dnt|MDO|SQL|input

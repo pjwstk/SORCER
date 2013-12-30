@@ -1,0 +1,63 @@
+# SORCER environment configuration
+
+# Make file sharing available for the project group
+umask 002
+
+# Environment variables for Java, Tomcat, Jini, Rio, JAXP, ant, CVS
+# Set IGRID_ENV in ~/configs/.iGrid_config
+#setenv IGRID_HOME ${HOME}/projects/iGrid
+#setenv IGRID_HOME /Users/sobol/projects/workspace/iGrid
+
+setenv JAVA_HOME /System/Library/Frameworks/JavaVM.framework/Home
+setenv JINI_HOME /Users/sobol/jini2_1
+setenv RIO_HOME /Users/sobol/rio
+setenv JAXP_HOME /research/sorcer/jaxp-1.1
+setenv STAX_HOME /research/sorcer/stax-utils
+setenv SURROGATE_HOME /research/sorcer/surrogate
+setenv ANT_HOME /home/sobolemw/apache-ant-1.6.5
+setenv OTHER_LIB /research/sorcer/lib
+# Set TMPDIR for cvs or cvs -T /tmp commit
+setenv TMPDIR /tmp
+setenv CVSROOT /research/sorcer/iGrid.cvsrep
+
+setenv PATH ${JAVA_HOME}/bin:${IGRID_HOME}/sorcer/bin:${ANT_HOME}/bin:$PATH
+
+# SORCER Portal and class server configuration
+setenv APP_BASE ${IGRID_HOME}/appserver/webapps/sorcer
+#setenv APP_CODEBASE ${APP_BASE}/WEB-INF/classes
+setenv APP_CODEBASE ${IGRID_HOME}/classes
+setenv CATALINA_HOME /Users/sobol/apache-tomcat-5.5.20
+setenv CATALINA_BASE ${IGRID_HOME}/appserver
+setenv IGRID_PORTAL_HOST 134.131.68.12
+setenv IGRID_PORTAL_PORT 9001
+setenv IGRID_WEBSTER 127.0.0.1
+setenv IGRID_WEBSTER_PORT 9009
+setenv INITIAL_LOOKUP_GROUP sorcer.DEV
+
+setenv LIB_JARS ${IGRID_HOME}/lib
+setenv COMMON_JARS ${IGRID_HOME}/common
+
+set JINI_LIB=${COMMON_JARS}\jsk-platform.jar:${COMMON_JARS}\jini-ext.jar:${COMMON_JARS}\sun-util.jar:${COMMON_JARS}\serviceui-1.1.jar
+set RIO_LIB=${RIO_HOME}/lib/rio.jar:${RIO_HOME}/lib/rio-platform.jar:${RIO_HOME}/lib/rio-space.jar:${RIO_HOME}/lib/cybernode.jar 
+set JAXP_LIB=${JAXP_HOME}/jaxp.jar:${JAXP_HOME}/xalan.jar:${JAXP_HOME}/crimson.jar:${STAX_HOME}/lib/jsr173_07_api.jar:${STAX_HOME}/lib/jsr173_07_ri.jar
+setenv SERVLET_JAR ${CATALINA_HOME}/common/lib/servlet-api.jar
+set ANT_LIB=${ANT_HOME}/lib/ant.jar:${RIO_HOME}/lib/classdepandjar.jar:${ANT_HOME}/lib/xml-apis.jar
+
+set JDBC_LIB=${OTHER_LIB}/classes12.zip
+set JNDI_LIB=${COMMON_JARS}/fscontext.jar:${COMMON_JARS}/jndi.jar:${COMMON_JARS}/providerutil.jar
+set TEA_LIB=${OTHER_LIB}/tea.jar
+set IGRID_LIB=${IGRID_HOME}/lib/sorcer.jar
+set SURROGATE_LIB=${SURROGATE_HOME}/lib/surrogate.jar:${SURROGATE_HOME}/lib/madison-boot.jar:${SURROGATE_HOME}/lib/IPinterconnect.jar
+set SCAF_LIB=${IGRID_HOME}/common/api.jar:${IGRID_HOME}/common/apduio.jar:${IGRID_HOME}/common/base-core.jar:${IGRID_HOME}/common/base-opt.jar:${IGRID_HOME}/common/mckoidb.jar:${IGRID_HOME}/common/mkjdbc.jar:${IGRID_HOME}/common/pcsc-wrapper-2.0.jar
+# Java CLASSPATH
+# setenv CLASSPATH .:${IGRID_LIB}:${JINI_LIB}:${SERVLET_JAR}:${ANT_LIB}:${JDBC_LIB}:${JNDI_LIB}:${TEA_LIB}:${JAXP_LIB}:${SURROGATE_LIB}
+
+unset IGRID_LIB
+unset JINI_LIB
+unset RIO_LIB
+unset JAXP_LIB
+unset ANT_LIB
+unset JDBC_LIB
+unset JINTEGRA_LIB
+unset JNDI_LIB
+unset TEA_LIB

@@ -1,0 +1,66 @@
+#!/bin/bash
+#echo "rantback: IGRID_HOME=$IGRID_HOME"
+
+
+# args
+#
+PID_FILE=`basename $1`
+ANT_CMD="$2"
+ANT_FILENAME="$3"
+
+
+# vars
+#
+#SBIN_HOME=`dirname \`readlink -f $0\``
+#SBIN_HOME=`dirname $0`
+SBIN_HOME=$IGRID_HOME/sbin
+SHELL_ENV=$SBIN_HOME/../configs/shellEnv
+PID_FILE="$SBIN_HOME/$PID_FILE"
+TITLE_ARG="--title"
+
+
+# get the terminal command
+#
+if [ -z "$COLORTERM" ]; then
+	if [ -z "$TERM" ]; then
+		TERM=xterm
+	fi
+    COLORTERM=$TERM
+    TITLE_ARG="-title"
+fi
+
+
+# double-check
+#
+WHC_COLORTERM=`which $COLORTERM &> /dev/null`
+ if [ $? -ne 0 ]; then
+ 	COLORTERM=xterm
+ 	TITLE_ARG="-title"
+ fi
+ 
+ 
+ # exit if no terminal found
+ #
+ WHC_COLORTERM=`which $COLORTERM &> /dev/null`
+ if [ $? -ne 0 ]; then
+	echo "*** error: could not invoke $COLORTERM, sorry!"
+	exit 1
+ fi
+ 
+
+# pop xterm and run ant file
+#
+#source $SHELL_ENV
+#$COLORTERM $TITLE_ARG "$ANT_FILENAME" -e "bash -c \"echo \$$ > $PID_FILE; export IGRID_HOME=\"$IGRID_HOME_SBIN\"; ant -f $ANT_CMD; echo exiting...; echo IGRID_HOME=$IGRID_HOME;sleep 15\"" &
+
+#echo "ANT_CMD=$ANT_CMD"
+#echo "IGRID_HOME_SBIN=$IGRID_HOME_SBIN"
+#echo "IGRID_HOME=$IGRID_HOME"
+
+IGRID_HOME_SBIN2=$(echo $IGRID_HOME_SBIN | awk 'BEGIN{ORS=""}{gsub(/\\/,"/", $0); print $0}')
+RIO_HOME_SBIN2=$(echo $RIO_HOME_SBIN | awk 'BEGIN{ORS=""}{gsub(/\\/,"/", $0); print $0}')
+
+$COLORTERM $TITLE_ARG "$ANT_FILENAME" -e "bash -c \"echo \$$ > $PID_FILE; export IGRID_HOME=$IGRID_HOME_SBIN2; export RIO_HOME=$RIO_HOME_SBIN2;env; $ANT_CMD; echo exiting...; echo IGRID_HOME=$IGRID_HOME;sleep 35\"" &
+
+
+

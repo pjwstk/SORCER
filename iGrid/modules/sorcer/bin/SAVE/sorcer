@@ -1,0 +1,57 @@
+#!/bin/ksh
+#
+# Startup script for the SORCER environmet
+# Mike Sobolewski, sobol@crd.ge.com
+#
+# pidfile: ${SORCER_HOME}/bin/run/cache.pid
+# pidfile: ${SORCER_HOME}/bin/run/catalog.pid
+# you need to run RMI registry at the host and port as specified in ??  ${SORCER_HOME}/classes/util/sorcer.env
+
+# Source function library.
+. ${SORCER_HOME}/bin/functions
+
+# See how we were called.
+case "$1" in
+  start)
+	echo "Starting SORCER environment: "
+	rmiregi start
+	tomcat start
+	sleep 3
+	cache start
+	sleep 10
+	catalog start
+	sleep 5
+	
+	chmod a+rx ${SORCER_HOME}/bin/logs/*
+	
+	echo SORCER environment started.
+	echo 
+	;;
+  stop)
+	echo "Shutting down SORCER environment: "
+	catalog stop
+	cache stop
+	rmiregi stop
+	tomcat stop
+	#remove all the files created by CheckDBThread.java
+	rm dberror*.txt
+	#rm all files created by FileNotifier.java
+	rm *.obf
+	echo
+	;;
+  restart)
+	$0 stop
+	sleep 5
+	$0 start
+	;;
+  status)
+	echo "Status of the SORCER environment: "
+	fiperStatus
+	echo
+	;;
+  *)
+	echo "Usage: $0 {start|stop|restart|status}"
+	exit 1
+esac
+
+exit 0

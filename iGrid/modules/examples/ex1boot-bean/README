@@ -1,0 +1,14 @@
+Examples for bootable service components (beans) 
+and corresponding requestors with an internal code servers (websters).
+
+For prerequisites and how to run Ant scripts see the README file in the ex1 directory.
+
+Two versions of examples that illustrate a behavioral transfer between the requestor 
+and provider and the need for a code server (webster):
+	1. The requestor in the first case,  whoIsItBean1, needs a webster to export its signature interface 
+	   to lookup services and it does not use any classes unknown to its provider
+	2. The requestor in the second case, whoIsItBean2, needs additionally to exchange messages with the provider. 
+	   Both requestor and provider implement differently their messages of the sorcer.ex1.Message type,
+	   so both need to exchange their message implementations using their websters on both ends. 
+	   The case two illustrates also how to access the bean enclosing provider by its name
+	   and shows how exceptions and traces are transfered to the requestor from the provider.

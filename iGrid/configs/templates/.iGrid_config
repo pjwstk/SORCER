@@ -1,0 +1,31 @@
+#!/bin/csh -f
+
+#setenv IGRID_HOME ${HOME}/projects/iGrid
+#source ${IGRID_HOME}/modules/sorcer/conf/.sbx
+setenv IGRID_HOME ~sobolemw/projects/workspace/iGrid-09
+alias ig 'cd $IGRID_HOME'
+alias igm 'cd $IGRID_HOME/modules'
+alias soc 'cd $IGRID_HOME/modules/sorcer'
+alias ssoc 'cd $IGRID_HOME/modules/sorcer/src/sorcer'
+alias socdm 'cd $IGRID_HOME/modules/sorcerdm'
+alias ssocdm 'cd $IGRID_HOME/modules/sorcerdm/src/sorcerdm'
+alias csoc 'cd $IGRID_HOME/classes'
+alias slib 'cd $IGRID_HOME/lib'
+alias scvs 'setenv CVSROOT /reserach/sorcer/sorcer.cvsrep'
+alias cstart '${CATALINA_HOME}/bin/catalina.sh start -security'
+alias cstop '${CATALINA_HOME}/bin/catalina.sh stop'
+alias ec '/Applications/eclipse/eclipse &'
+
+alias startBrowser '$IGRID_HOME/bin/jini/startBrowser &'
+alias startSpace  '$IGRID_HOME/bin/jini/startOutrigger --transient --jrmp --delete-logs &'
+alias startWebster '$IGRID_HOME/bin/rio/startweb.sh &'
+alias sdb '/opt/oracle/product/9.2/bin/sqlplus sorcer/1sorcer1'
+alias startl '/opt/oracle/product/9.2/bin/lsnrctl start'
+
+alias sbx 'source /config/.sbx'
+setenv ORACLE_HOME /opt/oracle/product/9.2
+setenv ORACLE_SID sorcer
+
+
+
+

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<platform>
+    <!--
+    Berkeley database jars to load into the common classloader.
+    -->
+    <capability name="Berkeley DB JE" common="yes">
+        <version>je-4.1.21</version>
+        <manufacturer>Oracle</manufacturer>
+        <classpath>${iGrid.home}/lib/common/je-4.1.21.jar</classpath>
+    </capability>     
+</platform>

@@ -1,0 +1,36 @@
+#!/bin/ksh
+#
+# Startup script for the SORCER Cache Server
+# Mike Sobolewski, sobol@crd.ge.com
+#
+# Mike Lapinski changed paths to reflect version 04 paths
+#
+# pidfile: ${SORCER_HOME}/bin/run/cache.pid
+# config: ${SORCER_HOME}/classes/sorcer/service/cache/cache.conf
+
+# Source function library.
+. ${SORCER_HOME}/bin/functions
+
+# See how we were called.
+case "$1" in
+  start)
+ 	echo "Starting cache server: "
+	echo ${APP_CODEBASE}/sorcer/core/provider/cache/cache.srv
+	startproc ${APP_CODEBASE}/sorcer/core/provider/cache/cache.srv
+	echo
+	;;
+  stop)
+	echo "Shutting down cache server: "
+	killproc cache.srv
+	echo
+	;;
+  restart)
+	$0 stop
+	$0 start
+	;;
+  *)
+	echo "Usage: $0 {start|stop|restart}"
+	exit 1
+esac
+
+exit 0

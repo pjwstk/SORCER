@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Surrogate-Codebase: sorcer-surrogate-dl.jar
+Surrogate-Class: sorcer.core.provider.surrogate.SurrogateProvider
+Created-By: Ravi Malladi

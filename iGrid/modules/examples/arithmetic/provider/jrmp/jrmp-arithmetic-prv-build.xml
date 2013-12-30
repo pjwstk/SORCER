@@ -1,0 +1,142 @@
+<?xml version='1.0' encoding='ISO-8859-1' standalone='yes'?>
+<!-- 
+ * Copyight (C) 2004 SORCER Lab, Texas Tech University. All rights reserved.
+ * Service-Oriented Computing Environmet: SORCER Arithetic service provider 
+ * build configuration.
+ * Make sure the following variables are changed to reflect your environment:
+ *    IGRID_HOME        	iGrid location
+ *    JAVA_HOME         	JDK Location
+ *	  IGRID_WEBSTER_PORT 	The class server (webster) port
+ *    ANT_HOME          	Jakarta Ant location
+ Please see also the ../common-build.xml for classpaths, definitions and targets
+-->
+<project name="JRMP Arithmetic" default="all" basedir=".">
+	<property name="module.name" value="jrmp" />
+	<property name="module.run.dir" value="arithmetic" />
+	<!-- set global properties -->
+	<import file="../../../../common-build.xml" />
+	<property name="src" value="./src" />
+	<property name="resources" value="../../resources" />
+
+	<!-- The sources to compile -->
+	<patternset id="ant.java">
+		<include name="sorcer/arithmetic/*.java" />
+		<include name="sorcer/provider/**/*.java" />
+		<exclude name="**/SAVE/*.java" />
+		<exclude name="**/BAK/*.java" />
+	</patternset>
+
+	<fileset dir="${resources}" id="icons">
+		<include name="sorcer.jpg" />
+	</fileset>
+
+	<patternset id="ant.classes">
+		<include name="sorcer/provider/arithmetic/**/*.class" />
+	</patternset>
+
+	<patternset id="ant.jars">
+		<include name="jrmp-arithmetic.jar" />
+		<include name="jrmp-arithmetic-dl.jar" />
+	</patternset>
+
+	<path id="project.classpath">
+		<pathelement location="${classes}" />
+		<pathelement location="${sorcer.lib}/sorcer-prv.jar" />
+		<pathelement location="${sorcerlib}/sorcer-lib.jar" />
+		<path refid="jaxp.path" />
+		<path refid="jini.path" />
+		<path refid="rio.path" />
+	</path>
+
+	<path id="javadocs.classpath">
+		<path refid="jini.path" />
+		<pathelement location="${common.lib}/buildsupport/ant-ext.jar" />
+		<pathelement location="${common.lib}/buildsupport/ant.jar" />
+	</path>
+
+	<target name="compile" depends="compileSources, copy-config-files" />
+	<target name="jars" depends="compile, rmics, arithmetic.jars, copy-run-prv-files" />
+	<target name="arithmetic.jars" depends="jrmp-arithmetic.jar, jrmp-arithmetic-dl.jar" />
+	<target name="all" depends="prepare, jars" />
+
+	<target name="jrmp-arithmetic.jar" depends="compileSources">
+		<classdepandjar jarfile="${sorcer.lib}/jrmp-arithmetic.jar" files="true" debug="false">
+			<classpath refid="project.classpath" />
+			<in name="sorcer" />
+			<in name="net.jini" />
+			<in name="com.sun" />
+			<in name="jgapp" />
+			<topclass name="sorcer.provider.arithmetic.jrmp.ArithmeticProviderRemoteImpl" />
+			<topclass name="sorcer.provider.arithmetic.jrmp.ArithmeticProviderRemoteImpl_Stub" />
+			<topclass name="net.jini.admin.Administrable" />
+			<fileset dir="${iGrid.home}/configs">
+				<filename name="sorcer/util/sorcer.env" />
+				<filename name="sorcer/util/data.formats" />
+			</fileset>
+		</classdepandjar>
+	</target>
+
+	<target name="jrmp-arithmetic-dl.jar" depends="compileSources">
+		<classdepandjar jarfile="${sorcer-dl.lib}/jrmp-arithmetic-dl.jar" files="true" debug="false">
+			<classpath refid="project.classpath" />
+			<in name="sorcer" />
+			<in name="jgapp" />
+			<in name="net.jini" />
+			<in name="com.sun" />
+			<topclass name="sorcer.arithmetic.Arithmometer" />
+			<topclass name="sorcer.ui.serviceui.UIComponentFactory" />
+			<topclass name="sorcer.arithmetic.ArithmeticRemote" />
+			<topclass name="sorcer.provider.arithmetic.jrmp.ArithmeticProviderRemoteImpl_Stub" />
+			<topclass name="sorcer.jini.lookup.entry.SorcerServiceType" />
+			<topclass name="sorcer.core.context.IndexedContext" />
+			<topclass name="net.jini.lookup.entry.ServiceInfo" />
+			<topclass name="net.jini.admin.Administrable" />
+			<topclass name="sorcer.core.AdministratableProvider" />
+			<topclass name="sorcer.core.provider.proxy.Partner" />
+			<fileset refid="icons" />
+		</classdepandjar>
+	</target>
+
+	<fileset dir="${classes}">
+		<patternset id="rmic.classes">
+			<include name="sorcer/provider/arithmetic/jrmp/ArithmeticProviderRemoteImpl.class" />
+		</patternset>
+	</fileset>
+
+	<target name="docs" depends="prepare, compile">
+		<javadoc packagenames="org.jini.rio.tools.ant.*" maxmemory="100M" sourcepath="${src}" destdir="${docs}/api" Author="true" Version="true" Use="true" windowtitle="Arithmetic Examples" doctitle="&lt;h1&gt;Arithmetic Examples;/h1&gt;" bottom="&lt;i&gt;Copyright (c) 2002-2006 Texas tech University, All Rights Reserved.&lt;/i&gt;">
+			<group title="Arithmetic Examples" packages="sorcer.arithmetic.*" />
+			<classpath refid="project.classpath" />
+		</javadoc>
+	</target>
+
+	<target name="copy-run-prv-files">
+		<mkdir dir="${iGrid.home}/bin/examples/${module.run.dir}/configs" />
+		<mkdir dir="${iGrid.home}/bin/examples/${module.run.dir}/bin" />
+		<mkdir dir="${iGrid.home}/bin/examples/${module.run.dir}/policy" />
+		<mkdir dir="${iGrid.home}/bin/examples/${module.run.dir}/logs" />
+		<copy todir="${iGrid.home}/bin/examples/${module.run.dir}/configs">
+			<fileset dir="configs">
+				<include name="*" />
+			</fileset>
+		</copy>
+		<copy todir="${iGrid.home}/bin/examples/${module.run.dir}/bin">
+			<fileset dir="bin">
+				<include name="*" />
+			</fileset>
+		</copy>
+		<copy todir="${iGrid.home}/bin/examples/${module.run.dir}/policy">
+			<fileset dir="policy">
+				<include name="*" />
+			</fileset>
+		</copy>
+		<chmod dir="${iGrid.home}/bin/examples/${module.run.dir}/bin" perm="755" includes="*.sh" />
+	</target>
+
+	<target name="rmics" depends="compileSources">
+		<rmic base="${classes}">
+			<classpath refid="project.classpath" />
+			<patternset refid="rmic.classes" />
+		</rmic>
+	</target>
+</project>

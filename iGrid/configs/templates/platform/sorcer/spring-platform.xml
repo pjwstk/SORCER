@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Define the spring platform
+-->
+
+<platform>
+    <!--
+    Spring platform jars
+    -->
+    <capability name="Spring" common="yes">
+        <description>Spring Framework</description>
+        <version>2.5</version>
+        <manufacturer>Interface21</manufacturer>
+        <classpath>${iGrid.home}/lib/spring
+                   ${iGrid.home}/lib/common/jakarta-commons</classpath>        
+    </capability>
+    
+</platform>

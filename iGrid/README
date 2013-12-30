@@ -1,0 +1,60 @@
+An intergrid (iGrid) is a generic framework for integrating multiple technology 
+frameworks using the Service-ORiented Computing EnviRonment (SORCER). SORCER is a 
+dynamically federated metacomputing environment that has been built and 
+developed by SOPRCER Lab at SORCERsoft.org (http://sorcersoft.org)
+
+To configure your iGrid, the following environment variable has to be defined:
+IGRID_HOME - points to your iGrid workspace (sandbox)
+
+BASIC CONFIGURATION
+The required configuration files must be copied from iGrid/configs/templates 
+to iGrid/configs. Never commit these files from your iGrid/configs directory 
+to the source repository, after customizing them they belong to you only.
+1.	sorcer.env
+2.	sorcer.logging
+
+In the sorcer.logging file, set logger levels accordingly to your development
+and testing needs.
+
+The data.formats file defines data-context-node types for various applications 
+(similar to MIME types).
+
+ADVANCED CONFIGURATION
+Once copied, these files should be customized accordingly. In particular, 
+the following properties in sorcer.env used by the sorcer.util.Env class should 
+be declared:
+provider.lookup.locators - locators used for unicast discovery
+provider.webster - a class server hostname used by sorcer.util.Env
+provider.webster.port - port of the iGrid class server used by sorcer.util.Env
+sorcer.admin - to receive email notifications
+sorcer.smtp.host - mail server
+If you use an RMI registry, set sorcer.rmi.host and sorcer.rmi.port accordingly.
+
+OFFLINE USE SEPARATE DESKTOP/DESKTOP SYSTEM NOT CONNECTED TO REPOSITORY 
+(To Remove .svn folders) 
+1. Make a backup of IGRID_HOME\data
+2. Right-click on IGRID_HOME folder, select Team, then Export
+3. Select Location
+4. Click OK
+5. Move IGRID_HOME folder to new system
+6. On new system using Eclipse, File-->Import-->General-->Existing Projects into 
+   Workspace
+7. Click Browse and navigate to IGRID_HOME
+8. Click Finish
+
+WINDOWS XP 32/64-bit NOTES
+1. Install eclipse workspace to c:\workspace or similar, try to avoid using 
+   paths like c:\Program Files where the spaces can cause ANT trouble.
+2. On 64-bit systems, may need to adjust Installed JREs to use the 64-bit one
+   in C:\Program Files\Java\jre6 by using:
+   Window-->Preferences-->Java-->Installed JRE's (Edit)
+3. If there are problems using the localhost address or multiple adapters
+   , try installing the Microsoft Loopback adapter and set it to use a 
+   192.168.x.y address with 255.255.0.0 submask. 
+   a.) Start-->Control Panel-->Add Hardware-->Next-->Yes,Next-->
+       Add a new hardware device (at bottom of list), Next-->
+       Install the hardware that I manually select from a list-->
+       Network Adapters, Next-->
+       Microsoft, Microsoft Loopback Adapter, Next-->
+       Follow directions...manually set address to 192.168.x.y using Properties
+       for adapter  

@@ -1,0 +1,28 @@
+#!/bin/ksh
+# Script to publish a FIPER service on a machine. 
+# Note:The .prv name is assumed to be the package name + .prv
+if [ $# != 2 ]; then
+ echo "Usage"
+ echo "publishService arg1, arg2"
+ echo "arg1 = serviceName where to publish"
+ echo "arg2 = machineName(.prv file name with out extension)"
+ echo "Example: publishService tp3, cassidy"
+else 
+machine=$2
+name=$1
+exec=$1".prv"
+#echo $machine
+#echo $name
+if [ $name != jobber ]; then
+echo "executing command:xterm -sl 2000 -sb -T ${name} -n ${name} -iconic -e \
+rsh ${machine} \"cd ${HOME}/www/projects/fiper/src/fiper/provider/${name}; ${exec} -test\"" & 
+xterm -sl 2000 -sb -T ${name} -n ${name} -iconic -e rsh \
+${machine} "cd ${HOME}/www/projects/fiper/src/fiper/provider/${name}; ${exec} -test" &
+else
+echo "executing command:xterm -sl 2000 -sb -T ${name} -n ${name} -iconic -e \
+rsh ${machine} \"cd ${HOME}/www/projects/fiper/src/fiper/core/provider/${name}; ${exec} -test\"" & 
+xterm -sl 2000 -sb -T ${name} -n ${name} -iconic -e rsh \
+${machine} "cd ${HOME}/www/projects/fiper/src/fiper/core/provider/${name}; ${exec} -test" &
+fi
+fi
+exit 0

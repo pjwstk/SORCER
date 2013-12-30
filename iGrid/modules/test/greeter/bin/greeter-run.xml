@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+
+<project name="Run Greeter1" default="run-class" basedir=".">
+
+	<!-- set global properties -->
+	<import file="../../../common-run.xml" />
+
+	<path id="project.classpath">
+		<pathelement location="${classes}" />
+	</path>
+
+	<target name="run-class">
+		<java classname="sorcer.greeter.GreeterTester" fork="yes">
+			<classpath refid="project.classpath" />
+			<jvmarg value="-ea" />
+		</java>
+	</target>
+
+	<target name="run-jar">
+		<java jar="${lib}/greeter.jar" fork="yes">
+		</java>
+	</target>
+
+</project>
+
+
+

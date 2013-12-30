@@ -1,0 +1,2 @@
+## $1: XML file name
+java -Djava.compiler=NONE sorcer.service.xml.SorcerXMLUtil -jobj $1

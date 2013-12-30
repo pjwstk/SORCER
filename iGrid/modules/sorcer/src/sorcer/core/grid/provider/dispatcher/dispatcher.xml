@@ -1,0 +1,126 @@
+%<?xml version="1.0" encoding="UTF-8"?>
+<!--
+/*
+ * Copyright 2002-2003 Texas Tach. All Rights Reserved.
+ *
+ * The contents of this file are made available under and subject to the
+ * Research Use Rights of the Sun Community Source License v 3.0
+ * (the "License"). Software distributed under the License is
+ * distributed on an "AS IS" basis, WITHOUT WARRANTY OF ANY KIND,
+ * either express or implied. See the License for the19 specific language
+ * governing rights and limitations under the License.
+ *
+ * Contributor(s): Sekhar Soorianarayanan
+ */
+-->
+
+<project name="SORCER" default="all" basedir=".">
+    <property environment="env"/>
+    <property name="sorcer.home" value="${env.SORCER_HOME}"/>
+    <property name="class" value="${env.APP_CODEBASE}"/>
+
+    <property name="SORCER_APPS" value="${env.SORCER_HOME}/apps" />
+    <property name="CURR_APP" value="${SORCER_APPS}/dispatcher" />
+    <property name="policy" value="${CURR_APP}/policy"/>
+    <property name="lib" value="${CURR_APP}/lib"/>
+    <!-- +++++++++++++++++++ Paths ++++++++++++++++++ -->
+
+    <path id="project.classpath">
+         <pathelement path="${env.CLASSPATH}" />
+         <pathelement path="${env.CODEBASE}" />
+    </path>
+
+    <target name="all" depends="prepare, clean, dispatcher.jar, dispatcher-dl.jar, dispatcher-ui.jar, copy_files" />
+
+
+    <target name="prepare">
+    <mkdir dir="${CURR_APP}" />
+    <mkdir dir="${lib}" />
+    <mkdir dir="${policy}" />
+    </target>
+
+    <target name="clean">
+        <delete file="${lib}/dispatcher.jar"/>
+	<delete file="${lib}/dispatcher-dl.jar"/>
+        <delete file="${lib}/dispatcher-ui.jar"/>	
+    </target>
+
+    <target name="copy_files" >
+    <copy todir="${CURR_APP}" >
+      <fileset dir="${class}/sorcer/provider/grid/dispatcher" >
+        <include name="**/runDispatcher" />
+      </fileset>
+    </copy>
+
+    <copy todir="${lib}" >
+      <fileset dir="${class}/jinilib" >
+        <include name="**/serviceui.jar" />
+	<include name="**/jsk-platform.jar" />
+      </fileset>
+    </copy>
+
+    <copy todir="${class}" >
+      <fileset dir="${lib}" >
+        <include name="**/dispatcher-ui.jar" />
+      </fileset>
+    </copy>    
+    </target>
+
+    <target name="dispatcher.jar">
+            <classdepandjar jarfile="${lib}/dispatcher.jar" files="true"
+	       manifest="${class}/sorcer/provider/grid/dispatcher/dispatcher.mf" >
+	    <classpath refid="project.classpath"/>
+
+            <in  name="sorcer"/>
+            <in  name="net.jini"/>
+	    <in  name="com.sun" />
+            <topclass name=
+                  "sorcer.provider.grid.dispatcher.GridDispatcherProviderImpl" />
+            <topclass name=
+                  "sorcer.provider.grid.dispatcher.GridDispatcherProviderImpl_Stub" />
+	    <topclass name=
+                  "sorcer.core.provider.SorcerJoiner"/>		  
+	     <fileset dir="${class}"
+	    	    includes="sorcer/util/sorcer.env" />
+   	     <fileset dir="${class}"
+	    	    includes="sorcer/provider/grid/dispatcher/dispatcher.properties" />
+	     <fileset dir="${class}"
+	    	    includes="sorcer/provider/grid/dispatcher/config/server.config" />	    
+	    </classdepandjar>
+     </target>
+
+    <target name="dispatcher-dl.jar">
+            <classdepandjar jarfile="${lib}/dispatcher-dl.jar" files="true">	
+	    <classpath refid="project.classpath"/>
+            <in  name="sorcer"/>
+	  <topclass name=
+                  "sorcer.core.serviceui.UIFrameFactory" />
+            <topclass name=
+                  "sorcer.provider.grid.dispatcher.GridDispatcherRemote" />
+            <topclass name=
+                  "sorcer.provider.grid.dispatcher.GridDispatcherProviderImpl_Stub" />
+	    </classdepandjar>
+     </target>
+	
+     <target name="dispatcher-ui.jar">
+            <classdepandjar jarfile="${lib}/dispatcher-ui.jar" files="true">
+	    <classpath refid="project.classpath"/>
+
+            <in  name="sorcer"/>
+            <in  name="net.jini"/>
+	    <in  name="com.sun" />
+            <topclass name=
+                  "sorcer.provider.grid.dispatcher.GridDispatcherUI" />
+  	    </classdepandjar>
+     </target>
+
+
+<!-- ++++++++++  Teach Ant a new trick... +++++++++++++ -->
+<taskdef name="classdepandjar" 
+classname="org.jini.project.example.jade.tools.ClassDepAndJarTask"
+classpath="${project.classpath}"
+/>
+<!-- ++++++++++  Teach Ant a new trick... +++++++++++++ -->
+
+
+</project>

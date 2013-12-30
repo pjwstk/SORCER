@@ -1,0 +1,52 @@
+#!/bin/sh
+
+# s. burton
+
+# set os flags 
+#
+UNAME_S=`uname -s`
+export IS_MAC=0
+export IS_LINUX=0
+export IS_WIN=0
+export IS_CYGWIN=0
+MATLAB_ARG=""
+ 
+if [ $UNAME_S == "Darwin" ]; then
+	IS_MAC=1
+	ORIG_DIR=$PWD
+	#echo "ECLIPSE_PATH=$ECLIPSE_PATH"
+	EC_DIR=$(dirname $ECLIPSE_PATH)
+	EC_EXEC=$(basename $ECLIPSE_PATH)
+	#echo "EC_DIR=$EC_DIR"
+	#echo "EC_EXEC=$EC_EXEC"
+	cd $EC_DIR
+	#echo "PWD=$PWD" 
+	./$EC_EXEC
+	cd $ORIG_DIR
+	exit 0
+fi
+if [ $UNAME_S == "Linux" ]; then
+	IS_LINUX=1
+fi
+export IS_CYGWIN=`uname -s | awk 'BEGIN{flag=0} {if ($0~/CYGWIN/) {flag=1}} END{print flag}'`
+
+
+source $IGRID_HOME/configs/minClasspath
+
+# switch paths to dos format for matlab; re-write classpath.txt
+#
+if [ $IS_CYGWIN -eq 1 ]; then
+	export IGRID_HOME=$IGRID_HOME_SBIN
+	export RIO_HOME=$RIO_HOME_SBIN
+	export CLASSPATH=$CLASSPATH_SBIN
+	export JAVA_HOME=$JAVA_HOME_SBIN
+	export ANT_HOME=$ANT_HOME_SBIN
+fi
+
+#echo "ECLIPSE_PATH=$ECLIPSE_PATH"
+
+# start eclipse
+#
+bash -c $ECLIPSE_PATH
+
+

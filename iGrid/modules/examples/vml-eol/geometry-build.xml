@@ -1,0 +1,185 @@
+<?xml version='1.0' encoding='ISO-8859-1' standalone='yes'?>
+
+<project name="Walkthrough step 1 - geometry" default="all" basedir=".">
+	<property name="module.name" value="walkthrough" />
+	<property name="module.run.dir" value="geometry" />
+
+	<!-- set global properties -->
+	<import file="../../common-build.xml" />
+	<property name="src" value="./src" />
+	<property name="resources" value="${iGrid.home}/modules/sorcer/resources" />
+
+	<!-- The sources to compile -->
+	<patternset id="ant.java">
+		<include name="sorcer/model/geometry/**/*.java" />
+		<include name="sorcer/model/junit/**/*.java" />
+		<exclude name="**/SAVE/*.java" />
+		<exclude name="**/BAK/*.java" />
+	</patternset>
+
+	<patternset id="ant.classes">
+		<include name="sorcer/model/geometry/**/*.class" />
+		<include name="sorcer/model/junit/**/*.class" />
+	</patternset>
+
+	<fileset dir="${resources}" id="icons">
+		<include name="sorcer.jpg" />
+	</fileset>
+
+	<path id="project.classpath">
+		<pathelement location="${classes}" />
+		<pathelement location="${sorcer.lib}/sorcer-prv.jar" />
+		<pathelement location="${sorcer.lib}/modeling.jar" />
+		<pathelement location="${support.lib}/junit.jar" />
+		<path refid="jaxp.path" />
+		<path refid="jini.path" />
+		<path refid="rio.path" />
+	</path>
+
+	<path id="javadocs.classpath">
+		<path refid="jini.path" />
+		<pathelement location="${common.lib}/buildsupport/ant-ext.jar" />
+		<pathelement location="${common.lib}/buildsupport/ant.jar" />
+	</path>
+
+	<target name="compile" depends="compileSources" />
+	<target name="jars" depends="rect, circle, copy-run-prv-files" />
+	<target name="rect" depends="rect.jar, rect-dl.jar, out-rect.jar, file-rect.jar" />
+	<target name="circle" depends="circle.jar, circle-dl.jar" />
+	<target name="all" depends="additional, prepare, compile, jars, copy-run-prv-files" />
+
+	<target name="doIt">
+		<antcall target="doOne">
+			<param name="dir" location="${iGrid.home}/modules/engineering/optimization/conmin/provider" />
+			<param name="antfile" value="conmin-prv-build.xml" />
+		</antcall>
+	</target>
+
+	<target name="modules">
+		<ant target="doIt" antfile="geometry-build.xml" />
+	</target>
+
+	<target name="rect.jar" depends="compile">
+		<classdepandjar jarfile="${sorcer.lib}/rect.jar" files="true" debug="false">
+			<classpath refid="project.classpath" />
+			<in name="sorcer.model.geometry" />
+			<topclass name="sorcer.model.geometry.RectModelBuilder" />
+			<topclass name="sorcer.model.geometry.ContextualRectImpl" />
+			<topclass name="sorcer.model.geometry.ParametricRectImpl" />
+			<topclass name="sorcer.model.geometry.ContextualRectTasker" />
+			<topclass name="sorcer.model.geometry.ParametricRectTasker" />
+			<topclass name="sorcer.model.geometry.Rectangle" />
+		</classdepandjar>
+	</target>
+
+	<target name="out-rect.jar" depends="compile">
+		<classdepandjar jarfile="${sorcer.lib}/out-rect.jar" files="true" manifest="configs/out-rect.mf" debug="false">
+			<classpath refid="project.classpath" />
+			<in name="sorcer.model.geometry" />
+			<topclass name="sorcer.model.geometry.OutRectCalculator" />
+		</classdepandjar>
+	</target>
+
+
+	<target name="file-rect.jar" depends="compile">
+		<classdepandjar jarfile="${sorcer.lib}/file-rect.jar" files="true" manifest="configs/file-rect.mf" debug="false">
+			<classpath refid="project.classpath" />
+			<in name="sorcer.model.geometry" />
+			<topclass name="sorcer.model.geometry.FileRectCalculator" />
+		</classdepandjar>
+	</target>
+
+	<target name="rect-dl.jar" depends="compile">
+		<classdepandjar jarfile="${sorcer-dl.lib}/rect-dl.jar" files="true" debug="false">
+			<classpath refid="project.classpath" />
+			<in name="sorcer.model.geometry" />
+			<topclass name="sorcer.vfe.ParametricModeling" />
+			<topclass name="sorcer.model.geometry.ContextualRect" />
+			<topclass name="sorcer.model.geometry.ParametricRect" />
+			<topclass name="sorcer.model.geometry.RemoteContextualRect" />
+			<topclass name="sorcer.model.geometry.RemoteParametricRect" />
+		</classdepandjar>
+	</target>
+
+	<target name="circle.jar" depends="compile">
+		<classdepandjar jarfile="${sorcer.lib}/circle.jar" files="true" debug="false">
+			<classpath refid="project.classpath" />
+			<in name="sorcer.model.geometry" />
+			<topclass name="sorcer.model.geometry.Circle" />
+			<topclass name="sorcer.model.geometry.ContextualCircleImpl" />
+			<topclass name="sorcer.model.geometry.ParametricCircleImpl" />
+		</classdepandjar>
+	</target>
+
+	<target name="circle-dl.jar" depends="compile">
+		<classdepandjar jarfile="${sorcer-dl.lib}/circle-dl.jar" files="true" debug="false">
+			<classpath refid="project.classpath" />
+			<in name="sorcer.model.geometry" />
+			<topclass name="sorcer.model.geometry.ContextualCircle" />
+			<topclass name="sorcer.model.geometry.ParametricCircle" />
+		</classdepandjar>
+	</target>
+
+	<target name="docs" depends="prepare, compile">
+		<javadoc packagenames="org.jini.rio.tools.ant.*" maxmemory="100M" sourcepath="${src}" destdir="${docs}/api" Author="true" Version="true" Use="true" windowtitle="Rect Tutorial" doctitle="&lt;h1&gt;Rect Tutorial;/h1&gt;" bottom="&lt;i&gt;Copyright (c) 2010 SORCERsoft.org, All Rights Reserved.&lt;/i&gt;">
+			<group title="Rect Tutorial" packages="sorcer.arithmetic.*" />
+			<classpath refid="project.classpath" />
+		</javadoc>
+	</target>
+
+
+	<!--this is the target the moves files to the main dir-->
+	<target name="copy-run-prv-files">
+		<mkdir dir="${iGrid.home}/bin/examples/${module.run.dir}/configs" />
+		<mkdir dir="${iGrid.home}/bin/examples/${module.run.dir}/bin" />
+		<mkdir dir="${iGrid.home}/bin/examples/${module.run.dir}/policy" />
+		<mkdir dir="${iGrid.home}/bin/examples/${module.run.dir}/logs" />
+		<copy todir="${iGrid.home}/bin/examples/${module.run.dir}/configs">
+			<fileset dir="configs">
+				<include name="*" />
+			</fileset>
+		</copy>
+		<copy todir="${iGrid.home}/bin/examples/${module.run.dir}/bin">
+			<fileset dir="bin">
+				<include name="*" />
+			</fileset>
+		</copy>
+		<copy todir="${iGrid.home}/data/${module.run.dir}">
+			<fileset dir="data">
+				<include name="*" />
+			</fileset>
+		</copy>
+		<copy todir="${iGrid.home}/bin/examples/${module.run.dir}/policy">
+			<fileset dir="policy">
+				<include name="*" />
+			</fileset>
+		</copy>
+		<chmod dir="${iGrid.home}/bin/examples/${module.run.dir}/bin" perm="755" includes="*.sh" />
+	</target>
+
+	<target name="additional">
+		<property name="target" value="all" />
+		<ant target="doIt" antfile="geometry-build.xml" />
+	</target>
+
+	<target name="doOne">
+		<condition property="whichone" value="doWith">
+			<isset property="target" />
+		</condition>
+		<condition property="whichone" value="doWithOut">
+			<not>
+				<isset property="target" />
+			</not>
+		</condition>
+		<ant target="${whichone}" antfile="geometry-build.xml" />
+	</target>
+
+	<target name="doWith">
+		<ant dir="${dir}" antfile="${antfile}" target="${target}" inheritAll="true" />
+	</target>
+
+	<target name="doWithOut">
+		<ant dir="${dir}" antfile="${antfile}" inheritAll="true" />
+	</target>
+
+</project>

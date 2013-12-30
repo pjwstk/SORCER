@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Class-path: jsk-platform.jar serviceui.jar
+Sorcer-Version: @SORCER_VERSION@
+Sorcer-Build: @SORCER_BUILD@

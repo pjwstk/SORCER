@@ -1,0 +1,603 @@
+<!-- This scripts creates a full SORCER application shell with a sample
+     provdier and requestor. It should be, baring any changes to SORCER,
+     able to run once the app has been created and the provider and requestor
+     build scripts have been executed.
+     
+     This script depends on template files in config/templates that have not
+     been altered and that iGrid-home has been set.
+     
+     This script will run from the command line and provide command-line
+     input prompts or run from Eclipse and provide a GUI input screens. 
+     
+     If you have any questions, please direct them to Michael Robbeloth -->
+<project name="create-SORCER-app" default="create-module" basedir=".">
+	<property environment="env" />
+    <import file="${env.IGRID_HOME}/modules/common-build.xml" />
+    <target name="create-module" 
+             description="Create a project shell automatically">
+         <!-- Ask user for name and type of module -->
+         <input message="Name of Module:"
+                addproperty="module.name"/>
+         <input message="Type of Module [Eng(E), Example(X), Other(O)]:"
+                addproperty="module.type"
+                validargs="E,X,O"
+         />
+       
+         <!-- Make sure user entered module name and type -->
+         <fail message="Name and/or type not set!">
+             <condition>
+                 <or>
+                     <isset property="${module.name}"/>
+                     <isset property="${module.type}"/>
+                 </or>
+             </condition>
+         </fail>
+         
+         <!-- Set module creation type based on specified module type -->
+         <condition property="engineering.module">
+               <or>
+                     <contains string="E" substring="${module.type}"/>
+               </or>
+         </condition>
+         
+         <condition property="example.module">
+               <or>
+                     <contains string="X" substring="${module.type}"/>
+               </or>
+         </condition>
+         
+         <condition property="other.module">
+               <or>
+                     <contains string="O" substring="${module.type}"/>
+               </or>
+         </condition>   
+         
+         <antcall target="create-engineering-module" inheritAll="true"/>
+         <antcall target="create-example-module" inheritAll="true"/>
+         <antcall target="create-other-module" inheritAll="true"/>
+     </target>
+     
+     <target name="create-engineering-module" 
+             if="engineering.module">
+           <!-- Report user entries" -->
+            <echo message="creating engineering module..."/>
+         
+            <mkdir dir="${iGrid.home}/modules/engineering/${module.name}/provider/bin"/>
+            <mkdir dir="${iGrid.home}/modules/engineering/${module.name}/provider/configs"/>
+            <mkdir dir="${iGrid.home}/modules/engineering/${module.name}/provider/logs"/>
+            <mkdir dir="${iGrid.home}/modules/engineering/${module.name}/provider/policy"/>
+            <mkdir dir="${iGrid.home}/modules/engineering/${module.name}/provider/src/engineering/provider/${module.name}"/>
+         
+            <mkdir dir="${iGrid.home}/modules/engineering/${module.name}/requestor/bin"/>
+            <mkdir dir="${iGrid.home}/modules/engineering/${module.name}/requestor/configs"/>
+            <mkdir dir="${iGrid.home}/modules/engineering/${module.name}/requestor/logs"/>
+            <mkdir dir="${iGrid.home}/modules/engineering/${module.name}/requestor/policy"/>
+            <mkdir dir="${iGrid.home}/modules/engineering/${module.name}/requestor/src/engineering/requestor/${module.name}"/>
+         
+            <copy file="${iGrid.config}/templates/provider-all-prv.config"
+                  todir="${iGrid.home}/modules/engineering/${module.name}/provider/configs"/>
+            <copy file="${iGrid.config}/templates/startup-prv.config"
+                 todir="${iGrid.home}/modules/engineering/${module.name}/provider/configs"/>
+            <copy file="${iGrid.config}/templates/provider.properties"
+                 todir="${iGrid.home}/modules/engineering/${module.name}/provider/configs"/>
+            <copy file="${iGrid.config}/templates/prv-build.xml"
+                 todir="${iGrid.home}/modules/engineering/${module.name}/provider"/>     
+            <copy file="${iGrid.config}/templates/jeri-prvname-prv-run.xml"
+                 todir="${iGrid.home}/modules/engineering/${module.name}/provider/bin"/>         
+            <copy file="${iGrid.config}/templates/policy.all"
+                 todir="${iGrid.home}/modules/engineering/${module.name}/provider/policy"/>
+            <copy file="${iGrid.config}/templates/policy.all"
+                  todir="${iGrid.home}/modules/engineering/${module.name}/requestor/policy"/>
+            <copy file="${iGrid.config}/templates/PROVIDER_INTERFACE_NAME_HERE.java"
+                  todir="${iGrid.home}/modules/engineering/${module.name}/provider/src/engineering/provider/${module.name}"/>
+            <copy file="${iGrid.config}/templates/PROVIDER_IMPLEMENTATION_NAME_HERE.java"
+                  todir="${iGrid.home}/modules/engineering/${module.name}/provider/src/engineering/provider/${module.name}"/>        
+            <copy file="${iGrid.config}/templates/REQUESTOR_IMPLEMENTATION_NAME_HERE.java"
+                  todir="${iGrid.home}/modules/engineering/${module.name}/requestor/src/engineering/requestor/${module.name}"/>
+            <copy file="${iGrid.config}/templates/req-build.xml"
+                  todir="${iGrid.home}/modules/engineering/${module.name}/requestor"/>
+            <copy file="${iGrid.config}/templates/req-run.xml"
+                  todir="${iGrid.home}/modules/engineering/${module.name}/requestor/bin"/>           
+         
+            <replace file="${iGrid.home}/modules/engineering/${module.name}/provider/prv-build.xml"
+                     token="PROVIDER_NAME_HERE"
+                     value="${module.name}"/>
+            <replace file="${iGrid.home}/modules/engineering/${module.name}/provider/prv-build.xml"
+                     token="MODULE_TYPE"
+                     value="engineering"/>
+            <replace file="${iGrid.home}/modules/engineering/${module.name}/provider/prv-build.xml"
+                     token="PATH/TO/JAVA/FILES/HERE"
+                     value="engineering/provider"/>
+            <replace file="${iGrid.home}/modules/engineering/${module.name}/provider/prv-build.xml"
+                     token="PATH/TO/CLASSES/FILES/HERE"
+                     value="classes"/>
+            <replace file="${iGrid.home}/modules/engineering/${module.name}/provider/prv-build.xml"
+                     token="PATH/TO/PROVIDER"
+                     value="eng.lib"/>
+            <replace file="${iGrid.home}/modules/engineering/${module.name}/provider/prv-build.xml"
+                     token="DOWNLOAD/JAR/FROM/HERE"
+                     value="eng-dl.lib"/>     
+            <replace file="${iGrid.home}/modules/engineering/${module.name}/provider/bin/jeri-prvname-prv-run.xml"
+                     token="PROVIDER_NAME_HERE"
+                     value="${module.name}"/>        
+            <replace file="${iGrid.home}/modules/engineering/${module.name}/provider/bin/jeri-prvname-prv-run.xml"
+                     token="PROVIDER_FULLY_QUALIFIED_CLASSNAME_HERE"
+                     value="engineering.provider.${module.name}.${module.name}Implementation"/>
+            <replace file="${iGrid.home}/modules/engineering/${module.name}/provider/bin/jeri-prvname-prv-run.xml"
+                     token="PATH/TO/PROVIDER"
+                     value="eng.lib"/>        
+            <replace file="${iGrid.home}/modules/engineering/${module.name}/provider/configs/provider-all-prv.config"
+                     token="PROVIDER_NAME_HERE"
+                     value="${module.name}"/>    
+            <replace file="${iGrid.home}/modules/engineering/${module.name}/provider/configs/provider-all-prv.config"
+                     token="FULLY_QUALIFIED_CLASSNAME_HERE"
+                     value="engineering.provider.${module.name}.${module.name}Interface"/>       
+            <replace file="${iGrid.home}/modules/engineering/${module.name}/provider/src/engineering/provider/${module.name}/PROVIDER_INTERFACE_NAME_HERE.java"
+                     token="AUTHOR_NAME_HERE"
+                     value="${user.name}"/>      
+            <replace file="${iGrid.home}/modules/engineering/${module.name}/provider/src/engineering/provider/${module.name}/PROVIDER_INTERFACE_NAME_HERE.java"
+                     token="PROVIDER_INTERFACE_NAME_HERE"
+                     value="${module.name}Interface"/>   
+            <replace file="${iGrid.home}/modules/engineering/${module.name}/provider/src/engineering/provider/${module.name}/PROVIDER_INTERFACE_NAME_HERE.java"
+                     token="METHOD_NAME_HERE"
+                     value="${module.name}Service"/>
+            <replace file="${iGrid.home}/modules/engineering/${module.name}/provider/src/engineering/provider/${module.name}/PROVIDER_INTERFACE_NAME_HERE.java"
+                     token="PACKAGE_NAME_HERE"
+                     value="engineering.provider.${module.name}"/>
+            <replace file="${iGrid.home}/modules/engineering/${module.name}/provider/src/engineering/provider/${module.name}/PROVIDER_IMPLEMENTATION_NAME_HERE.java"
+                     token="PACKAGE_NAME_HERE"
+                     value="engineering.provider.${module.name}"/>       
+            <replace file="${iGrid.home}/modules/engineering/${module.name}/provider/src/engineering/provider/${module.name}/PROVIDER_IMPLEMENTATION_NAME_HERE.java"
+                     token="AUTHOR_NAME_HERE"
+                     value="${user.name}"/>    
+            <replace file="${iGrid.home}/modules/engineering/${module.name}/provider/src/engineering/provider/${module.name}/PROVIDER_IMPLEMENTATION_NAME_HERE.java"
+                     token="PROVIDER_IMPLEMENTATION_NAME_HERE"
+                     value="${module.name}Implementation"/>  
+            <replace file="${iGrid.home}/modules/engineering/${module.name}/provider/src/engineering/provider/${module.name}/PROVIDER_IMPLEMENTATION_NAME_HERE.java"
+                     token="PROVIDER_INTERFACE_NAME_HERE"
+                     value="${module.name}Interface"/>   
+            <replace file="${iGrid.home}/modules/engineering/${module.name}/provider/src/engineering/provider/${module.name}/PROVIDER_IMPLEMENTATION_NAME_HERE.java"
+                     token="METHOD_NAME_HERE"
+                     value="${module.name}Service"/>
+            <replace file="${iGrid.home}/modules/engineering/${module.name}/provider/configs/provider.properties"
+                     token="FULLY_QUALIFIED_CLASSNAME_HERE"
+                     value="engineering.provider.${module.name}.${module.name}Interface"/>     
+            <replace file="${iGrid.home}/modules/engineering/${module.name}/requestor/src/engineering/requestor/${module.name}/REQUESTOR_IMPLEMENTATION_NAME_HERE.java"
+                     token="REQUESTOR_IMPLEMENTATION_NAME_HERE"
+                     value="${module.name}ReqImplementation"/>   
+            <replace file="${iGrid.home}/modules/engineering/${module.name}/requestor/src/engineering/requestor/${module.name}/REQUESTOR_IMPLEMENTATION_NAME_HERE.java"
+                     token="PACKAGE_NAME_HERE"
+                     value="engineering.requestor.${module.name}"/> 
+            <replace file="${iGrid.home}/modules/engineering/${module.name}/requestor/src/engineering/requestor/${module.name}/REQUESTOR_IMPLEMENTATION_NAME_HERE.java"
+                     token="PROVIDER_INTERFACE_NAME_HERE"
+                     value="engineering.provider.${module.name}.${module.name}Interface"/> 
+            <replace file="${iGrid.home}/modules/engineering/${module.name}/requestor/src/engineering/requestor/${module.name}/REQUESTOR_IMPLEMENTATION_NAME_HERE.java"
+                     token="AUTHOR_NAME_HERE"
+                     value="${user.name}"/> 
+            <replace file="${iGrid.home}/modules/engineering/${module.name}/requestor/req-build.xml"
+                     token="REQUESTOR_NAME_HERE"
+                     value="${module.name}"/>
+            <replace file="${iGrid.home}/modules/engineering/${module.name}/requestor/req-build.xml"
+                     token="PATH/TO/JAVA/FILES/HERE"
+                     value="engineering/requestor"/>         
+            <replace file="${iGrid.home}/modules/engineering/${module.name}/requestor/req-build.xml"
+                     token="PATH/TO/CLASSES/FILES/HERE"
+                     value="/engineering/requestor"/>            
+            <replace file="${iGrid.home}/modules/engineering/${module.name}/requestor/req-build.xml"
+                     token="MODULE_TYPE_LIB_DIR"
+                     value="eng.lib"/>
+            <replace file="${iGrid.home}/modules/engineering/${module.name}/requestor/req-build.xml"
+                     token="MODULE_TYPE"
+                     value="engineering"/>      
+            <replace file="${iGrid.home}/modules/engineering/${module.name}/requestor/req-build.xml"
+                      token="REQUESTOR_NAME_CLASS_HERE"
+                      value="${module.name}ReqImplementation"/>    
+            <replace file="${iGrid.home}/modules/engineering/${module.name}/requestor/bin/req-run.xml"
+                     token="REQUESTOR_NAME_CLASS_HERE"
+                     value="${module.name}ReqImplementation"/>   
+            <replace file="${iGrid.home}/modules/engineering/${module.name}/requestor/bin/req-run.xml"
+                     token="REQUESTOR_NAME_HERE"
+                     value="${module.name}"/>
+            <replace file="${iGrid.home}/modules/engineering/${module.name}/requestor/bin/req-run.xml"
+                     token="MODULE_TYPE_LIB_DIR"
+                     value="eng.lib"/>
+            <replace file="${iGrid.home}/modules/engineering/${module.name}/requestor/bin/req-run.xml"
+                     token="PROVIDER_NAME_HERE"
+                     value="${module.name}"/>        
+            <replace file="${iGrid.home}/modules/engineering/${module.name}/requestor/bin/req-run.xml"
+                     token="PACKAGE_NAME_HERE"
+                     value="engineering.requestor.${module.name}"/>              
+         
+            <move tofile="${iGrid.home}/modules/engineering/${module.name}/provider/${module.name}-prv-build.xml" 
+                  file="${iGrid.home}/modules/engineering/${module.name}/provider/prv-build.xml"/>
+            <move tofile="${iGrid.home}/modules/engineering/${module.name}/provider/bin/jeri-${module.name}-prv-run.xml" 
+                  file="${iGrid.home}/modules/engineering/${module.name}/provider/bin/jeri-prvname-prv-run.xml"/>
+            <move tofile="${iGrid.home}/modules/engineering/${module.name}/provider/configs/${module.name}.properties" 
+                  file="${iGrid.home}/modules/engineering/${module.name}/provider/configs/provider.properties"/>
+            <move tofile="${iGrid.home}/modules/engineering/${module.name}/provider/configs/jeri-${module.name}-prv.config" 
+                  file="${iGrid.home}/modules/engineering/${module.name}/provider/configs/provider-all-prv.config"/>
+            <move tofile="${iGrid.home}/modules/engineering/${module.name}/provider/policy/${module.name}-prv.policy" 
+                  file="${iGrid.home}/modules/engineering/${module.name}/provider/policy/policy.all"/>
+            <move tofile="${iGrid.home}/modules/engineering/${module.name}/requestor/policy/${module.name}-req.policy" 
+                  file="${iGrid.home}/modules/engineering/${module.name}/requestor/policy/policy.all"/>      
+            <move tofile="${iGrid.home}/modules/engineering/${module.name}/provider/src/engineering/provider/${module.name}/${module.name}Interface.java" 
+                  file="${iGrid.home}/modules/engineering/${module.name}/provider/src/engineering/provider/${module.name}/PROVIDER_INTERFACE_NAME_HERE.java"/>           
+            <move tofile="${iGrid.home}/modules/engineering/${module.name}/provider/src/engineering/provider/${module.name}/${module.name}Implementation.java" 
+                  file="${iGrid.home}/modules/engineering/${module.name}/provider/src/engineering/provider/${module.name}/PROVIDER_IMPLEMENTATION_NAME_HERE.java"/>
+            <move tofile="${iGrid.home}/modules/engineering/${module.name}/requestor/src/engineering/requestor/${module.name}/${module.name}ReqImplementation.java" 
+                  file="${iGrid.home}/modules/engineering/${module.name}/requestor/src/engineering/requestor/${module.name}/REQUESTOR_IMPLEMENTATION_NAME_HERE.java"/>
+            <move tofile="${iGrid.home}/modules/engineering/${module.name}/requestor/${module.name}-req-build.xml" 
+                  file="${iGrid.home}/modules/engineering/${module.name}/requestor/req-build.xml"/>
+            <move tofile="${iGrid.home}/modules/engineering/${module.name}/requestor/bin/${module.name}-req-run.xml" 
+                  file="${iGrid.home}/modules/engineering/${module.name}/requestor/bin/req-run.xml"/>            
+     </target>
+     
+     <target name="create-example-module" 
+             if="example.module">
+            <!-- Report user entries" -->
+            <echo message="creating example module..."/>
+         
+          <mkdir dir="${iGrid.home}/modules/examples/${module.name}/provider/bin"/>
+          <mkdir dir="${iGrid.home}/modules/examples/${module.name}/provider/configs"/>
+          <mkdir dir="${iGrid.home}/modules/examples/${module.name}/provider/logs"/>
+          <mkdir dir="${iGrid.home}/modules/examples/${module.name}/provider/policy"/>
+          <mkdir dir="${iGrid.home}/modules/examples/${module.name}/provider/src/examples/provider/${module.name}"/>
+       
+          <mkdir dir="${iGrid.home}/modules/examples/${module.name}/requestor/bin"/>
+          <mkdir dir="${iGrid.home}/modules/examples/${module.name}/requestor/configs"/>
+          <mkdir dir="${iGrid.home}/modules/examples/${module.name}/requestor/logs"/>
+          <mkdir dir="${iGrid.home}/modules/examples/${module.name}/requestor/policy"/>
+          <mkdir dir="${iGrid.home}/modules/examples/${module.name}/requestor/src/examples/requestor/${module.name}"/>
+         
+         <copy file="${iGrid.config}/templates/provider-all-prv.config"
+                todir="${iGrid.home}/modules/examples/${module.name}/provider/configs"/>
+         <copy file="${iGrid.config}/templates/startup-prv.config"
+               todir="${iGrid.home}/modules/examples/${module.name}/provider/configs"/>
+         <copy file="${iGrid.config}/templates/provider.properties"
+               todir="${iGrid.home}/modules/examples/${module.name}/provider/configs"/> 
+         <copy file="${iGrid.config}/templates/prv-build.xml"
+               todir="${iGrid.home}/modules/examples/${module.name}/provider"/> 
+         <copy file="${iGrid.config}/templates/jeri-prvname-prv-run.xml"
+               todir="${iGrid.home}/modules/examples/${module.name}/provider/bin"/>      
+         <copy file="${iGrid.config}/templates/policy.all"
+               todir="${iGrid.home}/modules/examples/${module.name}/provider/policy"/>
+         <copy file="${iGrid.config}/templates/policy.all"
+               todir="${iGrid.home}/modules/examples/${module.name}/requestor/policy"/> 
+         <copy file="${iGrid.config}/templates/PROVIDER_INTERFACE_NAME_HERE.java"
+               todir="${iGrid.home}/modules/examples/${module.name}/provider/src/examples/provider/${module.name}"/>
+         <copy file="${iGrid.config}/templates/PROVIDER_IMPLEMENTATION_NAME_HERE.java"
+               todir="${iGrid.home}/modules/examples/${module.name}/provider/src/examples/provider/${module.name}"/>
+         <copy file="${iGrid.config}/templates/REQUESTOR_IMPLEMENTATION_NAME_HERE.java"
+                 todir="${iGrid.home}/modules/examples/${module.name}/requestor/src/examples/requestor/${module.name}"/>
+         <copy file="${iGrid.config}/templates/req-build.xml"
+                 todir="${iGrid.home}/modules/examples/${module.name}/requestor"/>
+         <copy file="${iGrid.config}/templates/req-run.xml"
+               todir="${iGrid.home}/modules/examples/${module.name}/requestor/bin"/>             
+         
+         <replace file="${iGrid.home}/modules/examples/${module.name}/provider/prv-build.xml"
+                  token="PROVIDER_NAME_HERE"
+                  value="${module.name}"/>
+         <replace file="${iGrid.home}/modules/examples/${module.name}/provider/prv-build.xml"
+                  token="MODULE_TYPE"
+                  value="examples"/>
+         <replace file="${iGrid.home}/modules/examples/${module.name}/provider/prv-build.xml"
+                  token="PATH/TO/JAVA/FILES/HERE"
+                  value="examples/provider"/> 
+         <replace file="${iGrid.home}/modules/examples/${module.name}/provider/prv-build.xml"
+                  token="PATH/TO/CLASSES/FILES/HERE"
+                  value="classes"/>
+         <replace file="${iGrid.home}/modules/examples/${module.name}/provider/prv-build.xml"
+                  token="PATH/TO/PROVIDER"
+                  value="ex.lib"/>   
+         <replace file="${iGrid.home}/modules/examples/${module.name}/provider/prv-build.xml"
+                  token="DOWNLOAD/JAR/FROM/HERE"
+                  value="ex-dl.lib"/>     
+         <replace file="${iGrid.home}/modules/examples/${module.name}/provider/bin/jeri-prvname-prv-run.xml"
+                  token="PROVIDER_NAME_HERE"
+                  value="${module.name}"/>       
+         <replace file="${iGrid.home}/modules/examples/${module.name}/provider/bin/jeri-prvname-prv-run.xml"
+                 token="PROVIDER_FULLY_QUALIFIED_CLASSNAME_HERE"
+                 value="examples.provider.${module.name}.${module.name}Implementation"/>     
+         <replace file="${iGrid.home}/modules/examples/${module.name}/provider/bin/jeri-prvname-prv-run.xml"
+                  token="PATH/TO/PROVIDER"
+                  value="ex.lib"/>        
+         <replace file="${iGrid.home}/modules/examples/${module.name}/provider/configs/provider-all-prv.config"
+                  token="PROVIDER_NAME_HERE"
+                  value="${module.name}"/>      
+         <replace file="${iGrid.home}/modules/examples/${module.name}/provider/configs/provider-all-prv.config"
+                  token="FULLY_QUALIFIED_CLASSNAME_HERE"
+                  value="examples.provider.${module.name}.${module.name}Interface"/>     
+         <replace file="${iGrid.home}/modules/examples/${module.name}/provider/src/examples/provider/${module.name}/PROVIDER_INTERFACE_NAME_HERE.java"
+                  token="AUTHOR_NAME_HERE"
+                  value="${user.name}"/>      
+         <replace file="${iGrid.home}/modules/examples/${module.name}/provider/src/examples/provider/${module.name}/PROVIDER_INTERFACE_NAME_HERE.java"
+                  token="PROVIDER_INTERFACE_NAME_HERE"
+                  value="${module.name}Interface"/>   
+         <replace file="${iGrid.home}/modules/examples/${module.name}/provider/src/examples/provider/${module.name}/PROVIDER_INTERFACE_NAME_HERE.java"
+                  token="METHOD_NAME_HERE"
+                  value="${module.name}Service"/>       
+         <replace file="${iGrid.home}/modules/examples/${module.name}/provider/src/examples/provider/${module.name}/PROVIDER_INTERFACE_NAME_HERE.java"
+                  token="PACKAGE_NAME_HERE"
+                  value="examples.provider.${module.name}"/> 
+         <replace file="${iGrid.home}/modules/examples/${module.name}/provider/src/examples/provider/${module.name}/PROVIDER_IMPLEMENTATION_NAME_HERE.java"
+                  token="PACKAGE_NAME_HERE"
+                  value="examples.provider.${module.name}"/>   
+         <replace file="${iGrid.home}/modules/examples/${module.name}/provider/src/examples/provider/${module.name}/PROVIDER_IMPLEMENTATION_NAME_HERE.java"
+                  token="AUTHOR_NAME_HERE"
+                  value="${user.name}"/>  
+         <replace file="${iGrid.home}/modules/examples/${module.name}/provider/src/examples/provider/${module.name}/PROVIDER_IMPLEMENTATION_NAME_HERE.java"
+                  token="PROVIDER_IMPLEMENTATION_NAME_HERE"
+                  value="${module.name}Implementation"/>         
+         <replace file="${iGrid.home}/modules/examples/${module.name}/provider/src/examples/provider/${module.name}/PROVIDER_IMPLEMENTATION_NAME_HERE.java"
+                  token="PROVIDER_INTERFACE_NAME_HERE"
+                  value="${module.name}Interface"/>     
+         <replace file="${iGrid.home}/modules/examples/${module.name}/provider/src/examples/provider/${module.name}/PROVIDER_IMPLEMENTATION_NAME_HERE.java"
+                  token="METHOD_NAME_HERE"
+                  value="${module.name}Service"/>  
+         <replace file="${iGrid.home}/modules/examples/${module.name}/provider/configs/provider.properties"
+                  token="FULLY_QUALIFIED_CLASSNAME_HERE"
+                  value="examples.provider.${module.name}.${module.name}Interface"/> 
+         <replace file="${iGrid.home}/modules/examples/${module.name}/requestor/src/examples/requestor/${module.name}/REQUESTOR_IMPLEMENTATION_NAME_HERE.java"
+                  token="REQUESTOR_IMPLEMENTATION_NAME_HERE"
+                  value="${module.name}ReqImplementation"/> 
+         <replace file="${iGrid.home}/modules/examples/${module.name}/requestor/src/examples/requestor/${module.name}/REQUESTOR_IMPLEMENTATION_NAME_HERE.java"
+                  token="PACKAGE_NAME_HERE"
+                  value="examples.requestor.${module.name}"/> 
+         <replace file="${iGrid.home}/modules/examples/${module.name}/requestor/src/examples/requestor/${module.name}/REQUESTOR_IMPLEMENTATION_NAME_HERE.java"
+                  token="PROVIDER_INTERFACE_NAME_HERE"
+                  value="examples.provider.${module.name}.${module.name}Interface"/>     
+         <replace file="${iGrid.home}/modules/examples/${module.name}/requestor/src/examples/requestor/${module.name}/REQUESTOR_IMPLEMENTATION_NAME_HERE.java"
+                  token="AUTHOR_NAME_HERE"
+                  value="${user.name}"/>             
+         <replace file="${iGrid.home}/modules/examples/${module.name}/requestor/req-build.xml"
+                  token="REQUESTOR_NAME_HERE"
+                  value="${module.name}"/>    
+         <replace file="${iGrid.home}/modules/examples/${module.name}/requestor/req-build.xml"
+                      token="PATH/TO/JAVA/FILES/HERE"
+                      value="examples/requestor"/>       
+         <replace file="${iGrid.home}/modules/examples/${module.name}/requestor/req-build.xml"
+                  token="PATH/TO/CLASSES/FILES/HERE"
+                  value="/examples/requestor"/>    
+         <replace file="${iGrid.home}/modules/examples/${module.name}/requestor/req-build.xml"
+                  token="MODULE_TYPE_LIB_DIR"
+                  value="ex.lib"/>
+         <replace file="${iGrid.home}/modules/examples/${module.name}/requestor/req-build.xml"
+                  token="MODULE_TYPE"
+                  value="examples"/>         
+         <replace file="${iGrid.home}/modules/examples/${module.name}/requestor/req-build.xml"
+                  token="REQUESTOR_NAME_CLASS_HERE"
+                  value="${module.name}ReqImplementation"/>      
+         <replace file="${iGrid.home}/modules/examples/${module.name}/requestor/bin/req-run.xml"
+                  token="REQUESTOR_NAME_CLASS_HERE"
+                  value="${module.name}ReqImplementation"/>
+         <replace file="${iGrid.home}/modules/examples/${module.name}/requestor/bin/req-run.xml"
+                  token="REQUESTOR_NAME_HERE"
+                  value="${module.name}"/> 
+         <replace file="${iGrid.home}/modules/examples/${module.name}/requestor/bin/req-run.xml"
+                  token="MODULE_TYPE_LIB_DIR"
+                  value="ex.lib"/>       
+         <replace file="${iGrid.home}/modules/examples/${module.name}/requestor/bin/req-run.xml"
+                  token="PROVIDER_NAME_HERE"
+                  value="${module.name}"/>     
+         <replace file="${iGrid.home}/modules/examples/${module.name}/requestor/bin/req-run.xml"
+                  token="PACKAGE_NAME_HERE"
+                  value="examples.requestor.${module.name}"/>                
+         
+         <move tofile="${iGrid.home}/modules/examples/${module.name}/provider/${module.name}-build.xml" 
+               file="${iGrid.home}/modules/examples/${module.name}/provider/prv-build.xml"/>
+         <move tofile="${iGrid.home}/modules/examples/${module.name}/provider/bin/jeri-${module.name}-prv-run.xml" 
+               file="${iGrid.home}/modules/examples/${module.name}/provider/bin/jeri-prvname-prv-run.xml"/>
+         <move tofile="${iGrid.home}/modules/examples/${module.name}/provider/configs/${module.name}.properties" 
+               file="${iGrid.home}/modules/examples/${module.name}/provider/configs/provider.properties"/>   
+         <move tofile="${iGrid.home}/modules/examples/${module.name}/provider/configs/jeri-${module.name}-prv.config" 
+               file="${iGrid.home}/modules/examples/${module.name}/provider/configs/provider-all-prv.config"/>
+         <move tofile="${iGrid.home}/modules/examples/${module.name}/provider/policy/${module.name}-prv.policy" 
+               file="${iGrid.home}/modules/examples/${module.name}/provider/policy/policy.all"/>     
+         <move tofile="${iGrid.home}/modules/examples/${module.name}/requestor/policy/${module.name}-req.policy" 
+                file="${iGrid.home}/modules/examples/${module.name}/requestor/policy/policy.all"/>       
+         <move tofile="${iGrid.home}/modules/examples/${module.name}/provider/src/examples/provider/${module.name}/${module.name}Interface.java" 
+                file="${iGrid.home}/modules/examples/${module.name}/provider/src/examples/provider/${module.name}/PROVIDER_INTERFACE_NAME_HERE.java"/>
+         <move tofile="${iGrid.home}/modules/examples/${module.name}/provider/src/examples/provider/${module.name}/${module.name}Implementation.java" 
+               file="${iGrid.home}/modules/examples/${module.name}/provider/src/examples/provider/${module.name}/PROVIDER_IMPLEMENTATION_NAME_HERE.java"/>
+         <move tofile="${iGrid.home}/modules/examples/${module.name}/requestor/src/examples/requestor/${module.name}/${module.name}ReqImplementation.java" 
+               file="${iGrid.home}/modules/examples/${module.name}/requestor/src/examples/requestor/${module.name}/REQUESTOR_IMPLEMENTATION_NAME_HERE.java"/>
+         <move tofile="${iGrid.home}/modules/examples/${module.name}/requestor/${module.name}-req-build.xml" 
+               file="${iGrid.home}/modules/examples/${module.name}/requestor/req-build.xml"/>  
+         <move tofile="${iGrid.home}/modules/examples/${module.name}/requestor/bin/${module.name}-req-run.xml" 
+               file="${iGrid.home}/modules/examples/${module.name}/requestor/bin/req-run.xml"/>                      
+     </target>   
+
+     <target name="create-other-module" 
+             if="other.module">
+            <!-- Report user entries" -->
+            <echo message="creating other module..."/>
+         
+         <mkdir dir="${iGrid.home}/modules/${module.name}/provider/bin"/>
+         <mkdir dir="${iGrid.home}/modules/${module.name}/provider/configs"/>
+         <mkdir dir="${iGrid.home}/modules/${module.name}/provider/logs"/>
+         <mkdir dir="${iGrid.home}/modules/${module.name}/provider/policy"/>
+         <mkdir dir="${iGrid.home}/modules/${module.name}/provider/src/provider/${module.name}"/>
+      
+         <mkdir dir="${iGrid.home}/modules/${module.name}/requestor/bin"/>
+         <mkdir dir="${iGrid.home}/modules/${module.name}/requestor/configs"/>
+         <mkdir dir="${iGrid.home}/modules/${module.name}/requestor/logs"/>
+         <mkdir dir="${iGrid.home}/modules/${module.name}/requestor/policy"/>
+         <mkdir dir="${iGrid.home}/modules/${module.name}/requestor/src/requestor/${module.name}"/>
+         
+         <copy file="${iGrid.config}/templates/provider-all-prv.config"
+                todir="${iGrid.home}/modules/${module.name}/provider/configs"/>
+         <copy file="${iGrid.config}/templates/startup-prv.config"
+               todir="${iGrid.home}/modules/${module.name}/provider/configs"/>
+         <copy file="${iGrid.config}/templates/provider.properties"
+               todir="${iGrid.home}/modules/${module.name}/provider/configs"/>
+         <copy file="${iGrid.config}/templates/prv-build.xml"
+               todir="${iGrid.home}/modules/${module.name}/provider"/>     
+         <copy file="${iGrid.config}/templates/jeri-prvname-prv-run.xml"
+               todir="${iGrid.home}/modules/${module.name}/provider/bin"/>       
+         <copy file="${iGrid.config}/templates/policy.all"
+               todir="${iGrid.home}/modules/${module.name}/provider/policy"/>
+         <copy file="${iGrid.config}/templates/policy.all"
+               todir="${iGrid.home}/modules/${module.name}/requestor/policy"/>
+         <copy file="${iGrid.config}/templates/PROVIDER_INTERFACE_NAME_HERE.java"
+               todir="${iGrid.home}/modules/${module.name}/provider/src/provider/${module.name}"/> 
+         <copy file="${iGrid.config}/templates/PROVIDER_IMPLEMENTATION_NAME_HERE.java"
+               todir="${iGrid.home}/modules/${module.name}/provider/src/provider/${module.name}"/>   
+         <copy file="${iGrid.config}/templates/REQUESTOR_IMPLEMENTATION_NAME_HERE.java"
+                 todir="${iGrid.home}/modules/${module.name}/requestor/src/requestor/${module.name}"/>
+         <copy file="${iGrid.config}/templates/req-build.xml"
+                 todir="${iGrid.home}/modules/${module.name}/requestor"/>
+         <copy file="${iGrid.config}/templates/req-run.xml"
+               todir="${iGrid.home}/modules/${module.name}/requestor/bin"/>  
+             
+         <replace file="${iGrid.home}/modules/${module.name}/provider/prv-build.xml"
+                  token="PROVIDER_NAME_HERE"
+                  value="${module.name}"/>
+         <replace file="${iGrid.home}/modules/${module.name}/provider/prv-build.xml"
+                  token="MODULE_TYPE/"/>
+         <replace file="${iGrid.home}/modules/${module.name}/provider/prv-build.xml"
+                  token="MODULE_TYPE"
+                  value="provider"/>
+         <replace file="${iGrid.home}/modules/${module.name}/provider/prv-build.xml"
+                  token="PATH/TO/JAVA/FILES/HERE"
+                  value="provider"/>   
+         <replace file="${iGrid.home}/modules/${module.name}/provider/prv-build.xml"
+                  token="PATH/TO/CLASSES/FILES/HERE"
+                  value="classes"/>       
+         <replace file="${iGrid.home}/modules/${module.name}/provider/prv-build.xml"
+                  token="PATH/TO/PROVIDER"
+                  value="lib"/>       
+         <replace file="${iGrid.home}/modules/${module.name}/provider/prv-build.xml"
+                  token="DOWNLOAD/JAR/FROM/HERE"
+                  value="lib"/>       
+         <replace file="${iGrid.home}/modules/${module.name}/provider/bin/jeri-prvname-prv-run.xml"
+                  token="PROVIDER_NAME_HERE"
+                  value="${module.name}"/>       
+         <replace file="${iGrid.home}/modules/${module.name}/provider/bin/jeri-prvname-prv-run.xml"
+                  token="PROVIDER_FULLY_QUALIFIED_CLASSNAME_HERE"
+                  value="provider.${module.name}.${module.name}Implementation"/>  
+         <replace file="${iGrid.home}/modules/${module.name}/provider/bin/jeri-prvname-prv-run.xml"
+                  token="PATH/TO/PROVIDER"
+                  value="lib"/>       
+         <replace file="${iGrid.home}/modules/${module.name}/provider/configs/provider-all-prv.config"
+                  token="PROVIDER_NAME_HERE"
+                  value="${module.name}"/>
+         <replace file="${iGrid.home}/modules/${module.name}/provider/configs/provider-all-prv.config"
+                  token="FULLY_QUALIFIED_CLASSNAME_HERE"
+                  value="provider.${module.name}.${module.name}Interface"/>  
+         <replace file="${iGrid.home}/modules/${module.name}/provider/src/provider/${module.name}/PROVIDER_INTERFACE_NAME_HERE.java"
+                  token="AUTHOR_NAME_HERE"
+                  value="${user.name}"/>      
+         <replace file="${iGrid.home}/modules/${module.name}/provider/src/provider/${module.name}/PROVIDER_INTERFACE_NAME_HERE.java"
+                  token="PROVIDER_INTERFACE_NAME_HERE"
+                  value="${module.name}Interface"/>   
+         <replace file="${iGrid.home}/modules/${module.name}/provider/src/provider/${module.name}/PROVIDER_INTERFACE_NAME_HERE.java"
+                  token="METHOD_NAME_HERE"
+                  value="${module.name}Service"/>        
+         <replace file="${iGrid.home}/modules/${module.name}/provider/src/provider/${module.name}/PROVIDER_INTERFACE_NAME_HERE.java"
+                  token="PACKAGE_NAME_HERE"
+                  value="provider.${module.name}"/>      
+         <replace file="${iGrid.home}/modules/${module.name}/provider/src/provider/${module.name}/PROVIDER_IMPLEMENTATION_NAME_HERE.java"
+                  token="PACKAGE_NAME_HERE"
+                  value="provider.${module.name}"/>      
+         <replace file="${iGrid.home}/modules/${module.name}/provider/src/provider/${module.name}/PROVIDER_IMPLEMENTATION_NAME_HERE.java"
+                  token="AUTHOR_NAME_HERE"
+                  value="${user.name}"/>      
+         <replace file="${iGrid.home}/modules/${module.name}/provider/src/provider/${module.name}/PROVIDER_IMPLEMENTATION_NAME_HERE.java"
+                  token="PROVIDER_IMPLEMENTATION_NAME_HERE"
+                  value="${module.name}Implementation"/>   
+         <replace file="${iGrid.home}/modules/${module.name}/provider/src/provider/${module.name}/PROVIDER_IMPLEMENTATION_NAME_HERE.java"
+                  token="PROVIDER_INTERFACE_NAME_HERE"
+                  value="${module.name}Interface"/> 
+         <replace file="${iGrid.home}/modules/${module.name}/provider/src/provider/${module.name}/PROVIDER_IMPLEMENTATION_NAME_HERE.java"
+                  token="METHOD_NAME_HERE"
+                  value="${module.name}Service"/>     
+         <replace file="${iGrid.home}/modules/${module.name}/provider/configs/provider.properties"
+                   token="FULLY_QUALIFIED_CLASSNAME_HERE"
+                   value="provider.${module.name}.${module.name}Interface"/>   
+         <replace file="${iGrid.home}/modules/${module.name}/requestor/src/requestor/${module.name}/REQUESTOR_IMPLEMENTATION_NAME_HERE.java"
+                  token="REQUESTOR_IMPLEMENTATION_NAME_HERE"
+                  value="${module.name}ReqImplementation"/> 
+         <replace file="${iGrid.home}/modules/${module.name}/requestor/src/requestor/${module.name}/REQUESTOR_IMPLEMENTATION_NAME_HERE.java"
+                  token="PACKAGE_NAME_HERE"
+                  value="requestor.${module.name}"/>    
+         <replace file="${iGrid.home}/modules/${module.name}/requestor/src/requestor/${module.name}/REQUESTOR_IMPLEMENTATION_NAME_HERE.java"
+                  token="PROVIDER_INTERFACE_NAME_HERE"
+                  value="provider.${module.name}.${module.name}Interface"/>
+         <replace file="${iGrid.home}/modules/${module.name}/requestor/src/requestor/${module.name}/REQUESTOR_IMPLEMENTATION_NAME_HERE.java"
+                  token="AUTHOR_NAME_HERE"
+                  value="${user.name}"/>  
+         <replace file="${iGrid.home}/modules/${module.name}/requestor/req-build.xml"
+                  token="REQUESTOR_NAME_HERE"
+                  value="${module.name}"/>
+         <replace file="${iGrid.home}/modules/${module.name}/requestor/req-build.xml"
+                  token="PATH/TO/JAVA/FILES/HERE"
+                  value="requestor"/>   
+         <replace file="${iGrid.home}/modules/${module.name}/requestor/req-build.xml"
+                  token="PATH/TO/CLASSES/FILES/HERE"
+                  value="/requestor"/>       
+         <replace file="${iGrid.home}/modules/${module.name}/requestor/req-build.xml"
+                  token="MODULE_TYPE_LIB_DIR"
+                  value="lib"/>
+         <replace file="${iGrid.home}/modules/${module.name}/requestor/req-build.xml"
+                  token="MODULE_TYPE/"/>
+         <replace file="${iGrid.home}/modules/${module.name}/requestor/req-build.xml"
+                  token="MODULE_TYPE"
+                  value="requestor"/>
+         <replace file="${iGrid.home}/modules/${module.name}/requestor/req-build.xml"
+                  token="&lt;in name=&quot;requestor&quot;/&gt;"
+                  value="&lt;in name=&quot;requestor&quot;/&gt;&#10;&lt;in name=&quot;provider&quot;/&gt;"/>
+         <replace file="${iGrid.home}/modules/${module.name}/requestor/req-build.xml"
+                  token=".requestor"
+                  value="requestor"/>            
+         <replace file="${iGrid.home}/modules/${module.name}/requestor/req-build.xml"
+                  token="requestorrequestor"
+                  value="requestor"/>   
+         <replace file="${iGrid.home}/modules/${module.name}/provider/prv-build.xml"
+                  token=".provider"
+                  value="provider"/> 
+         <replace file="${iGrid.home}/modules/${module.name}/provider/prv-build.xml"
+                  token="providerprovider"
+                  value="provider"/> 
+         <replace file="${iGrid.home}/modules/${module.name}/requestor/req-build.xml"
+                  token="REQUESTOR_NAME_CLASS_HERE"
+                  value="${module.name}ReqImplementation"/>   
+         <replace file="${iGrid.home}/modules/${module.name}/requestor/bin/req-run.xml"
+                  token="REQUESTOR_NAME_CLASS_HERE"
+                  value="${module.name}ReqImplementation"/>  
+         <replace file="${iGrid.home}/modules/${module.name}/requestor/bin/req-run.xml"
+                  token="REQUESTOR_NAME_HERE"
+                  value="${module.name}"/>    
+         <replace file="${iGrid.home}/modules/${module.name}/requestor/bin/req-run.xml"
+                  token="MODULE_TYPE_LIB_DIR"
+                  value="lib"/>      
+         <replace file="${iGrid.home}/modules/${module.name}/requestor/bin/req-run.xml"
+                  token="PROVIDER_NAME_HERE"
+                  value="${module.name}"/>    
+         <replace file="${iGrid.home}/modules/${module.name}/requestor/bin/req-run.xml"
+                  token="PACKAGE_NAME_HERE"
+                  value="requestor.${module.name}"/>   
+             
+         <move tofile="${iGrid.home}/modules/${module.name}/provider/${module.name}-build.xml" 
+               file="${iGrid.home}/modules/${module.name}/provider/prv-build.xml"/>
+         <move tofile="${iGrid.home}/modules/${module.name}/provider/bin/jeri-${module.name}-prv-run.xml" 
+               file="${iGrid.home}/modules/${module.name}/provider/bin/jeri-prvname-prv-run.xml"/>
+         <move tofile="${iGrid.home}/modules/${module.name}/provider/configs/${module.name}.properties" 
+               file="${iGrid.home}/modules/${module.name}/provider/configs/provider.properties"/>   
+         <move tofile="${iGrid.home}/modules/${module.name}/provider/configs/jeri-${module.name}-prv.config" 
+               file="${iGrid.home}/modules/${module.name}/provider/configs/provider-all-prv.config"/>        
+         <move tofile="${iGrid.home}/modules/${module.name}/provider/policy/${module.name}-prv.policy" 
+               file="${iGrid.home}/modules/${module.name}/provider/policy/policy.all"/>      
+         <move tofile="${iGrid.home}/modules/${module.name}/requestor/policy/${module.name}-req.policy" 
+                file="${iGrid.home}/modules/${module.name}/requestor/policy/policy.all"/>    
+         <move tofile="${iGrid.home}/modules/${module.name}/provider/src/provider/${module.name}/${module.name}Interface.java" 
+                file="${iGrid.home}/modules/${module.name}/provider/src/provider/${module.name}/PROVIDER_INTERFACE_NAME_HERE.java"/>
+         <move tofile="${iGrid.home}/modules/${module.name}/provider/src/provider/${module.name}/${module.name}Implementation.java" 
+               file="${iGrid.home}/modules/${module.name}/provider/src/provider/${module.name}/PROVIDER_IMPLEMENTATION_NAME_HERE.java"/>
+         <move tofile="${iGrid.home}/modules/${module.name}/requestor/src/requestor/${module.name}/${module.name}ReqImplementation.java" 
+               file="${iGrid.home}/modules/${module.name}/requestor/src/requestor/${module.name}/REQUESTOR_IMPLEMENTATION_NAME_HERE.java"/>
+         <move tofile="${iGrid.home}/modules/${module.name}/requestor/${module.name}-req-build.xml" 
+               file="${iGrid.home}/modules/${module.name}/requestor/req-build.xml"/>    
+         <move tofile="${iGrid.home}/modules/${module.name}/requestor/bin/${module.name}-req-run.xml" 
+               file="${iGrid.home}/modules/${module.name}/requestor/bin/req-run.xml"/>
+     </target>	
+</project>

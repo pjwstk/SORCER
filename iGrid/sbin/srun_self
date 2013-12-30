@@ -1,0 +1,34 @@
+#!/bin/bash
+
+
+# config
+#
+ANT_FILE=$IGRID_HOME/modules/engineering/apps/self/provider/bin/self-prv-run.xml
+
+
+# help menu
+#
+SCRIPT_NAME=`basename $0`
+if [ "$#" -gt 0 ]; then
+	if [ "$1" == "-h" ]; then
+		printf "\nName:\t\t$SCRIPT_NAME\n\n"
+		printf "Description:\tCalls $ANT_FILE\n"
+		printf "\t\twhich starts the Self Provider.\n\n"
+		printf "Usage:\t\t$SCRIPT_NAME [-options]\n\n"
+		printf "Options:\n\n"
+		printf " -h\t\tprint this message and exit\n\n"
+		printf " -w\t\tstart process in new window\n\n"
+		exit 0;
+	fi
+fi
+
+
+# run ant
+#
+#SBIN_HOME=`dirname \`readlink -f $0\``
+#SBIN_HOME=`dirname $0`
+SBIN_HOME=$IGRID_HOME/sbin
+
+$SBIN_HOME/runant $SCRIPT_NAME $ANT_FILE $1
+
+

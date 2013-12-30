@@ -1,0 +1,14 @@
+#!/bin/csh
+#clear
+echo "Copying FIPER config files...\n"
+
+setenv FIPER_CONF ${FIPER_HOME}/conf
+
+cp  ${FIPER_CONF}/portalFiper.def ${FIPER_HOME}/jfiper/fiper/lnch/fiper.def
+cp  ${FIPER_CONF}/portalFiper.env ${FIPER_HOME}/jfiper/fiper/util/fiper.env
+cp  ${FIPER_CONF}/portalAs.access ${FIPER_HOME}/jfiper/fiper/dbas/as.access
+cp  ${FIPER_CONF}/portalAs.def ${FIPER_HOME}/jfiper/fiper/dbas/as.def
+cp  ${FIPER_CONF}/portalServer.xml ${FIPER_HOME}/tomcat/conf/server.xml
+cp  ${FIPER_CONF}/portalWeb.xml ${FIPER_HOME}/web/WEB-INF/web.xml
+
+echo "Installing Done\n"

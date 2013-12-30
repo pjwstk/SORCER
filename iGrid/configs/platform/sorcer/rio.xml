@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<platform>
+
+	<!-- Rio jars to load into the common classloader. -->
+	<capability name="Rio"
+		class="org.rioproject.system.capability.software.RioSupport" common="yes">
+		<version>5.0 M4</version>
+		<manufacturer>Asarian Technologies LLC</manufacturer>
+		<classpath>${iGrid.home}/rio/lib-dl/rio-api-5.0-M4.jar
+		</classpath>
+
+	</capability>
+
+</platform>

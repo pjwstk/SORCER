@@ -1,0 +1,84 @@
+<?xml version='1.0' encoding='ISO-8859-1' standalone='yes'?>
+<!-- 
+ * Make sure the following variable is set:
+ *    IGRID_HOME        	iGrid location
+ Please see also the modules/common-build.xml for classpaths, definitions and targets
+-->
+<project name="exertlet runner" default="all" basedir=".">
+	<property name="module.name" value="ex6-exertlet" />
+	<property name="module.run.dir" value="ex6" />
+	<!-- set global properties -->
+	<import file="../../common-build.xml" />
+	<property name="src" value="./src" />
+
+	<!-- The sources to compile -->
+	<patternset id="ant.java">
+		<include name="sorcer/arithmetic/requestor/**/*.java" />
+		<exclude name="**/SAVE/*.java" />
+		<exclude name="**/BAK/*.java" />
+	</patternset>
+
+	<patternset id="ant.classes">
+		<include name="sorcer/arithmetic/requestor/**/*.class" />
+	</patternset>
+
+	<path id="project.classpath">
+		<pathelement location="${classes}" />
+		<pathelement location="${sorcer.lib}/sorcer-prv.jar" />
+		<pathelement location="${sorcer-ext.lib}/webster.jar" />
+		<path refid="jini.path" />
+		<path refid="rio.path" />
+	</path>
+
+	<path id="javadocs.classpath">
+		<path refid="jini.path" />
+		<pathelement location="${common.lib}/buildsupport/ant-ext.jar" />
+		<pathelement location="${common.lib}/buildsupport/ant.jar" />
+	</path>
+
+	<target name="all" depends="prepare, jars" />
+	<target name="compile" depends="compileSources" />
+	<target name="jars" depends="compile, ex6-exertlet.jar, copy-run-req-files" />
+
+	<target name="docs" depends="prepare, compile">
+		<javadoc packagenames="org.jini.rio.tools.ant.*" maxmemory="100M" sourcepath="${src}" destdir="${docs}/api" Author="true" Version="true" Use="true" windowtitle="e7 Exertlet" doctitle="&lt;h1&gt;e7 Exertlet;/h1&gt;" bottom="&lt;i&gt;Copyright (c) 2010 SORCERsoft.org, All Rights Reserved.&lt;/i&gt;">
+			<group title="e6 Exertlet" packages="sorcer.arithmetic.requestor/*" />
+			<classpath refid="project.classpath" />
+		</javadoc>
+	</target>
+
+	<target name="ex6-exertlet.jar">
+		<classdepandjar jarfile="${sorcer.lib}/ex6-exertlet.jar" files="true">
+			<classpath refid="project.classpath" />
+			<in name="sorcer" />
+			<out name="sorcer.util.bdb.objects" />
+			<topclass name="sorcer.arithmetic.requestor.ArithmeticExertletRunner" />
+			<topclass name="sorcer.eo.operator" />
+			<fileset dir="${iGrid.home}/configs" includes="sorcer/util/sorcer.env" />
+		</classdepandjar>
+	</target>
+
+	<target name="copy-run-req-files">
+		<mkdir dir="${iGrid.home}/bin/examples/${module.run.dir}/configs" />
+		<mkdir dir="${iGrid.home}/bin/examples/${module.run.dir}/bin" />
+		<mkdir dir="${iGrid.home}/bin/examples/${module.run.dir}/policy" />
+		<mkdir dir="${iGrid.home}/bin/examples/${module.run.dir}/logs" />
+		<copy todir="${iGrid.home}/bin/examples/${module.run.dir}/configs">
+			<fileset dir="configs">
+				<include name="*" />
+			</fileset>
+		</copy>
+		<copy todir="${iGrid.home}/bin/examples/${module.run.dir}/bin">
+			<fileset dir="bin">
+				<include name="*" />
+			</fileset>
+		</copy>
+		<copy todir="${iGrid.home}/bin/examples/${module.run.dir}/policy">
+			<fileset dir="policy">
+				<include name="*" />
+			</fileset>
+		</copy>
+		<chmod dir="${iGrid.home}/bin/examples/${module.run.dir}/bin" perm="755" includes="*.sh" />
+	</target>
+
+</project>

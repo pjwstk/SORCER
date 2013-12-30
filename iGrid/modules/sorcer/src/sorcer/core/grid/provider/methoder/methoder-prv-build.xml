@@ -1,0 +1,101 @@
+<?xml version='1.0' encoding='ISO-8859-1' standalone='yes'?>
+<!-- 
+ * Copyight (C) 2004 SORCER Lab, Texas Tech University. All rights reserved.
+ * Service-Oriented Computing Environmet: SORCER Cataloger build configuration
+ * Make sure the following variables are changed to reflect your environment:
+ *    IGRID_HOME        	iGrid location
+ *    JAVA_HOME         	JDK Location
+ *	  IGRID_WEBSTER_PORT 	The class server (webster) port
+ *    ANT_HOME          	Jakarta Ant location
+ Please see also the ../common-build.xml for classpaths, definitions and targets
+-->
+
+<project name="SORCER Tasker" default="all" basedir=".">
+	<property name="module.name" value="methoder" />
+	<!-- set global properties -->
+	<import file="../../../../../../../common-build.xml" />
+	<property name="src" value="../../../../../" />
+	<property name="resources" value="${iGrid.home}/modules/sorcer/resources" />
+
+	<path id="project.classpath">
+		<pathelement location="${classes}/" />
+		<path refid="jini.path" />
+		<path refid="rio.path" />
+		<path refid="jep.path" />
+	</path>
+
+	<patternset id="ant.java">
+		<include name="sorcer/core/grid/provider/methoder/**/*.java" />
+	</patternset>
+
+	<patternset id="ant.classes">
+		<include name="sorcer/core/grid/provider/methoder/**/*.class" />
+	</patternset>
+
+	<fileset dir="${resources}" id="icons">
+		<include name="sorcer.jpg" />
+	</fileset>
+
+	<target name="compile" depends="compileSources" />
+	<target name="jars" depends="methoder, copy-run-prv-files" />
+	<target name="methoder" depends="methoder.jar, methoder-dl.jar" />
+	<target name="all" depends="prepare, compile, jars, copy-run-prv-files" />
+
+	<target name="methoder.jar">
+		<classdepandjar jarfile="${sorcer.lib}/methoder.jar" files="true">
+			<classpath refid="project.classpath" />
+			<in name="sorcer.core.grid.provider.methoder" />
+			<in name="sorcer.service" />
+			<topclass name="sorcer.core.Methoder" />
+			<topclass name="sorcer.core.grid.provider.methoder.MethoderImpl" />
+		</classdepandjar>
+	</target>
+	
+	<target name="methoder-dl.jar">
+		<classdepandjar jarfile="${sorcer-dl.lib}/methoder-dl.jar" files="true">
+			<classpath refid="project.classpath" />
+			<in name="sorcer" />
+			<out name="sorcer.util.bdb" />
+			<out name="sorcer.tools.webster" />
+			<topclass name="sorcer.core.Methoder" />
+			<topclass name="sorcer.core.AdministratableProvider" />
+			<topclass name="sorcer.jini.lookup.entry.SorcerServiceInfo" />
+			<topclass name="sorcer.ui.serviceui.UIComponentFactory" />
+			<topclass name="sorcer.ui.serviceui.UIFrameFactory" />
+
+			<topclass name="sorcer.core.exertion.NetJob" />
+			<topclass name="sorcer.core.exertion.NetTask" />
+			<topclass name="sorcer.core.exertion.ExertionEnvelop" />
+			<topclass name="sorcer.service.Context" />
+			<fileset refid="icons" />
+		</classdepandjar>
+	</target>
+
+	<target name="copy-run-prv-files">
+		<mkdir dir="${iGrid.home}/bin/sorcer/${module.name}/configs" />
+		<mkdir dir="${iGrid.home}/bin/sorcer/${module.name}/bin" />
+		<mkdir dir="${iGrid.home}/bin/sorcer/${module.name}/policy" />
+		<mkdir dir="${iGrid.home}/bin/sorcer/${module.name}/logs" />
+
+		<copy todir="${iGrid.home}/bin/sorcer/${module.name}/configs">
+			<fileset dir="configs">
+				<include name="*" />
+			</fileset>
+		</copy>
+
+		<copy todir="${iGrid.home}/bin/sorcer/${module.name}/bin">
+			<fileset dir="bin">
+				<include name="*" />
+			</fileset>
+		</copy>
+
+		<copy todir="${iGrid.home}/bin/sorcer/${module.name}/policy">
+			<fileset dir="policy">
+				<include name="*" />
+			</fileset>
+		</copy>
+
+		<chmod dir="${iGrid.home}/bin/sorcer/${module.name}/bin" perm="755" includes="*.sh" />
+	</target>
+
+</project>

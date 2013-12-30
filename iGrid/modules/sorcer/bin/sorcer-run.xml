@@ -1,0 +1,111 @@
+<?xml version="1.0"?>
+
+<project name="silenusr" default="all" basedir=".">
+
+	<import file="../../common-run.xml" />
+
+
+	<target name="midas">
+		<java jar="${jini.home}/lib/start.jar" fork="yes">
+			<sysproperty key="java.security.policy" value="../policy/policy.all" />
+			<sysproperty key="IGRID_HOME" value="${iGrid.home}" />
+			<sysproperty key="sorcer.http.codebase" value="${sorcer.http.codebase}" />
+			<sysproperty key="java.util.logging.config.file" value="${iGrid.home}/configs/sorcer.logging" />
+			<arg value="../configs/start-midas.config" />
+		</java>
+	</target>
+
+	<target name="midas2">
+		<java jar="${jini.home}/lib/start.jar" fork="yes">
+			<sysproperty key="java.security.policy" value="../policy/policy.all" />
+			<sysproperty key="IGRID_HOME" value="${iGrid.home}" />
+			<sysproperty key="sorcer.http.codebase" value="${sorcer.http.codebase}" />
+			<sysproperty key="java.util.logging.config.file" value="${iGrid.home}/configs/sorcer.logging" />
+			<arg value="../configs/start-midas.config.2" />
+		</java>
+	</target>
+
+	<target name="byzantium">
+		<java jar="${jini.home}/lib/start.jar" fork="yes">
+			<sysproperty key="java.security.policy" value="../policy/policy.all" />
+			<sysproperty key="IGRID_HOME" value="${iGrid.home}" />
+			<sysproperty key="sorcer.http.codebase" value="${sorcer.http.codebase}" />
+			<sysproperty key="INITIAL_LOOKUP_GROUP" value="${sorcer.groups}" />
+			<sysproperty key="java.util.logging.config.file" value="${iGrid.home}/configs/sorcer.logging" />
+			<arg value="../configs/start-byzantium.config" />
+		</java>
+	</target>
+
+	<target name="byzantium2">
+		<java jar="${jini.home}/lib/start.jar" fork="yes">
+			<sysproperty key="java.security.policy" value="../policy/policy.all" />
+			<sysproperty key="IGRID_HOME" value="${iGrid.home}" />
+			<sysproperty key="sorcer.http.codebase" value="${sorcer.http.codebase}" />
+			<sysproperty key="INITIAL_LOOKUP_GROUP" value="${sorcer.groups}" />
+			<sysproperty key="java.util.logging.config.file" value="${iGrid.home}/configs/sorcer.logging" />
+			<arg value="../configs/start-byzantium.config.2" />
+		</java>
+	</target>
+
+	
+	<target name="silenus">
+		<java jar="${jini.home}/lib/start.jar" fork="yes">
+			<sysproperty key="java.security.policy" value="../policy/policy.all" />
+			<sysproperty key="IGRID_HOME" value="${iGrid.home}" />
+			<sysproperty key="sorcer.http.codebase" value="${sorcer.http.codebase}" />
+			<sysproperty key="INITIAL_LOOKUP_GROUP" value="${sorcer.groups}" />
+			<sysproperty key="java.util.logging.config.file" value="${iGrid.home}/configs/sorcer.logging" />
+			<arg value="../configs/start-silenus.config" />
+		</java>
+	</target>
+
+	<target name="polycephaly">
+		<java jar="${jini.home}/lib/start.jar" fork="yes">
+			<sysproperty key="java.security.policy" value="../policy/policy.all" />
+			<sysproperty key="IGRID_HOME" value="${iGrid.home}" />
+			<sysproperty key="sorcer.http.codebase" value="${sorcer.http.codebase}" />
+			<sysproperty key="java.util.logging.config.file" value="${iGrid.home}/configs/sorcer.logging" />
+			<arg value="../configs/start-polycephaly.config" />
+		</java>
+	</target>
+
+
+	<target name="print">
+		<echo message="${sorcer.http.codebase}" />
+	</target>
+	
+	<target name="all">
+		<parallel>
+			<daemons>
+				<ant target="byzantium" />
+				<ant target="midas" />
+			</daemons>
+			<sequential>
+				<sleep seconds="5" />
+				<ant target="silenus" />
+			</sequential>
+		</parallel>
+	</target>
+
+	<!--
+	<target name="byzantium-speed" depends="print">
+		<java classname="sorcer.silenus.examples.bytestore.ByteStoreSpeedMeasure" fork="yes">
+			<sysproperty key="java.security.policy" value="../policy/policy.all" />
+			<sysproperty key="java.rmi.server.codebase" value="${sorcer.http.codebase}" />
+			<sysproperty key="sorcer.http.codebase" value="${sorcer.http.codebase}" />
+			<classpath>
+				<pathelement location="${iGrid.home}/lib/byzantium-test.jar" />
+				<pathelement location="${iGrid.home}/common/jini-core.jar" />
+				<pathelement location="${iGrid.home}/common/jini-ext.jar" />
+				<pathelement location="${iGrid.home}/common/serviceui-1.1.jar" />
+				<pathelement location="${iGrid.home}/common/sun-util.jar" />
+				<pathelement location="${iGrid.home}/common/jsk-platform.jar" /> 
+				<pathelement location="${iGrid.home}/common/reggie-dl.jar" /> 
+			</classpath>
+		</java>
+	</target>
+-->
+
+
+
+</project>

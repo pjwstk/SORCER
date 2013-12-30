@@ -1,0 +1,147 @@
+# SORCER attributes
+#
+# SorcerTypes
+# Note: All Modifies must be in alphabetical order
+# Example: ft|application|format|a.b.c.e.f.g
+#
+sorcer.unknown=ft|*|unknown|*
+sorcer.responsevariable=ft|sorcer|object|ResponseVariable
+sorcer.responsevariableTxt=ft|sorcer|text|ResponseVariable
+sorcer.job=ft|sorcer|object|SorcerJob
+sorcer.variables=ft|sorcer|class|Variable
+sorcer.variable=ft|sorcer|object|Variable
+sorcer.variableTxt=ft|sorcer|text|Variable
+sorcer.ordereddesignvariables=ft|sorcer|class|OrderedDesignVariables
+sorcer.gradient.strat=ft|sorcer|text|gradient
+
+# tp3
+sorcer.tp3.txt=ft|tp3|text|input
+sorcer.tp3.model=ft|tp3|object|model
+sorcer.tp3.f003=ft|tp3|text|f003.namelist
+# Changed this for web interface
+sorcer.tp3.f012=ft|tp3|text|for012
+sorcer.tp3.modeldata=ft|tp3|text|data.model
+sorcer.tp3toetds=ft|tp3|text|input.map
+
+# cafd
+sorcer.cafd.strat=ft|cafd|text|strategy
+sorcer.cafd.blademap=ft|cafd|text|blmap
+sorcer.cafd.out=ft|cafd|object|String.outgdsdir
+
+# bezmorph
+sorcer.bezmorph.strat=ft|bezmorph|text|strategy
+sorcer.bezmorph.report=ft|bezmorph|text|html.report
+
+# viscgrid
+sorcer.viscgrid.strat=ft|viscgrid|text|strategy
+sorcer.viscgrid.report=ft|viscgrid|text|html.report
+
+# etds
+sorcer.etds.in=ft|etds|text|input
+sorcer.etds.out=ft|etds|object|Hashtable.output
+sorcer.etds.in2=ft|etds|object|input
+
+# gdsManager
+sorcer.gdsManager.strat=ft|gdsManager|text|strategy
+
+# q3dgrid
+sorcer.q3dgrid.strat=ft|q3dgrid|text|strategy
+sorcer.q3dgrid.report=ft|q3dgrid|text|html.report
+
+# tacoma
+sorcer.3DCFD.grd=ft|3DCFD|binary|grid
+sorcer.3DCFD.flw=ft|3DCFD|binary|flow
+sorcer.2DCFD.grd=ft|2DCFD|binary|grid
+sorcer.2DCFD.flw=ft|2DCFD|binary|flow
+sorcer.tacoma.par=ft|tacoma|text|parameter
+sorcer.tacoma.strat=ft|tacoma|text|strategy
+sorcer.tacoma.stat=ft|tacoma|text|stat
+sorcer.tacoma.summ=ft|tacoma|text|sum
+
+#post3D
+sorcer.post3D.strat=ft|post3D|text|strategy
+sorcer.post3D.report=ft|post3D|text|html.report
+sorcer.post3D.bldreff=ft|post3D|text|bldreff
+
+# MeshProvider
+sorcer.text.mesh=ft|sorcer|text|mesh
+sorcer.ansys.mesh=ft|ansys|text|mesh.prep7
+sorcer.ansys.translation=ft|ansys|text|translation
+
+# Optimization
+sorcer.optim.strat=ft|optim|text|strat
+sorcer.optim.dvs=ft|optim|object|dvs
+sorcer.optim.obj=ft|optim|object|obj
+sorcer.optim.constr=ft|optim|object|constr
+sorcer.optim.zerojob=ft|optim|object|zerojob
+sorcer.optim.firstjob=ft|optim|object|firstjob
+sorcer.optim.summary=ft|optim|text|summary
+sorcer.optim.database=ft|optim|text|database
+
+# Response Provider
+sorcer.resp.input=ft|resp|text|input
+sorcer.resp.output=ft|resp|text|output
+
+# Aurora - Reliability
+sorcer.aurora.strat=ft|aurora|text|strat
+sorcer.aurora.rvs=ft|aurora|object|rvs
+sorcer.aurora.lsfs=ft|aurora|object|lsfs
+sorcer.aurora.zerojob=ft|aurora|object|zerojob
+sorcer.aurora.firstjob=ft|aurora|object|firstjob
+sorcer.aurora.output=ft|aurora|text|output
+
+# autoshank
+sorcer.autoshank.param=ft|autoshank|text|parameter
+sorcer.autoshank.seedpart=ft|ug|binary|autoshank.seed
+sorcer.autoshank.outpart=ft|ug|binary|solid
+sorcer.autoshank.outpart.tags=ft|ug|binary|solid.tags
+
+# icem
+sorcer.icem.ug=ft|ug|binary|solid
+sorcer.icem.replay=ft|icem|text|replay
+sorcer.icem.boco=ft|icem|text|boco
+sorcer.icem.familyboco=ft|icem|text|familyboco
+sorcer.icem.tetin=ft|icem|text|tetin
+sorcer.icem.domain=ft|icem|binary|domain
+
+# siesta
+sorcer.siesta.mesh=ft|siesta|text|mesh.uif
+sorcer.siesta.tag=ft|siesta|text|tag.uif
+sorcer.siesta.meshtag=ft|siesta|text|mesh.tag.uif
+
+# BCProvider
+sorcer.text.boundarycondition=ft|sorcer|text|boundaryCondition
+sorcer.object.boundarycondition=ft|sorcer|object|boundaryCondition
+
+#PatranProvider
+sorcer.patran.neutral.geometry=ft|patran|text|discretized.geometry.neutral
+
+# numericalanalysis
+sorcer.numericalanalysis.doeMatrix=ft|numericalanalysis|text|doeTable
+sorcer.numericalanalysis.paramMatrix=ft|numericalanalysis|text|paramTable
+
+# ansys
+sorcer.ansys.db              = ft|ansys|binary|database
+sorcer.ansys.prep7           = ft|ansys|text|prep7
+sorcer.mesh                  = ft|*|text|mesh
+sorcer.ansys.mesh            = ft|ansys|text|mesh
+sorcer.ansys.mac             = ft|ansys|text|macro
+sorcer.service.properties    = ft|ansys|text|service properties
+sorcer.ansys.rst             = ft|ansys|binary|restart
+sorcer.ansys.rth             = ft|ansys|unknown|rth
+sorcer.ansys.mode            = ft|ansys|unknown|mode
+sorcer.ansys.apdl            = ft|ansys|text|apdl
+sorcer.ansys.output          = ft|ansys|*|out
+
+sorcer.ansys.text.output.stress	= ft|ansys|text|output.stress
+sorcer.ansys.text.output.volume  = ft|ansys|text|output.volume
+sorcer.ansys.text.prep7.load	= ft|ansys|text|load.prep7
+sorcer.ansys.text.prep7.mat  	= ft|ansys|text|materials.prep7
+sorcer.ansys.text.post1.stress 	= ft|ansys|text|post1.stress
+sorcer.ansys.text.post1.volume 	= ft|ansys|text|post1.volume
+
+# script
+sorcer.script.text.strat		= ft|script|text|strategy
+sorcer.script.text.script	= ft|script|text|script
+
+sorcer.ansys.mesh.prep7=ft|ansys|text|mesh.prep7

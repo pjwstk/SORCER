@@ -1,0 +1,9 @@
+Get serial version for serialized classes:
+
+private static final long serialVersionUID = ?
+
+serialver -classpath $IGRID_HOME/classes/:$IGRID_HOME/lib/river/lib/jsk-lib.jar:$IGRID_HOME/lib/river/lib/jsk-platform.jar myClassName
+
+serialver -classpath $IGRID_HOME/classes/:$IGRID_HOME/lib/river/lib/jsk-lib.jar:$IGRID_HOME/lib/river/lib/jsk-platform.jar:$IGRID_HOME/lib/rio/rio.jar myClassName
+
+serialver -classpath $IGRID_HOME/classes/:$IGRID_HOME/lib/river/lib/jsk-lib.jar:$IGRID_HOME/lib/river/lib/jsk-platform.jar:$IGRID_HOME/lib/common/groovy/groovy-all-1.7.4.jar myClassName

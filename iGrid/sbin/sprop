@@ -1,0 +1,21 @@
+#!/bin/bash
+OLD_CLASPATH=$CLASSPATH
+. $IGRID_HOME/configs/minClasspath
+
+# print help for '-h' option, then exit
+#
+for arg in $*; do
+	if [ $arg == "-h" ]; then
+	    printf "\nName:\t\tsprop\n\n"
+	    printf "Description:\tsprop lists the java System properties\n\n"
+	    printf "Usage:\t\tsprop [-options]\n\n"
+	    printf "Options:\n\n"
+	    printf " -h\t\tprint this message and exit\n\n"
+	    exit 0;
+	fi
+done
+
+java -classpath "$CLASSPATH_SBIN" sorcer.util.GenericUtil -sp
+
+export CLASSPATH=$OLD_CLASSPATH
+

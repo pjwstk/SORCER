@@ -1,0 +1,9 @@
+RIO changed files
+
+Current RIO version in the SORCER tree (modules/rio) is RIO M3
+It is modified to accomodate On-demand Provisioning. The following files are modified:
+
+src/org/rioproject/monitor/ServiceProvisioner.java
+src/org/rioproject/cybernode/ServiceBeanLoader.java
+src/org/rioproject/cybernode/StaticCybernode.java
+src/org/rioproject/cybernode/JSBDelegate.java

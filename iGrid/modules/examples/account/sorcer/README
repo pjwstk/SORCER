@@ -1,0 +1,35 @@
+There are two remote interfaces:
+1. sorcer.account.provider.Account - a standard RMI interface
+2. sorcer.account.provider.SorcerAccount - a SORCER version 
+with Context as parameter and return value. 
+
+The sorcer.account.provider.AccountProvider implements both
+interfaces Account and SorcerAccount, so can be used as a plain 
+RMI remote object and SORCER provider as well.
+
+jeri-account1-prv-run.xml and jeri-account2-prv-run.xml use Jini
+configurations jeri-account1-prv.config and jeri-account2-prv.config
+respectively. 
+Also jeri-account1-prv.config and jeri-account2-prv.config use
+provider properties files prv1.properties and prv2.properties
+respectively. 
+
+Context used for the account module is defined as follows:
+
+account
+	deposit
+		amount
+	withdrawal
+		amount
+	balance
+		amount
+		
+A Job with two tasks with the above service context are created in
+sorcer.account.requestor.AccountTester
+and processed by
+sorcer.account.provider.SorcerAccountImpl
+
+There are two user agents:
+1. sorcer.account.provider.ui.AccountUI
+2. sorcer.account.provider.ui.mvc.AccountView
+AccountView illustrates the MVC design in contrast with AccountUI.

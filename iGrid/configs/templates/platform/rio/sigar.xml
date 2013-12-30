@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Define Hyperic Sigar
+-->
+<platform>
+    <capability name="Sigar" common="yes">
+        <description>Hyperic SIGAR</description>
+        <version>1.6</version>
+        <manufacturer>Hyperic</manufacturer>
+        <classpath>${iGrid.home}/lib/common/hyperic/sigar.jar</classpath>
+    </capability>
+
+</platform>

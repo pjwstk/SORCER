@@ -1,0 +1,40 @@
+#!/bin/sh
+unset notify
+clear
+
+printf "[Run] Starting  SORCER Notifier Provider Service in background...\n"
+
+#java -Djava.security.policy=${SORCER_HOME}/policy/policy.all -DproviderProps=provider.properties sorcer.service.provider.SorcerJoiner -test -c"http://hippolyta.cs.ttu.edu/~lapinski/jsorcer/ http://hippolyta.cs.ttu.edu/jsorcer/jinilib/jini-ext.jar http://hippolyta.cs.ttu.edu/jsorcer/jinilib/mahalo.jar" -psorcer.service.notifier.SorcerNotifierImpl
+
+
+HTTP_CODEBASE="http://${SORCER_HTTP_HOST}:${SORCER_HTTP_PORT}/sorcer/jsorcer/jinilib/jini-ext.jar \
+	       http://${SORCER_HTTP_HOST}:${SORCER_HTTP_PORT}/sorcer/jsorcer/jinilib/mahalo-dl.jar \
+	       http://${SORCER_PORTAL_HOST}:${SORCER_PORTAL_PORT}${APP_WEB_CODEBASE}"
+		
+
+echo java -Djava.security.policy=${SORCER_HOME}/policy/policy.all \
+     -Djava.rmi.server.codebase="$HTTP_CODEBASE" \
+     -DproviderProps=provider.properties \
+     sorcer.core.provider.SorcerJoiner -test -psorcer.core.provider.notifier.SorcerNotifierImpl
+
+
+java -Djava.security.policy=${SORCER_HOME}/policy/policy.all \
+     -Djava.rmi.server.codebase="$HTTP_CODEBASE" \
+     -DproviderProps=provider.properties \
+     sorcer.core.provider.SorcerJoiner -test -psorcer.core.provider.notifier.SorcerNotifierImpl
+
+
+
+
+printf "[Run] done.\n\n"
+printf "[Run] To kill the SORCER Notifier Provider Service type the command:\n"
+printf "[Run]      ./killprovider\n"
+
+
+
+
+
+
+
+
+

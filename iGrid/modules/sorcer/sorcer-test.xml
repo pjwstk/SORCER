@@ -1,0 +1,66 @@
+<?xml version='1.0' encoding='ISO-8859-1' standalone='yes'?>
+<project name="sorcer" default="sorcer-test-only" basedir=".">
+
+	<import file="../../modules/common-run.xml" />
+
+	<target name="sorcer-test-only">
+		<ant antfile="sorcer-build.xml" target="sorcer-test" inheritAll="false" />
+	</target>
+
+	<target name="sorcer-test">
+		<parallel>
+			<sequential>
+				<ant antfile="${iGrid.home}/bin/iGrid-boot-http-spawn.xml" dir="${iGrid.home}/bin" target="iGrid" inheritAll="false" />
+				<ant antfile="sorcer-build.xml" target="sorcer-test" inheritAll="false" />
+				<antcall target="iGrid-destroy" />
+			</sequential>
+		</parallel>
+	</target>
+
+	<target name="iGrid-destroy">
+		<java classname="sorcer.util.ServiceDestroyer" fork="yes" logerror="yes">
+			<classpath>
+				<pathelement location="${sorcer.lib}/prv-destroyer.jar" />
+				<pathelement location="${jini.lib}/jsk-platform.jar" />
+				<pathelement location="${jini.lib}/jsk-lib.jar" />
+				<pathelement location="${sorcer.lib}/sorcer-prv.jar" />
+				<path refid="rio.path" />
+				<pathelement location="${rio.home}/lib-dl/cybernode-api${rio.version}.jar" />
+				<pathelement location="${rio.home}/lib-dl/monitor-api${rio.version}.jar" />
+				<pathelement location="${rio.home}/lib/logging/jul/slf4j-jdk14-${slf4j.version}.jar" />
+				<pathelement location="${java.home}/../lib/tools.jar" />
+			</classpath>
+			<sysproperty key="java.security.policy" value="${iGrid.home}/policy/iGrid.policy" />
+			<sysproperty key="java.protocol.handler.pkgs" value="net.jini.url|sorcer.util.bdb.sos|org.rioproject.url" />
+			<sysproperty key="java.rmi.server.RMIClassLoaderSpi" value="org.rioproject.rmi.ResolvingLoader" />
+			<arg value="jvm:boot-iGrid" />
+		</java>
+	</target>
+
+	<target name="ci-test" description="starts iGrid core services, SORCER JUnit tests, and destroys iGrid">
+		<delete dir="${iGrid.home}/databases" failonerror="false" />
+		<parallel>
+			<ant antfile="iGrid-boot-http-spawn.xml" dir="${iGrid.home}/bin" target="iGrid" inheritAll="false" />
+			<sequential>
+				<sleep seconds="5" />
+				<ant antfile="sorcer-test.xml" target="sorcer-test" inheritAll="false" />
+				<ant antfile="sorcer-test.xml" target="iGrid-destroy" />
+			</sequential>
+		</parallel>
+	</target>
+
+	<target name="copy-prv-config-files">
+		<mkdir dir="${iGrid.home}/bin/sorcer/test/arithmetic/configs" />
+		<copy todir="${iGrid.home}/bin/sorcer/test/arithmetic/configs">
+			<fileset dir="src/junit/sorcer/core/provider/configs">
+				<include name="*" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="create-reports-dir">
+		<mkdir dir="${iGrid.home}/modules/sorcer/reports" />
+	</target>
+
+</project>
+

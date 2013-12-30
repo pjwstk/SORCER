@@ -1,0 +1,59 @@
+java sorcer.service.xml.ServiceJobXMLDomParser -s '<?xml version ="1.0" encoding="UTF-8"?>
+
+
+<!DOCTYPE ServiceJob SYSTEM "http://hippolyta.cs.ttu.edu/sorcer/data/xml/ServiceJob.dtd">
+
+
+<ServiceJob name="test job">
+
+   <ServiceContext name="DAS">
+      <DataNode path="GEOM/SHANK/MESH/DATA" ioType="IN_TYPE" NodeType="SORCER_DATA_MESH" 
+		data="http://hippolyta.cs.ttu.edu/sorcer/data/Shank_Tet_Mesh.dat">  TET </DataNode>
+      <DataNode path="GEOM/SHANK/SHANK_PRT" ioType="IN_TYPE" NodeType="SORCER_AUTOSHANK_SEED" 
+		data="http://hippolyta.cs.ttu.edu/sorcer/data/AS_Shank_Prt.prt"> SEEDPART </DataNode>
+      <DataNode path="GEOM/SHANK/SHANK_INP" ioType="IN_TYPE" NodeType="SORCER_AUTOSHANK_PARAMETERS" 
+		data="http://hippolyta.cs.ttu.edu/sorcer/data/AS_Inp.dat"> INP </DataNode>
+      <DataNode path="GEOM/DISK/MESH/DATA" ioType="IN_TYPE" NodeType="SORCER_DATA_MESH" 
+		data="http://hippolyta.cs.ttu.edu/sorcer/data/Disk_Tet_Mesh.dat"> TET </DataNode>
+      <DataNode path="GEOM/DISK/UGSOLID" ioType="IN_TYPE" NodeType="SORCER_UG" 
+		data="http://hippolyta.cs.ttu.edu/sorcer/data/Disk.prt"> SOLID </DataNode>
+      <DataNode path="GEOM/AIRFOIL/AIRFOIL_UIF" ioType="IN_TYPE" NodeType="SORCER_UIF" 
+		data="http://hippolyta.cs.ttu.edu/sorcer/data/Airfoil.uif"> UIF </DataNode>
+      <DataNode path="BC/CYCLIC/IN" ioType="IN_TYPE" NodeType="SORCER_DATA_BC" 
+		data="http://hippolyta.cs.ttu.edu/sorcer/data/bc_cyclic.dat">  CYCLIC </DataNode>
+      <DataNode path="LCLC_EXT_GAS_LOADS/" ioType="IN_TYPE" NodeType="SORCER_ANSYS_PREP7" 
+		data="http://hippolyta.cs.ttu.edu/sorcer/data/LC_EXT_Gas_Loads.dat"> LOADS </DataNode>
+      <DataNode path="PP/STRESS" ioType="IN_TYPE" NodeType="SORCER_ANSYS_POST1" 
+		data="http://hippolyta.cs.ttu.edu/sorcer/data/Post_Stress.post1">  STRESS </DataNode>
+      <DataNode path="MAT/RENE5" ioType="IN_TYPE" NodeType="SORCER_ANSYS_PREP7" 
+		data="http://hippolyta.cs.ttu.edu/sorcer/data/Mat.prep7"> RENE5  </DataNode>
+   </ServiceContext>
+
+
+   <ServiceTask name="Generate Solid Shank"
+		description="Generate a solid shank from\na parametric data file and a seed part"
+		method="autoshank"
+		provider="AUTOSHANK">
+	<TaskContext root="DAS"> GEOM/SHANK </TaskContext>   </ServiceTask>
+   <ServiceTask name="Mesh Shank"
+		description="Tet-mesh shank for stress analysis"
+		method="mesh"
+		provider="PATRAN">
+	<TaskContext root="DAS"> GEOM/SHANK </TaskContext>   </ServiceTask>
+   <ServiceTask name="Mesh Disk"
+		description="Tet-mesh disk for stress analysis"
+		method="mesh"
+		provider="PATRAN">
+	<TaskContext root="DAS"> GEOM/DISK </TaskContext>   </ServiceTask>
+
+   <ServiceTask name="Apply Boundary Conditions"
+		description="Apply cyclic symmetric boundary conditions \non cut faces, constraint equations between \nairfoil base and platform, constraint \nequations between disk pressure planes and \ndovetail"
+		method="lBCApply"
+		provider="SIESTABACK">
+	<TaskContext root="DAS"> BC  </TaskContext>
+	<TaskContext root="DAS"> GEOM/AIRFOIL  </TaskContext>
+	<TaskContext root="DAS"> GEOM/SHANK  </TaskContext>
+	<TaskContext root="DAS"> GEOM/DISK  </TaskContext>   </ServiceTask>
+
+</ServiceJob>
+'

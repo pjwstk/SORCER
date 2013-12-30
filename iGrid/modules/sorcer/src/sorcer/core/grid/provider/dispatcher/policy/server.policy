@@ -1,0 +1,80 @@
+grant codebase "file:../lib/dispatcher.jar"{
+	//permission java.net.SocketPermission "neem.cs.ttu.edu:9000", "connect,accept,listen";
+	//permission java.net.SocketPermission "129.118.29.71", "connect,accept,listen";
+	permission java.net.SocketPermission "*", "connect,accept,listen";
+	permission javax.security.auth.PrivateCredentialPermission "javax.security.auth.x500.X500PrivateCredential javax.security.auth.x500.X500Principal \"*\"", "read";
+	permission net.jini.security.AuthenticationPermission "javax.security.auth.x500.X500Principal \"*\"", "accept";	
+	permission javax.security.auth.AuthPermission "createLoginContext.GAppLogin";
+	permission java.io.FilePermission "<<ALL FILES>>" , "read,write,execute";
+	permission javax.security.auth.AuthPermission "doAsPrivileged";
+	permission net.jini.discovery.DiscoveryPermission "sorcer.DEV";
+	//permission sorcer.provider.dispatcher.MethodPermission "*";	
+	permission java.lang.RuntimePermission "getClassLoader";
+	permission net.jini.io.context.ContextPermission "net.jini.io.context.ClientSubject.getClientSubject";
+};
+
+grant principal javax.security.auth.x500.X500Principal "CN=abhijit, OU=a, O=a, L=a, ST=a, C=a"{
+	//permission sorcer.security.permission.MethodPermission "computePrime";
+	permission java.security.AllPermission;
+};
+
+grant principal javax.security.auth.x500.X500Principal "CN=Server, OU=IT, O=Sorcer, L=Lubbock, ST=Tx, C=US"{
+	// Allow everything for now
+	permission java.security.AllPermission;
+	permission java.net.SocketPermission "*", "connect,accept,listen";
+	permission javax.security.auth.PrivateCredentialPermission "javax.security.auth.x500.X500PrivateCredential javax.security.auth.x500.X500Principal \"*\"", "read";
+	permission javax.security.auth.AuthPermission "doAsPrivileged";
+	permission javax.security.auth.AuthPermission "doAs";
+	permission javax.security.auth.AuthPermission "getSubject";
+	permission net.jini.discovery.DiscoveryPermission "sorcer.DEV";
+	permission java.lang.RuntimePermission "getClassLoader";
+	permission java.io.FilePermission "provider.properties", "read";
+	permission java.io.FilePermission "provider.log", "read, write";
+	permission java.io.FilePermission "<<ALL FILES>>" , "read";
+	permission java.util.PropertyPermission "java.home", "read";
+	permission java.util.PropertyPermission "sorcer.env.file", "read";
+	permission java.util.PropertyPermission "sorcer.debug", "read";
+	permission java.util.PropertyPermission "sorcer.home", "read";
+	permission java.util.PropertyPermission "sorcer.rmi.host", "read";
+	permission java.util.PropertyPermission "sorcer.rmi.port", "read";
+	permission java.util.PropertyPermission "sorcer.http.host", "read";	
+	permission java.util.PropertyPermission "sorcer.http.port", "read";
+	permission java.util.PropertyPermission "sorcer.portal.host", "read";	
+	permission java.util.PropertyPermission "sorcer.portal.port", "read";	
+	permission java.util.PropertyPermission "sorcer.lib.codebase", "read";		
+	permission java.util.PropertyPermission "user.dir", "read";
+	permission java.util.PropertyPermission "user.name", "read";				
+	permission java.lang.RuntimePermission "getClassLoader";	
+	permission java.lang.RuntimePermission "setIO";	
+ 	permission sorcer.security.permission.MethodPermission "*";
+	
+};
+
+
+/*
+grant principal javax.security.auth.x500.X500Principal "CN=Server, OU=IT, O=Sorcer, L=Lubbock, ST=Tx, C=US"{
+	permission java.security.AllPermission;
+};
+*/
+	//permission java.net.SocketPermission "neem.cs.ttu.edu", "connect,accept,resolve";
+	//permission java.net.SocketPermission "129.118.29.71", "connect,accept,listen";
+	//permission java.net.SocketPermission "localhost", "resolve";
+	//permission java.net.SocketPermission "*", "connect,accept,listen";
+	//permission java.net.SocketPermission "neem.cs.ttu.edu:9000", "connect,resolve";	
+	//permission java.net.SocketPermission "*", "connect";
+	//permission java.net.SocketPermission "*", "accept";	
+	//permission java.net.SocketPermission "*", "listen";	
+	//permission java.net.SocketPermission "neem.cs.ttu.edu:9000", "connect,accept,resolve,listen";
+	//permission java.net.SocketPermission "neem.cs.ttu.edu:2027", "connect,accept,resolve,listen";
+	//permission java.net.SocketPermission "129.118.29.71:1024-", "connect,accept,resolve,listen";
+	//permission java.net.SocketPermission "", "connect,accept,listen";
+	//permission java.net.SocketPermission "neem.cs.ttu.edu:9000", "connect,resolve";	
+	//permission java.net.SocketPermission "129.118.29.71:8080", "connect,accept,listen";
+	//permission java.net.SocketPermission "localhost", "resolve";
+	//permission java.net.SocketPermission "*", "accept";	
+	//permission java.net.SocketPermission "*", "listen";
+	//permission java.net.SocketPermission "*", "connect,accept,listen";
+	//permission java.net.SocketPermission "neem.cs.ttu.edu:9000", "connect,accept,resolve,listen";
+	//permission java.net.SocketPermission "neem.cs.ttu.edu:2027", "connect,accept,resolve,listen";
+	//permission java.net.SocketPermission "129.118.29.71:1024-", "connect,accept,resolve,listen";
+	//permission java.net.SocketPermission "", "connect,accept,resolve,listen";

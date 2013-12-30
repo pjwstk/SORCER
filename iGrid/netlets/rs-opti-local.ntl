@@ -1,0 +1,39 @@
+#!/usr/bin/env nsh -f
+
+import static sorcer.eo.operator.context
+import static sorcer.eo.operator.dispatcher
+import static sorcer.eo.operator.initialDesign
+import static sorcer.eo.operator.input
+import static sorcer.eo.operator.model
+import static sorcer.eo.operator.optiTask
+import static sorcer.eo.operator.optimizer
+import static sorcer.eo.operator.result
+import static sorcer.eo.operator.sig
+import static sorcer.eo.operator.strategy
+import static sorcer.eo.operator.value
+import static sorcer.po.operator.par
+import sorcer.core.context.model.explore.Explorer
+import sorcer.explorer.rs10a.RosenSuzukiDispatcher
+import sorcer.model.rs.RosenSuzukiModelBuilder
+import sorcer.service.Task
+import sorcer.service.Strategy.Opti
+import engineering.optimization.conmin.provider.ConminOptimizerJNA
+import engineering.optimization.conmin.provider.ConminState
+import engineering.optimization.conmin.provider.ConminStrategy
+
+String home = System.getenv("IGRID_HOME");
+System.setProperty("java.library.path", home + "/lib/local");
+System.setProperty("optimizer.data.dir", home + "/modules/engineering/optimization/conmin/data/test");
+String conminStrategyfile = home + "/modules/engineering/optimization/conmin/data/conminrosenSuzukiMin.dat";
+String dispatchStrategyfile = home + "/modules/examples/ex10b/data/rsDispatcherStrategy.dat";
+
+Task optiTask = optiTask(sig("explore", Explorer.class),
+	context(initialDesign(input("x1", 1.0), input("x2", 1.0), input("x3", 1.0), input("x4", 1.0)),
+		par("optimizer/strategy", new ConminStrategy(new File(conminStrategyfile))),
+		result("exploration/results")),
+	strategy(Opti.MIN, 
+		dispatcher(sig(RosenSuzukiDispatcher.class)),
+		model(sig("createModel", RosenSuzukiModelBuilder.class)),
+		optimizer(sig(ConminOptimizerJNA.class))));
+
+println(value(optiTask));

@@ -1,0 +1,53 @@
+#!/bin/sh
+
+# start webster for junit test
+#
+#srun_webster -w
+
+# config
+#
+SCRIPT_NAME=sinstall_igrid
+ANT_FILENAME=iGrid-install.xml
+ANT_FILE_DIR=$IGRID_HOME
+ANT_CMD="ant -f $ANT_FILENAME all"
+
+# vars
+#
+ANT_FILE=$ANT_FILE_DIR/$ANT_FILENAME
+
+
+# help menu
+#
+if [ "$#" -gt 0 ]; then
+	if [ "$1" == "-h" ]; then
+		printf "\nName:\t\t$SCRIPT_NAME\n\n"
+		printf "Description:\tCalls $ANT_FILE\n"
+		printf "\t\twhich deletes iGrid classes and JAR files and\n"
+		printf "\t\tcompiles.\n\n"
+		printf "Usage:\t\t$SCRIPT_NAME [-options]\n\n"
+		printf "Options:\n\n"
+		printf " -h\t\tprint this message and exit\n\n"
+		printf " -w\t\tstart process in new window\n\n"
+		exit 0;
+	fi
+fi
+
+
+# check ant file
+#
+if [ ! -r $ANT_FILE ]; then
+    echo "***error: $ANT_FILE not readable."
+    exit 1;
+fi
+
+
+# run ant
+#
+#SBIN_HOME=`dirname \`readlink -f $0\``
+#SBIN_HOME=`dirname $0`
+SBIN_HOME=$IGRID_HOME/sbin
+SBIN_HOME/runant $SCRIPT_NAME $ANT_FILE $1
+
+
+
+

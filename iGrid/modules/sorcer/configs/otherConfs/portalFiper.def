@@ -1,0 +1,78 @@
+# FIPER Server Default Properties
+
+launcher.appName=FIPER
+launcher.appPrefix=Fiper
+launcher.dbPrefix=FIP
+launcher.fullAppName=Federated Intelligent Product Environment
+launcher.baseDir=/local/fiper/jfiper/fiper/lnch
+
+
+launcher.noPassword=true
+launcher.noDBC=false
+launcher.width=120
+launcher.height=450
+
+# Debugging setup
+launcher.isDebugged=true
+launcher.debugKey=TAADemoCmd
+launcher.isAsserted=true
+
+http.host=sfiper-crd.crd.ge.com
+http.port=80
+
+applicationServer.host=sfiper-crd.crd.ge.com
+applicationServer.port=6500
+
+launcher.sqlDir=data/sql
+launcher.SQLUtil.url=sqlutil.html
+
+launcher.server.type=portalProxy
+#launcher.server.type=servlet
+#launcher.server.type=socket
+#launcher.server.type=http
+
+launcher.portalProxyServlet.url=https://sfiper-crd.crd.ge.com:8443/fiper/servlet/portalServer
+
+launcher.htmlTester.url=cmd.html
+launcher.text.url=text.html
+launcher.message.url=message.html
+launcher.tobe.url=tobe.html
+launcher.fiper.url=fiper.html
+
+# context
+launcher.contextEditor.url=contextEditor.html
+launcher.contextEditor.size=500,600
+launcher.contextFinder.url=contextFinder.html
+launcher.contextFinder.size=500,600
+launcher.contextBrowser.url=contextBrowser.html
+launcher.contextBrowser.size=500,600
+
+# jobs
+launcher.jobEditor.url=jobEditor.html
+launcher.jobEditor.size=500,600
+launcher.jobFinder.url=jobFinder.html
+launcher.jobFinder.size=500,600
+launcher.jobBrowser.url=jobBrowser.html
+launcher.jobBrowser.size=500,600
+
+# notifier
+launcher.notificationBrowser.url=notificationBrowser.html
+launcher.notificationBrowser.size=300,500
+
+#maxSize is in MB
+uploadedFile.maxSize=30
+fileUpload.isDebugged=true
+launcher.archiveDir=data
+launcher.fileUpload.url=https://sfiper-crd.crd.ge.com:8443/fiper/servlet/fiperUpload
+
+launcher.data.url=http://fiper.crd.ge.com/fiper/data/
+launcher.sysAdmin=sobol@crd.ge.com
+
+
+
+
+
+
+
+
+

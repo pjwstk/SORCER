@@ -1,0 +1,11 @@
+#!/bin/ksh
+#
+# Build the SORCER environment
+# Mike Sobolewski, sobol@crd.ge.com
+#
+#
+# Create required directories and links
+fipsetup
+cd ${SORCER_HOME}/src/sorcer
+make providers
+echo ### SORCER Providers BUILT

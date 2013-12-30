@@ -1,0 +1,140 @@
+<?xml version='1.0' encoding='ISO-8859-1' standalone='yes'?>
+<!-- 
+ * Copyright 2010 the original author or authors.
+ * Copyright 2010 SorcerSoft.org.
+ *  
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * Make sure the following variables are changed to reflect your environment:
+ *    IGRID_HOME        	iGrid location
+ *    JAVA_HOME         	JDK Location
+ *	  IGRID_WEBSTER_PORT 	The class server (webster) port
+ *    ANT_HOME          	Jakarta Ant location
+ * Please see also the ../common-build.xml for classpaths, definitions and targets
+-->
+
+<project name="SORCER Grider" default="all" basedir=".">
+	<property name="module.name" value="grider" />
+	<!-- set global properties -->
+	<import file="../../../../../../../common-build.xml" />
+	<property name="src" value="../../../../../" />
+	<property name="resources" value="${iGrid.home}/modules/sorcer/resources" />
+
+	<path id="project.classpath">
+		<pathelement location="${classes}/" />
+		<path refid="jini.path" />
+		<path refid="rio.path" />
+		<path refid="swing.layout.path" />
+		<path refid="jep.path" />
+	</path>
+
+	<patternset id="ant.java">
+		<include name="sorcer/core/grid/provider/grider/**/*.java" />
+	</patternset>
+
+	<patternset id="ant.classes">
+		<include name="sorcer/core/grid/provider/grider/**/*.class" />
+	</patternset>
+
+	<fileset dir="${resources}" id="icons">
+		<include name="sorcer.jpg" />
+	</fileset>
+
+	<target name="compile" depends="compileSources" />
+	<target name="jars" depends="grider, copy-run-prv-files" />
+	<target name="grider" depends="grider.jar, grider-dl.jar, grider-ui.jar" />
+	<target name="all" depends="prepare, compile, jars, copy-run-prv-files" />
+
+	<target name="grider.jar">
+		<classdepandjar jarfile="${sorcer.lib}/grider.jar" files="true">
+			<classpath refid="project.classpath" />
+			<in name="sorcer.core.grid.provider.grider" />
+			<topclass name="sorcer.core.grid.provider.grider.GridDispatcherProviderImpl" />
+		</classdepandjar>
+	</target>
+
+	<target name="grider-dl.jar">
+		<classdepandjar jarfile="${sorcer-dl.lib}/grider-dl.jar" files="true">
+			<classpath refid="project.classpath" />
+			<in name="sorcer" />
+			<out name="sorcer.util.bdb" />
+			<out name="sorcer.tools.webster" />
+			<topclass name="sorcer.core.Caller" />
+			<topclass name="sorcer.core.grid.provider.grider.GridDispatcherRemote" />
+			<topclass name="sorcer.security.permission.MethodPermission" />
+			<topclass name="sorcer.core.AdministratableProvider" />
+			<topclass name="sorcer.jini.lookup.entry.SorcerServiceInfo" />
+			<topclass name="sorcer.core.AdministratableProvider" />
+
+			<topclass name="sorcer.core.exertion.NetJob" />
+			<topclass name="sorcer.core.exertion.NetTask" />
+			<topclass name="sorcer.core.exertion.ExertionEnvelop" />
+			<topclass name="sorcer.service.Context" />
+			<fileset refid="icons" />
+		</classdepandjar>
+	</target>
+	
+	<target name="grider-ui.jar">
+		<classdepandjar jarfile="${sorcer.lib}/grider-ui.jar" files="true">
+			<classpath refid="project.classpath" />
+			<in name="sorcer" />
+			<in name="org.jdesktop" />
+			<out name="sorcer.util.bdb" />
+			<out name="sorcer.tools.webster" />
+			<topclass name="sorcer.core.grid.provider.grider.ui.GriderDispatcherUI" />
+			<topclass name="sorcer.core.grid.provider.grider.ui.GriderDispatcherCall" />
+			<topclass name="sorcer.core.grid.provider.grider.ui.GriderDispatcherConfig" />
+			<topclass name="sorcer.core.grid.provider.grider.ui.GriderDispatcherParameter" />
+			<topclass name="sorcer.core.grid.provider.grider.ui.GriderDispatcherProgram" />
+			<topclass name="sorcer.core.grid.provider.grider.ui.GriderDispatcherChecker" />
+			<topclass name="sorcer.core.grid.provider.grider.ui.GriderDispatcherArgumentsPanel" />
+			<topclass name="sorcer.core.grid.provider.grider.ui.GriderDispatcherContextPanel" />
+			<topclass name="sorcer.core.grid.provider.grider.ui.GriderDispatcherExecutionPanel" />
+			<topclass name="sorcer.core.grid.provider.grider.ui.GriderDispatcherGeneralPanel" />
+			<topclass name="sorcer.core.grid.provider.grider.ui.GriderDispatcherIncludePanel" />
+			<topclass name="sorcer.core.grid.provider.grider.ui.GriderDispatcherFileAccess" />
+			<topclass name="sorcer.core.grid.provider.grider.ui.GriderDispatcherStringEncrypter" />
+			<topclass name="sorcer.ui.serviceui.UIComponentFactory" />
+			<topclass name="sorcer.ui.serviceui.UIFrameFactory" />
+			<topclass name="sorcer.core.provider.ui.ProviderUI" />
+		</classdepandjar>
+	</target>
+
+	<target name="copy-run-prv-files">
+		<mkdir dir="${iGrid.home}/bin/sorcer/${module.name}/configs" />
+		<mkdir dir="${iGrid.home}/bin/sorcer/${module.name}/bin" />
+		<mkdir dir="${iGrid.home}/bin/sorcer/${module.name}/policy" />
+		<mkdir dir="${iGrid.home}/bin/sorcer/${module.name}/logs" />
+
+		<copy todir="${iGrid.home}/bin/sorcer/${module.name}/configs">
+			<fileset dir="configs">
+				<include name="*" />
+			</fileset>
+		</copy>
+
+		<copy todir="${iGrid.home}/bin/sorcer/${module.name}/bin">
+			<fileset dir="bin">
+				<include name="*" />
+			</fileset>
+		</copy>
+
+		<copy todir="${iGrid.home}/bin/sorcer/${module.name}/policy">
+			<fileset dir="policy">
+				<include name="*" />
+			</fileset>
+		</copy>
+
+		<chmod dir="${iGrid.home}/bin/sorcer/${module.name}/bin" perm="755" includes="*.sh" />
+	</target>
+
+</project>

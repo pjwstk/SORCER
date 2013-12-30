@@ -1,0 +1,10 @@
+#!/bin/sh
+
+CLASSES=${JINI_HOME}/lib/jini-core.jar:${JINI_HOME}/lib/jini-ext.jar:${JINI_HOME}/lib/sun-util.jar:${RIO_HOME}/lib/serviceui.jar:${RIO_HOME}/lib/jaxp.jar:${RIO_HOME}/lib/crimson.jar:${RIO_HOME}/lib/xalan.jar:${RIO_HOME}/lib/opmon.jar
+
+# DEBUG="-Dsun.rmi.loader.logLevel=20 -Dcom.sun.rio.debug"
+DEBUG=-Dcom.sun.rio.debug
+# DEBUG=
+
+java -cp $CLASSES $DEBUG -Djava.security.policy=${RIO_HOME}/policy/policy.all -Dcom.sun.rio.groups="fiper.DEV,fiper.*" com.sun.rio.tools.opmon.OpMonitor $1 $2 $3 $4 &
+

@@ -1,0 +1,13 @@
+#!/bin/csh
+#clear
+echo "Copying FIPER config files...\n"
+
+setenv FIPER_CONF ${FIPER_HOME}/conf
+
+cp  ${FIPER_CONF}/proxyFiper.def ${FIPER_HOME}/jfiper/fiper/lnch/fiper.def
+cp  ${FIPER_CONF}/proxyFiper.env ${FIPER_HOME}/jfiper/fiper/util/fiper.env
+cp  ${FIPER_CONF}/as.* ${FIPER_HOME}/jfiper/fiper/dbas
+cp  ${FIPER_CONF}/proxyServer.xml ${FIPER_HOME}/tomcat/conf/server.xml
+cp  ${FIPER_CONF}/proxyWeb.xml ${FIPER_HOME}/web/WEB-INF/web.xml
+
+echo "Installing Done\n"

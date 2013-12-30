@@ -1,0 +1,27 @@
+<?xml version='1.0' encoding='ISO-8859-1' standalone='yes'?>
+
+<!-- Project Rozen-Suzuki Optimization -->
+<project name="rs-opti" default="clean-logs" basedir=".">
+	<!-- Import common buildfile. Leave this alone -->
+	<import file="../../common-build.xml" />
+
+	<target name="clean-logs">
+		<delete includeemptydirs="true">
+			<fileset dir="${iGrid.home}/modules/examples/ex8/logs" includes="**/*" />
+		</delete>
+		<delete includeemptydirs="true">
+			<fileset dir="${iGrid.home}/modules/examples/ex9/logs" includes="**/*" />
+		</delete>
+		<delete includeemptydirs="true">
+			<fileset dir="${iGrid.home}/modules/examples/ex10a/logs" includes="**/*" />
+		</delete>
+		<delete>
+			<fileset dir="${iGrid.home}/modules/examples/ex9/bin">
+				<include name="optiInfoEcho.dat" />
+				<include name="fort.8" />
+			</fileset>
+		</delete>
+
+	</target>
+
+</project>

@@ -1,0 +1,65 @@
+<?xml version='1.0' encoding='ISO-8859-1' standalone='yes'?>
+<!-- 
+ * Copyight (C) 2004 SORCER Lab, Texas Tech University. All rights reserved.
+ * Service-Oriented Computing Environmet: SORCER Cataloger build configuration
+ * Make sure the following variables are changed to reflect your environment:
+ *    IGRID_HOME        	iGrid location
+ *    JAVA_HOME         	JDK Location
+ *	  IGRID_WEBSTER_PORT 	The class server (webster) port
+ *    ANT_HOME          	Jakarta Ant location
+ Please see also the ../common-build.xml for classpaths, definitions and targets
+-->
+
+<project name="Simple SpaceJob" default="all" basedir=".">
+	
+	<!-- set global properties -->
+	<import file="../../../../../common-build.xml" />
+	<property name="src" value="./../../../" />
+
+	<!-- The sources to compile -->
+	<patternset id="ant.java">
+		<include name="sorcer/test/space/**/*.java" />
+	</patternset>
+	
+	<patternset id="ant.classes">
+		<include name="sorcer/test/space/**/*.class" />
+	</patternset>
+
+	<patternset id="ant.jars">
+		<include name="spaceTester.jar" />
+		<include name="spaceTester-dl.jar" />
+	</patternset>
+
+	<path id="project.classpath">
+		<pathelement location="${classes}/" />
+		<pathelement location="${lib}/jgapp.jar" />
+		<path refid="jini.path" />
+		<path refid="rio.path" />
+	</path>
+
+	<target name="compile" depends="compileSources" />
+	<target name="jars" depends="spaceTester" />
+	<target name="spaceTester" depends="spaceTester.jar, spaceTester-dl.jar" />
+	<target name="all" depends="prepare, compile, jars" />
+
+	<target name="spaceTester.jar">
+		<classdepandjar jarfile="${lib}/spaceTester.jar" files="true">
+			<classpath refid="project.classpath"/>
+			<in name="sorcer.test.space"/>
+			<topclass name="sorcer.test.space.SpaceTester" />
+		</classdepandjar>
+	</target>
+	
+	<target name="spaceTester-dl.jar">
+		<classdepandjar jarfile="${lib}/spaceTester-dl.jar" files="true">
+			<classpath refid="project.classpath"/>
+			<in name="sorcer"/>
+			<in name="jgapp" />
+			<topclass name="sorcer.service.Exertion" />
+			<topclass name="sorcer.core.exertion.ExertionEnvelop" />
+			<topclass name="sorcer.core.exertion.RemoteServiceJob" />
+			<topclass name="sorcer.core.exertion.RemoteServiceTask" />
+			<topclass name="sorcer.core.context.ServiceContext" />
+		</classdepandjar>
+	</target>
+</project>

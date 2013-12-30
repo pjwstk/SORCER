@@ -1,0 +1,5 @@
+This example defines and implements the Worker service type (interface).
+Three service requestors illustrate how to create:
+	1. an exertion task - WorkerTaskRequestor
+	2. an exertion job with a single task executed by one workers
+	3. an exertion job with three tasks executed by three workers

@@ -1,0 +1,75 @@
+# FIPER provider attributes
+#
+# FiperTypes
+# Note: All Modifies must be in alphabetical order
+# Example: ft|application|format|a.b.c.e.f.g
+#
+fiper.unknown=ft|*|unknown|*
+fiper.responsevariable=ft|fiper|object|responsevariable
+
+# tp3
+fiper.tp3.txt=ft|tp3|text|input
+fiper.tp3.model=ft|tp3|object|model
+fiper.tp3.f003=ft|tp3|namelist|f003
+fiper.tp3.f012=ft|tp3|namelist|f012
+fiper.tp3.modeldata=ft|tp3|text|data.model
+
+# etds
+fiper.etds.in=ft|etds|text|input
+fiper.etds.out=ft|etds|Object|out
+fiper.etds.in2=ft|etds|object|input
+
+# MeshProvider
+fiper.text.mesh=ft|fiper|text|mesh
+fiper.ansys.mesh=ft|ansys|text|mesh.prep7
+fiper.ansys.translation=ft|ansys|text|translation
+
+# Optimization
+fiper.optim.strat=ft|optim|text|strat
+fiper.optim.dvs=ft|optim|object|dvs
+fiper.optim.obj=ft|optim|object|obj
+fiper.optim.constr=ft|optim|object|constr
+fiper.optim.zerojob=ft|optim|object|zerojob
+fiper.optim.firstjob=ft|optim|object|firstjob
+fiper.optim.summary=ft|optim|text|summary
+fiper.optim.database=ft|optim|text|database
+
+# Response Provider
+fiper.resp.input=ft|resp|text|input
+fiper.resp.output=ft|resp|text|output
+
+# Aurora - Reliability
+fiper.aurora.strat=ft|aurora|text|strat
+fiper.aurora.rvs=ft|aurora|object|rvs
+fiper.aurora.lsfs=ft|aurora|object|lsfs
+fiper.aurora.zerojob=ft|aurora|object|zerojob
+fiper.aurora.firstjob=ft|aurora|object|firstjob
+fiper.aurora.output=ft|aurora|text|output
+
+# autoshank
+fiper.autoshank.param=ft|autoshank|text|param
+fiper.autoshank.seedpart=ft|ug|binary|autoshank.seed
+fiper.autoshank.outpart=ft|ug|binary|solid
+
+# icem
+fiper.icem.ug=ft|ug|binary|solid
+fiper.icem.replay=ft|icem|text|replay
+fiper.icem.boco=ft|icem|text|boco
+fiper.icem.familyboco=ft|icem|text|familyboco
+fiper.icem.tetin=ft|icem|text|tetin
+fiper.icem.domain=ft|icem|binary|domain
+
+# siesta
+fiper.siesta.mesh=ft|siesta|text|mesh.uif
+fiper.siesta.tag=ft|siesta|text|tag.uif
+fiper.siesta.meshtag=ft|siesta|text|mesh.tag.uif
+
+# BCProvider
+fiper.text.boundarycondition=ft|fiper|text|boundaryCondition
+fiper.object.boundarycondition=ft|fiper|object|boundaryCondition
+
+#PatranProvider
+fiper.patran.neutral.geometry=ft|patran|text|discretized.geometry.neutral
+
+
+

@@ -1,0 +1,20 @@
+PreferredResources-Version: 1.0
+Preferred: true
+
+Name: sorcer/service/*
+Preferred: false
+
+Name: sorcer/core/-
+Preferred: false
+
+Name: sorcer/core/provider/ui/-
+Preferred: true
+
+Name: com/sun/jini/admin/*
+Preferred: false
+
+Name: com/sun/jini/resource/*
+Preferred: false
+
+Name: com/sun/jini/start/*
+Preferred: false

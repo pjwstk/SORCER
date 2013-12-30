@@ -1,0 +1,83 @@
+JobMediatorClient '<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE ServiceJob SYSTEM "http://hippolyta.cs.ttu.edu/sorcer/data/xml/ServiceJob.dtd">
+
+<ServiceJob name="Load/Lock Slot Analysis Job">
+
+<ServiceContext name="Translation">
+<DataNode path="Translation Strategy" ioType="IN_TYPE" NodeType="application/sorcer.analysis.ansys.trans" data="http://hippolyta.cs.ttu.edu/sorcer/data/lls/translation/llstranslation.dat"> Translation Strategy File </DataNode>
+<DataNode path="CAD Geometry" ioType="IN_TYPE" NodeType="application/sorcer.part.ug" data="http://hippolyta.cs.ttu.edu/sorcer/data/lls/translation/cf34-10s4_lls.prt"> CAD Geometry File </DataNode>
+</ServiceContext>
+<ServiceContext name="Sys Context">
+<TextNode path="in/task/id0"> 7d2b7167:e34c6811e0:-7ffb </TextNode>
+<TextNode path="in/task/id1"> 7d2b7167:e34c6811e0:-7ffa </TextNode>
+<!-- <TextNode path="in/task/id2"> 7d2b7167:e34c6811e0:-7ff9 </TextNode> -->
+<!-- <TextNode path="in/task/id3"> 7d2b7167:e34c6811e0:-7ff8 </TextNode> -->
+<!-- <TextNode path="in/task/id4"> 7d2b7167:e34c6811e0:-7ff7 </TextNode> -->
+<!-- <TextNode path="in/task/id5"> 7d2b7167:e34c6811e0:-7ff6 </TextNode> -->
+<TextNode path="out/task/id"> 7d2b7167:e34c6811e0:-7ffb </TextNode>
+<TextNode path="is master"> true </TextNode>
+<TextNode path="no wait"> false </TextNode>
+<TextNode path="job/strategy/access"> catalog </TextNode>
+<TextNode path="job/strategy"> sequential </TextNode>
+<TextNode path="notify/execution/to:/peter.rohl"> peter.rohl@cs.ttu.edu </TextNode>
+</ServiceContext>
+<ServiceTask name="Import UG Part File" description="Import UG context Model into Ansys" method="ugToAnsys" serviceType="sorcer.service.ansys.UgToAnsysProtocol" provider="UG-ANSYS" taskID="7d2b7167:e34c6811e0:-7ffb">
+<TaskContext root="Translation"></TaskContext>
+<TaskContext root="Sys Context"></TaskContext>
+</ServiceTask>
+
+
+<ServiceContext name="Material">
+<TextNode path="IN/PATH/Database File"> Translation/OUT/Database File </TextNode>
+<DataNode path="Material Data" ioType="IN_TYPE" NodeType="application/sorcer.analysis.ansys.prep7" data="http://hippolyta/sorcer/data/lls/material/llsmaterial.prep7"> Material Data File </DataNode>
+</ServiceContext>
+<ServiceTask name="Load Material Data" description="Load Material Data" method="executeAnsys" serviceType="sorcer.service.ansys.AnsysProtocol" provider="ANSYS on Solaris" taskID="7d2b7167:e34c6811e0:-7ffa">
+<TaskContext root="Material"></TaskContext>
+</ServiceTask>
+
+
+<!--
+
+<ServiceContext name="Meshing">
+<DataNode path="Service Properties" ioType="IN_TYPE" NodeType=" " data="http://hippolyta/sorcer/data/lls/meshing/llsmesh.serviceproperties"> Service Properties File </DataNode>
+<TextNode path="IN/PATH/Database File"> Material/OUT/Database File </TextNode>
+<DataNode path="Mesh/Amap Macro" ioType="IN_TYPE" NodeType="application/sorcer.analysis.ansys.mac" data="http://hippolyta/sorcer/data/lls/meshing/geamap.mac"> Amap Macro </DataNode>
+<DataNode path="Mesh/MeshStrategy" ioType="IN_TYPE" NodeType="application/sorcer.analysis.ansys.mesh" data="http://hippolyta/sorcer/data/lls/meshing/llsmesh.dat"> Mesh Strategy Data </DataNode>
+<DataNode path="Mesh/Mesh Blades" ioType="IN_TYPE" NodeType="application/sorcer.analysis.ansys.mac" data="http://hippolyta/sorcer/data/lls/meshing/mshbld.mac"> Mesh Blades </DataNode>
+<DataNode path="Mesh/Vsweep Macro" ioType="IN_TYPE" NodeType="application/sorcer.analysis.ansys.mac" data="http://hippolyta/sorcer/data/lls/meshing/gesweep.mac"> Vsweep Macro </DataNode>
+<DataNode path="Mesh/Spring Elements" ioType="IN_TYPE" NodeType="application/sorcer.analysis.ansys.mac" data="http://hippolyta/sorcer/data/lls/meshing/comnode.mac"> Spring Elements Macro </DataNode>
+</ServiceContext>
+<ServiceTask name="Mesh Model" description="Mesh LLS Model" method="mesh" serviceType="sorcer.service.ansys.AnsysDiscretizationProtocol" provider="ANSYS on Solaris" taskID="7d2b7167:e34c6811e0:-7ff9">
+<TaskContext root="Meshing"></TaskContext>
+</ServiceTask>
+
+<ServiceContext name="Loads and BC">
+<DataNode path="Blades Macro" ioType="IN_TYPE" NodeType="application/sorcer.analysis.ansys.mac" data="http://hippolyta/sorcer/data/lls/loadsbc/fixblds.mac"> Blades Macro </DataNode>
+<TextNode path="IN/PATH/Database File"> Meshing/OUT/Meshed Geometry </TextNode>
+<DataNode path="Loads and BC Strategy" ioType="IN_TYPE" NodeType="application/sorcer.analysis.ansys.prep7" data="http://hippolyta/sorcer/data/lls/loadsbc/llslbc.prep7"> LBC Strategy File </DataNode>
+</ServiceContext>
+<ServiceTask name="Apply Loads and BC" description="Apply Loads and Boundary Conditions" method="executeAnsys" serviceType="sorcer.service.ansys.AnsysProtocol" provider="ANSYS on Solaris" taskID="7d2b7167:e34c6811e0:-7ff8">
+<TaskContext root="Loads and BC"></TaskContext>
+</ServiceTask>
+
+<ServiceContext name="Solution">
+<TextNode path="IN/PATH/Database File"> Loads and BC/OUT/Database File </TextNode>
+<DataNode path="Solution Strategy" ioType="IN_TYPE" NodeType="application/sorcer.analysis.ansys.apdl" data="http://hippolyta/sorcer/data/lls/solution/llssolve.apdl"> Solution Strategy File </DataNode>
+</ServiceContext>
+<ServiceTask name="Solve Model" description="Solve Model" method="executeAnsys" serviceType="sorcer.service.ansys.AnsysProtocol" provider="ANSYS on Solaris" taskID="7d2b7167:e34c6811e0:-7ff7">
+<TaskContext root="Solution"></TaskContext>
+</ServiceTask>
+
+<ServiceContext name="PostProcessing">
+<DataNode path="PostProcessing Strategy" ioType="IN_TYPE" NodeType=" " data="http://hippolyta/sorcer/data/lls/postprocessing/llspost.apdl"> PostProcessing Strategy File </DataNode>
+<TextNode path="IN/PATH/Results File"> Solution/OUT/Results File </TextNode>
+<TextNode path="IN/PATH/Database File"> Solution/OUT/Database File </TextNode>
+</ServiceContext>
+<ServiceTask name="Load Material Data" description="Load Material Data" method="executeAnsys" serviceType="sorcer.service.ansys.AnsysProtocol" provider="ANSYS on Solaris" taskID="7d2b7167:e34c6811e0:-7ff6">
+<TaskContext root="PostProcessing"></TaskContext>
+</ServiceTask>
+-->
+
+</ServiceJob>
+'

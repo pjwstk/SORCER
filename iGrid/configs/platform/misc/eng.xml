@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<platform>
+
+	<!-- Engineering jars to load into the common classloader -->
+	<capability name="Engineering" common="yes">
+		<version>5.0</version>
+		<manufacturer>AFRL/WPAFB</manufacturer>
+		<classpath>${iGrid.home}/lib/eng/lib/engineering-core.jar
+			${iGrid.home}/lib/eng/lib/eng-lib.jar
+			${iGrid.home}/lib/eng/lib/engutils.jar
+			${iGrid.home}/lib/common/commons-math3-3.2/commons-math3-3.2.jar
+		</classpath>
+	</capability>
+
+</platform>

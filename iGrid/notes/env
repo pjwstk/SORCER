@@ -1,0 +1,7 @@
+The SORCER environment:
+1. is loaded (Env.loadEnvironment) by the static initializer in Env
+2. Env.loadEnvironment loads sorcer.env properties and context data types
+3. User for service discovery either (in sorcer.env):
+	sorcer.accessor.provider.name=sorcer.util.ProviderAccessor
+	sorcer.accessor.provider.name=sorcer.util.ProviderLookup
+The second use for frequent lookups, the second one for seldom, e.g. by service requestor.

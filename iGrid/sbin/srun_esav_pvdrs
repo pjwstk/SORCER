@@ -1,0 +1,26 @@
+#!/bin/bash
+
+echo "running srun_mgeom..."
+srun_mstcgeom -w
+
+echo "running srun_friction..."
+srun_friction -w
+
+echo "running srun_self..."
+srun_self -w
+
+echo "running srun_tornado..."
+srun_tornado -w
+
+echo "running srun_nastran..."
+srun_nastran -w
+
+echo "running srun_astros..."
+srun_astros -w
+
+echo "running srun_esav_mdl..."
+srun_esav_mdl -w 
+
+
+
+

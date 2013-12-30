@@ -1,0 +1,104 @@
+<?xml version='1.0' encoding='ISO-8859-1' standalone='yes'?>
+
+<project name="service booter" default="all" basedir=".">
+	<property name="module.name" value="booter" />
+
+	<!-- set global properties -->
+	<import file="../../common-build.xml" />
+	<!-- Where your sources can be found relative to the current directory -->
+	<property name="src" value="./src" />
+
+	<fileset dir="${src}">
+		<patternset id="java.source">
+			<include name="**/*.java" />
+		</patternset>
+	</fileset>
+
+	<property name="resources" value="./resources" />
+	<property name="jini.lib" value="${lib}/river/lib" />
+
+
+	<path id="tools.path">
+		<pathelement location="${common.lib}/tools/jmx-lookup.jar" />
+		<pathelement location="${lib}/emory/emory-util-io.jar" />
+		<pathelement location="${lib}/emory/emory-util-security.jar" />
+		<pathelement location="${lib}/emory/backport-util-concurrent.jar" />
+		<pathelement location="${common.lib}/cglib/cglib-nodep-2.1_3.jar" />
+		<pathelement location="${common.lib}/prefuse/prefuse.jar" />
+	</path>
+
+	<path id="project.classpath">
+		<pathelement location="${classes}" />
+		<path refid="sorcer.path" />
+		<path refid="jini.path" />
+		<path refid="rio.path" />
+		<path refid="junit.path" />
+		<path refid="tools.path" />
+	</path>
+
+	<!-- The sources to compile, relative to your source directory. DO NOT CHANGE! -->
+	<patternset id="ant.java">
+		<include name="sorcer/provider/**/*.java" />
+		<include name="edu/emory/**/*.java" />
+		<!-- exlude security related dispatcher for now -->
+		<exclude name="**/SAVE/*.java" />
+		<exclude name="**/BAK/*.java" />
+	</patternset>
+
+	<!-- the classes that result from it, used for "clean" target -->
+	<patternset id="ant.classes">
+		<include name="sorcer/provider/**/*.class" />
+	</patternset>
+
+	<target name="boot.jar">
+		<classdepandjar jarfile="${lib}/boot.jar" files="true" debug="true">
+			<manifest>
+				<attribute name="Class-Path" value="river/lib/start.jar rio/lib/rio-start.jar common/groovy/groovy-all-1.7.4.jar" />
+				<attribute name="Main-Class" value="com.sun.jini.start.ServiceStarter" />
+				<attribute name="Premain-Class" value="sorcer.provider.boot.InstrumentationHook" />
+				<attribute name="Implementation-Title" value="${sorcer-title}" />
+				<attribute name="Implementation-Version" value="${sorcer-version}" />
+				<attribute name="SORCER-Version" value="${sorcer-version}" />
+				<attribute name="SORCER-Build" value="${DSTAMP}" />
+			</manifest>
+			<classpath refid="project.classpath" />
+			<in name="sorcer.provider.boot" />
+			<in name="sorcer.core" />
+			<in name="sorcer.util" />
+			<in name="sorcer.tools.webster" />
+			<in name="org.rioproject" />
+			<in name="edu.emory" />
+			<skip name="sorcer.core.Provider" />
+			<topclass name="sorcer.provider.boot.RegistryUtil" />
+			<topclass name="sorcer.provider.boot.Booter" />
+			<topclass name="sorcer.provider.boot.SorcerDescriptorUtil" />
+			<topclass name="sorcer.core.SorcerConstants" />
+			<topclass name="sorcer.provider.boot.ActivateWrapper" />
+			<topclass name="sorcer.provider.boot.InstrumentationHook" />
+			<fileset dir="${src}/sorcer/provider/boot">
+				<include name="META-INF/platform.xml" />
+				 <!--include name="META-INF/services/net.jini.config.Configuration"/-->
+			</fileset>
+
+		</classdepandjar>
+	</target>
+
+	<target name="boot-sources" depends="boot.jar">
+		<jar destfile="${build.dir}/boot-sources.jar">
+			<zipfileset dir="${src}/edu/emory/mathcs/util" prefix="edu/emory/mathcs/util" />
+			<zipfileset dir="${src}/sorcer/provider/boot" prefix="sorcer/provider/boot" />
+		</jar>
+	</target>
+
+	<target name="compile" depends="compileSources" />
+	<target name="jars" depends="compile, boot.jar" />
+	<target name="all" depends="prepare, jars" />
+
+	<target name="docs" depends="prepare, compile">
+		<javadoc packagenames="org.jini.rio.tools.ant.*" maxmemory="100M" sourcepath="${src}" destdir="${docs}/api" Author="true" Version="true" Use="true" windowtitle="SORCER Booter" doctitle="&lt;h1&gt;SORCER Booter;/h1&gt;" bottom="&lt;i&gt;Copyright (c) 2008-2009 AFRL/WPAFB, All Rights Reserved.&lt;/i&gt;">
+			<group title="SORCER Booter" packages="sorcer.ssb.*" />
+			<classpath refid="project.classpath" />
+		</javadoc>
+	</target>
+
+</project>

@@ -1,0 +1,331 @@
+<?xml version='1.0' encoding='ISO-8859-1' standalone='yes'?>
+<!-- 
+ * Copyight (C) 2004 SORCER Lab, Texas Tech University. All rights reserved.
+ * Service-Oriented Computing Environmet: Examples build configuration
+ * Make sure the following variables are changed to reflect your environment:
+ *    IGRID_HOME        iGrid location
+ *    JAVA_HOME         JDK Location
+ *    JINI_HOME         Jini location
+ *    RIO_HOME          Rio location
+ *    ANT_HOME          Jakarta Ant location
+ *    JAXP_HOME         XML parsing tools location
+ *    CATALINA_HOME     Jakarta Tomcat location
+-->
+
+<project name="sorcer" default="compile" basedir=".">
+    <property name="module.name" value="auditor" />
+    <property environment="env"/>
+    <property name="src" value="."/>    
+    <property name="java.home" value="${env.JAVA_HOME}"/>
+    <property name="jini.home" value="${env.JINI_HOME}"/>
+    <property name="rio.home" value="${env.RIO_HOME}"/>
+    <property name="ant.home" value="${env.ANT_HOME}"/>
+    <property name="iGrid.home" value="${env.IGRID_HOME}"/>
+    <property name="classes" value="${iGrid.home}/classes" />
+    <property name="lib" value="${iGrid.home}/lib"/>  
+	<property name="common.lib" value="${lib}/common" />
+	<property name="support.lib" value="${common.lib}/buildsupport" />
+    <property name="docs" value="${iGrid.home}/docs/${module.name}" />
+    <property name="servlet.api" value="${env.CATALINA_HOME}/common/lib/servlet-api.jar" />
+    <property name="jaxp.home" value="${env.JAXP_HOME}" />
+    <property name="CURRDIR" value="sorcer/core/provider/auditor" />
+    <property name="DISTRIBUTION" value="${env.IGRID_HOME}/modules/sorcer/bin/${CURRDIR}" />
+    <property name="common.lib" value="${iGrid.home}/common"/>   
+    <property name="CODEBASE" value="${env.APP_CODEBASE}" />
+
+    <patternset id="ant.java">
+        <include name="**/*.java"/>
+        <exclude name="**/SAVE/*.java"/>
+        <exclude name="**/BAK/*.java"/>
+    </patternset>
+
+    <patternset id="ant.classes">
+        <include name="**/auditor/*.class"/>
+        <exclude name="**/SAVE/*.class"/>
+        <exclude name="**/BAK/*.class"/>
+    </patternset>
+
+    <path id="jini.path">
+        <pathelement location="${jini.home}/lib/jini-core.jar" />
+        <pathelement location="${jini.home}/lib/jini-ext.jar" />
+        <pathelement location="${jini.home}/lib/sun-util.jar" />
+        <pathelement location="${rio.home}/lib/serviceui-1.1.jar" />
+        <pathelement location="${jini.home}/lib/tools.jar" />
+    </path>    
+
+    <path id="rio.path">
+        <pathelement location="${rio.home}/rio.jar" />
+        <pathelement location="${rio.home}/rio-corba.jar" />
+        <pathelement location="${rio.lib}/rio-space.jar" />
+    </path>
+
+    <path id="jaxp.path">
+        <pathelement location="${jaxp.home}/jaxp.jar" />
+        <pathelement location="${jaxp.home}/crimson.jar" />
+        <pathelement location="${jaxp.home}/xalan.jar" />
+    </path>
+
+    <path id="scaf.path">
+        <pathelement location="${common.lib}/mckoidb.jar" />
+        <pathelement location="${common.lib}/mkjdbc.jar" />
+        <pathelement location="${common.lib}/base-core.jar" />
+        <pathelement location="${common.lib}/base-opt.jar" />
+        <pathelement location="${common.lib}/pcsc-wrapper-2.0.jar" />	
+	<pathelement location="${common.lib}/apduio.jar" />
+	<pathelement location="${common.lib}/api.jar" />
+	<pathelement location="${common.lib}/javacardframework.jar" />
+
+    </path>
+
+    <path id="project.classpath">
+        <pathelement location="${classes}"/>
+        <pathelement location="${lib}/sorcer.jar"/>
+        <pathelement location="${lib}/tea.jar"/>
+        <pathelement location="${servlet.api}"/>
+        <pathelement location="${lib}/classes12.zip"/>
+        <pathelement location="${lib}/jintegra.jar"/>
+	<path refid="jaxp.path" />
+	<path refid="jini.path" />
+	<path refid="rio.path" />
+	<path refid="scaf.path" />
+    </path>
+
+	<taskdef name="classdep" classname="org.jini.rio.tools.ant.ClassDepTask">
+		<!-- Should be included by ant anyways -->
+		<!--<classpath location="${ant.home}/lib/ant.jar" />-->
+		<classpath location="${support.lib}/ant-ext.jar" />
+	</taskdef>
+	
+	<taskdef name="classdepandjar" classname="org.jini.rio.tools.ant.ClassDepAndJarTask">
+		<classpath location="${support.lib}/classdepandjar.jar" />
+	</taskdef>
+
+    <target name="all" depends="prepare, jars"/>
+
+
+    <target name="clean" depends="prepare, clean-jars, clean-classes"/>
+    <target name="clean-classes">
+        <delete verbose="true">
+            <fileset dir="${classes}">
+                <patternset refid="ant.classes"/>
+            </fileset>
+        </delete>
+    </target>
+
+
+    <target name="clean-jars" >
+        <delete verbose="true" >
+            <fileset dir="${DISTRIBUTION}/lib" >
+                <patternset refid="jar.files" />
+            </fileset>
+        </delete>
+    </target>
+
+
+    <target name="clean-docs" description="Removes all generated Java API docs.">
+        <delete dir="${docs}"/>
+    </target>
+
+
+    <target name="jars" depends="auditor"/>    
+    <target name="auditor" depends="clean-jars, auditor.jar, auditor-dl.jar" />
+
+
+    <target name="prepare">
+        <mkdir dir="${lib}"/>
+        <mkdir dir="${docs}" />
+        <mkdir dir="${docs}/api"/>
+        <mkdir dir="${classes}"/>
+    </target>
+
+    <target name="compile" depends="prepare, copy-files">
+        <javac srcdir="." destdir="${classes}" debug="true"
+            debuglevel="lines, vars, source">
+            <classpath refid="project.classpath"/>
+            <patternset refid="ant.java"/>
+        </javac>
+    </target>
+
+
+    <target name="docs" depends="prepare, compile" >
+        <javadoc packagenames="sorcer.*"
+                 maxmemory="100M"
+                 destdir="${docs}/api"
+                 Author="true"
+                 Version="true"
+                 Use="true"
+                 windowtitle="Service-Oriented Computing
+                 Environmeeneric: SORCER"
+                 doctitle="&lt;h1&gt;Service-Oriented Computing
+                 Environmet: Examples&lt;/h1&gt;"
+                 bottom="&lt;i&gt;Copyright (c) 2004 Texas Tech
+                 University, All Rights Reserved.&lt;/i&gt;" >
+            <fileset dir="${src}">
+		 <patternset refid="ant.java"/>
+	    </fileset>
+            <group title="SORCER: Examples" packages="sorcer.*" />
+        </javadoc>
+    </target>
+	
+     <fileset dir="${lib}" >
+        <patternset id="jar.files" >
+            <include name="auditor.jar" />
+            <include name="auditor-dl.jar" />
+        </patternset>
+    </fileset>
+
+  <target name="auditor.jar">
+            <classdepandjar
+     jarfile="${DISTRIBUTION}/lib/auditor.jar" files="true">
+	    	        
+	    <classpath refid="project.classpath"/>
+            <in  name="sorcer"/>
+            <in  name="net.jini"/>
+	    <in  name="com.sun" />
+	    <in  name="com.mckoi" />
+            <topclass name=
+                  "sorcer.core.provider.auditor.AuditorImpl" />
+            
+	    <topclass name=
+                  "sorcer.core.provider.auditor.AuditorImpl_Stub" />
+            
+	    <topclass name=
+                  "sorcer.security.sign.SignedServiceTask"/>
+	    
+<!--	    <topclass name=
+                  "sorcer.provider.bboard.books.BooksBid"/>-->
+	   
+	    <topclass name=
+                  "sorcer.core.provider.auditor.AuditorImpl_Skel" />
+	    
+	    <topclass name= 
+	          "net.jini.admin.Administrable" />
+            
+	    <topclass name=
+ 		"com.artima.lookup.util.ConsistentSet" />
+           
+	    <topclass name=
+	          "com.mckoi.JDBCDriver"/>
+	   
+	    <topclass name=
+		 "com.mckoi.database.jdbcserver.DefaultLocalBootable" />
+	   
+	    <topclass name=
+	         "com.mckoi.database.regexbridge.JavaRegex" />
+	   
+	    <topclass name=
+	         "com.mckoi.database.interpret.ViewManager"/>
+	   
+	    <topclass name=
+	         "com.mckoi.database.interpret.Show"/>
+	   
+	    <topclass name=
+	         "com.mckoi.database.interpret.CreateTable"/>
+	   
+	    <topclass name=
+	         "com.mckoi.database.interpret.Insert"/>
+	   
+	    <topclass name=
+	         "com.mckoi.database.interpret.Select"/>
+	   
+	    <topclass name=
+	         "com.mckoi.database.procedure.SystemBackup"/>
+	   
+	   
+
+
+	    <fileset dir="${classes}"
+	    	    includes="sorcer/util/sorcer.env" />
+ 	    </classdepandjar>
+  </target>
+
+  <target name="auditor-dl.jar">
+            <classdepandjar jarfile="${iGrid.home}/lib/auditor-dl.jar" files="true">	
+	    <classpath refid="project.classpath"/>
+            <in  name="sorcer"/>
+	    <in name="net.jini" />
+	    <in name="com.sun" />
+	    <in name="com.mckoi" />
+
+            <topclass name=
+                  "sorcer.core.provider.auditor.AuditorImpl_Stub" />
+            
+	    <topclass name=
+                  "sorcer.core.provider.auditor.AuditorImpl_Skel" />
+            
+	    <topclass name=
+	          "com.mckoi.JDBCDriver"/>
+	    
+	    <topclass name= 
+	          "net.jini.lookup.entry.ServiceInfo" />
+             
+	    <topclass name=
+	          "net.jini.admin.Administrable" />
+	    
+	    <topclass name=
+	          "sorcer.core.AdministratableProvider" />
+	    
+	    <topclass name=
+	          "sorcer.core.SorcerServiceType" /> 
+	    
+	    <topclass name=
+	          "sorcer.util.rmi.RemoteOutputStreamServer_Stub" /> 
+	    
+	    <topclass name=
+	          "sorcer.util.rmi.RemoteInputStreamServer_Stub" />
+
+	    <topclass name =
+	         "net.jini.lookup.entry.ServiceInfo" />	
+	    </classdepandjar>
+  </target>
+	
+
+ <target name="copy-files" >
+   <copy todir="${DISTRIBUTION}/" >
+       <fileset dir="." >
+	 <include name="**/as.def" />
+	 <include name="**/as.access" />
+       </fileset>
+   </copy>
+   <copy todir="${DISTRIBUTION}/configs" >
+       <fileset dir="./configs" >
+	 <include name="auditor.config" />
+	 <include name="auditor.logging" />
+	 <include name="auditor.properties" />
+	 <include name="start-auditor.config" />
+       </fileset>
+    </copy>
+    <copy todir="${DISTRIBUTION}/bin" >
+       <fileset dir="./bin" >
+	 <include name="auditor.prv" />
+       </fileset>
+       <fileset dir="./bin" >
+	 <include name="jdbctool.sh" />
+       </fileset>
+       <fileset dir="." >
+	 <include name="db.conf" />
+       </fileset>
+       <fileset dir="." >
+	 <include name="data/" />
+       </fileset>
+       <fileset dir="./configs" >
+	 <include name="truststore.server" />
+       </fileset>
+    </copy>
+    <copy todir="${DISTRIBUTION}/policy" >
+       <fileset dir="./policy" >
+	 <include name="auditor.policy" />
+       </fileset>
+    </copy>
+    
+    <chmod dir="${DISTRIBUTION}/configs" perm="755"
+	includes="auditor.properties" />
+    <chmod dir="${DISTRIBUTION}/bin" perm="755"
+	includes="auditor.prv" />
+    <chmod dir="${DISTRIBUTION}/bin" perm="755"
+	includes="jdbctool.sh" />
+</target>
+
+
+
+</project>

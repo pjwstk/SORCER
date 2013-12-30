@@ -1,0 +1,208 @@
+<project name="Blitz Lock Service" default="init" basedir=".">
+
+	<!-- set global properties -->
+	<import file="../../common-build.xml" />
+	<property name="src" value="./src" />
+
+	<property name="resources" value="${iGrid.home}/modules/sorcer/resources" />
+	<fileset dir="${resources}" id="icons">
+		<include name="sorcer-ico.png" />
+	</fileset>
+
+	<description>
+        Main build file for Blitz Lock Service implementation
+    </description>
+	<!-- set global properties for this build -->
+	<property name="src" location="src" />
+	<property name="installer_src" location="installer/src" />
+	<property name="build" location="build" />
+	<property name="installer_build" location="installer_build" />
+	<property name="dist" location="dist" />
+	<property name="lib" location="lib" />
+	<property name="release" location="release" />
+	<property name="config" location="config" />
+	<property name="examples" location="examples" />
+	<property name="otherlib" location="thirdpartylib" />
+	<property name="jini.lib" value="${lib}/river/lib" />
+
+	<target name="init">
+		<!-- Create the time stamp -->
+		<tstamp />
+		<!-- Create the build directory structure used by compile -->
+		<mkdir dir="${build}" />
+		<mkdir dir="docs/javadocs" />
+		<mkdir dir="${lib}" />
+		<mkdir dir="${installer_build}" />
+	</target>
+
+	<target name="clean" description="clean up">
+		<delete dir="${build}" />
+		<!--delete dir="${lib}" /-->
+		<delete dir="installer_build" />
+		<delete dir="${dist}" />
+	</target>
+
+	<target name="all" depends="pristine,compile,serverjar,dljar" />
+
+	<target name="pristine" description="Restore to pristine build" depends="clean">
+		<delete dir="docs/javadocs" />
+		<delete dir="${release}" />
+	</target>
+
+	<path id="lk.classpath">
+		<pathelement location="${build}" />
+		<pathelement location="${support.lib}/junit.jar" />
+		<fileset dir="${otherlib}">
+			<include name="*.jar" />
+		</fileset>
+		<fileset dir="${jini.lib}">
+			<include name="*.jar" />
+		</fileset>
+	</path>
+
+
+	<path id="remote.classpath">
+		<pathelement location="${build}" />
+		<fileset dir="${blitz.lib}/thirdpartylib">
+			<include name="*.jar" />
+		</fileset>
+		<pathelement location="${support.lib}/junit.jar" />
+		<pathelement location="${jini.lib}/jsk-lib.jar" />
+		<pathelement location="${jini.lib}/jsk-platform.jar" />
+		<pathelement location="${jini.lib}/jsk-resources.jar" />
+		<pathelement location="${jini.lib}/serviceui.jar" />
+		<pathelement location="${jini.lib}/tools.jar" />
+		<pathelement location="${jini.lib}/start.jar" />
+		<pathelement location="${jini.lib}/outrigger.jar" />
+		<fileset dir="${otherlib}">
+			<include name="*.jar" />
+		</fileset>
+	</path>
+
+	<target name="compile" depends="init" description="compile the source ">
+		<!-- Compile the java code from ${src} into ${build} -->
+		<javac srcdir="${src}" destdir="${build}" debug="true" debuglevel="lines,vars,source" classpathref="remote.classpath" />
+		<!--javac srcdir="${src}" destdir="${build}" debug="true" debuglevel="lines,vars,source" classpathref="lk.classpath" /-->
+	</target>
+
+	<target name="testlockmgr" depends="compile">
+		<java classname="org.dancres.blitz.jini.lockmgr.DistributedLockManagerTest" classpathref="lk.classpath" />
+	</target>
+
+	<path id="allclasses">
+		<pathelement location="${build}" />
+		<pathelement location="${jini.lib}/jsk-lib.jar" />
+		<pathelement location="${jini.lib}/jsk-platform.jar" />
+		<pathelement location="${jini.lib}/jsk-resources.jar" />
+		<pathelement location="${jini.lib}/serviceui.jar" />
+		<pathelement location="${jini.lib}/tools.jar" />
+		<pathelement location="${jini.lib}/start.jar" />
+		<pathelement location="${jini.lib}/outrigger.jar" />
+		<pathelement location="${classes}" />
+	</path>
+
+	<target name="dljar" depends="compile" description="generate txnmgr-dl.jar">
+		<classdepandjar jarfile="${blitz.lib}/lockmgr-dl.jar" files="true">
+			<classpath refid="allclasses" />
+			<in name="org.dancres" />
+			<in name="net.jini" />
+			<in name="org.jini" />
+			<in name="com.sun.jini" />
+			<in name="sorcer.jini.lookup.entry" />
+			<out name="net.jini.core" />
+			<out name="net.jini.activation" />
+			<out name="net.jini.config" />
+			<out name="net.jini.constraint" />
+			<out name="net.jini.export" />
+			<out name="net.jini.id" />
+			<out name="net.jini.iiop" />
+			<out name="net.jini.io" />
+			<out name="net.jini.jeri" />
+			<out name="net.jini.jrmp" />
+			<out name="net.jini.loader" />
+			<out name="net.jini.security" />
+			<out name="net.jini.url" />
+			<out name="com.sun.jini.discovery" />
+			<topclass name="org.dancres.blitz.jini.lockmgr.Proxy" />
+			<topclass name="org.dancres.blitz.jini.lockmgr.TxnParticipantImpl" />
+			<topclass name="sorcer.jini.lookup.entry.SorcerServiceInfo" />
+			<topclass name="org.dancres.blitz.jini.lockmgr.AdministratableProvider" />
+			<fileset refid="icons" />
+		</classdepandjar>
+	</target>
+
+	<target name="serverjar" depends="compile" description="generate blitz server .jar">
+		<jar jarfile="${blitz.lib}/lockmgr.jar" basedir="${build}" />
+	</target>
+
+	<target name="javadoc" description="Generate developer grade docos for the code">
+		<javadoc sourcepath="${src}:${jini_root}/source/vob/jive/src" destdir="docs/javadocs" private="true" packagenames="org.*,EDU.*,com.go.*">
+			<tag name="todo" scope="all" description="todo:" />
+		</javadoc>
+
+	</target>
+
+	<target name="testremote" depends="compile">
+		<java classname="org.dancres.blitz.jini.lockmgr.MutexTest" classpathref="remote.classpath" fork="true">
+			<jvmarg value="-Djava.security.policy=/Users/dan/src/jini/lock/config/policy.all" />
+		</java>
+	</target>
+
+	<target name="testconflict" depends="compile">
+		<java classname="org.dancres.blitz.jini.lockmgr.Conflicter" classpathref="remote.classpath" fork="true">
+			<jvmarg value="-Djava.security.policy=/Users/dan/src/jini/lock/config/policy.all" />
+		</java>
+	</target>
+
+	<target name="dist" depends="all">
+		<mkdir dir="${release}" />
+		<copy todir="${release}">
+			<fileset dir="${basedir}">
+				<include name="ChangeLog" />
+			</fileset>
+		</copy>
+		<copy todir="${release}">
+			<fileset dir="${basedir}">
+				<include name="NOTICE" />
+			</fileset>
+		</copy>
+		<copy todir="${release}">
+			<fileset dir="${basedir}">
+				<include name="LICENSE" />
+			</fileset>
+		</copy>
+		<copy todir="${release}">
+			<fileset dir="${basedir}">
+				<include name="build.xml" />
+			</fileset>
+		</copy>
+		<copy todir="${release}">
+			<fileset dir="${basedir}">
+				<include name="index.html" />
+			</fileset>
+		</copy>
+		<copy todir="${release}/ant_addon">
+			<fileset dir="ant_addon" />
+		</copy>
+		<copy todir="${release}/config">
+			<fileset dir="${config}" />
+		</copy>
+		<copy todir="${release}/src">
+			<fileset dir="${src}">
+			</fileset>
+		</copy>
+		<copy todir="${release}/lib">
+			<fileset dir="${lib}">
+			</fileset>
+		</copy>
+		<copy todir="${release}/docs">
+			<fileset dir="docs">
+			</fileset>
+		</copy>
+		<copy todir="${release}/thirdpartylib">
+			<fileset dir="${otherlib}">
+			</fileset>
+		</copy>
+	</target>
+
+</project>

@@ -1,0 +1,206 @@
+# Context Type Attributes
+#
+# Used by engineering tools, applications and utilites
+# Note: All Modifies must be in alphabetical order
+# Example: cnt|application|format|a.b.c.e.f.g
+#
+fiper.unknown=cnt|*|unknown|*
+fiper.responsevariable=cnt|fiper|object|ResponseVariable
+fiper.responsevariableTxt=cnt|fiper|text|ResponseVariable
+fiper.job=cnt|fiper|object|FiperJob
+fiper.variables=cnt|fiper|class|Variable
+fiper.variable=cnt|fiper|object|Variable
+fiper.variableTxt=cnt|fiper|text|Variable
+fiper.ordereddesignvariables=cnt|fiper|class|OrderedDesignVariables
+
+# tp3
+fiper.tp3.txt=cnt|tp3|text|input
+fiper.tp3.model=cnt|tp3|object|model
+fiper.tp3.f003=cnt|tp3|text|f003.namelist
+# Changed this for web interface
+fiper.tp3.f012=cnt|tp3|text|for012
+fiper.tp3.modeldata=cnt|tp3|text|data.model
+fiper.tp3toetds=cnt|tp3|text|input.map
+
+# cafd
+fiper.cafd.strat=cnt|cafd|text|strategy
+fiper.cafd.blademap=cnt|cafd|text|blmap
+fiper.cafd.gds=cnt|cafd|object|String.gdsdir
+fiper.cafd.log=cnt|cafd|text|logfile
+fiper.cafd.cpo=cnt|cafd|text|cpofile
+fiper.cafd.errorlist=cnt|cafd|text|gdstp3errlist
+fiper.cafd.dump=cnt|cafd|text|dumpfile
+fiper.cafd.scratchdir=cnt|cafd|object|String.scratchdir
+
+#turbga
+fiper.turbga.strat=cnt|turbga|text|strategy
+fiper.turbga.gds=cnt|turbga|object|String.gdsdir
+fiper.turbga.log=cnt|turbga|text|logfile
+
+#thrcal
+fiper.thrcal.strat=cnt|thrcal|text|strategy
+fiper.thrcal.gds=cnt|thrcal|object|String.gdsdir
+fiper.thrcal.log=cnt|thrcal|text|log
+
+# bezmorph
+fiper.bezmorph.strat=cnt|bezmorph|text|strategy
+fiper.bezmorph.report=cnt|bezmorph|text|html.report
+
+# viscgrid
+fiper.viscgrid.strat=cnt|viscgrid|text|strategy
+fiper.viscgrid.report=cnt|viscgrid|text|html.report
+
+# etds
+fiper.etds.in=cnt|etds|text|input
+fiper.etds.out=cnt|etds|object|Hashtable.output
+fiper.etds.outtxt=cnt|etds|text|output
+fiper.etds.in2=cnt|etds|object|input
+
+# gdsManager
+fiper.gdsManager.strat=cnt|gdsManager|text|strategy
+
+# novak
+fiper.novak.strat=cnt|novak|text|strategy
+fiper.novak.report=cnt|novak|text|html.report
+# q3dgrid
+fiper.q3dgrid.strat=cnt|q3dgrid|text|strategy
+fiper.q3dgrid.report=cnt|q3dgrid|text|html.report
+
+# tacoma
+fiper.3DCFD.grd=cnt|3DCFD|binary|grid
+fiper.3DCFD.flw=cnt|3DCFD|binary|flow
+fiper.2DCFD.grd=cnt|2DCFD|binary|grid
+fiper.2DCFD.flw=cnt|2DCFD|binary|flow
+fiper.tacoma.par=cnt|tacoma|text|parameter
+fiper.tacoma.strat=cnt|tacoma|text|strategy
+fiper.tacoma.stat=cnt|tacoma|text|stat
+fiper.tacoma.summ=cnt|tacoma|text|sum
+fiper.tacoma.report=cnt|tacoma|text|html.report
+#post3D
+fiper.post3D.strat=cnt|post3D|text|strategy
+fiper.post3D.report=cnt|post3D|text|html.report
+fiper.post3D.bldreff=cnt|post3D|text|bldreff
+
+# MeshProvider
+fiper.text.mesh=cnt|fiper|text|mesh
+fiper.ansys.mesh=cnt|ansys|text|mesh.prep7
+fiper.ansys.translation=cnt|ansys|text|translation
+
+# Pez
+fiper.pez.strat=cnt|pez|text|strat
+
+# Optimization
+fiper.design.dvs=cnt|design|object|FiperDesignVariable.Array
+fiper.design.dvsTxt=cnt|design|text|FiperDesignVariable.Array
+fiper.design.dv=cnt|design|object|FiperDesignVariable
+fiper.design.dvTxt=cnt|design|text|FiperDesignVariable
+
+fiper.design.objs=cnt|design|object|Objective.Array
+fiper.design.objsTxt=cnt|design|text|Objective.Array
+fiper.design.obj=cnt|design|object|Objective
+fiper.design.objTxt=cnt|design|text|Objective
+
+fiper.design.constrs=cnt|design|object|Constraint.Array
+fiper.design.constrsTxt=cnt|design|text|Constraint.Array
+fiper.design.constr=cnt|design|object|Constraint
+fiper.design.constrTxt=cnt|design|text|Constraint
+    
+fiper.optim.zerojob=cnt|optim|object|zerojob
+fiper.optim.firstjob=cnt|optim|object|firstjob
+fiper.optim.summary=cnt|optim|text|summary
+fiper.optim.database=cnt|optim|text|database
+
+fiper.gradient.strategyTxt=cnt|design|text|gradientStrategy
+fiper.gradient.strategy=cnt|design|object|gradientStrategy
+fiper.gradient.gradient=cnt|design|object|gradient
+fiper.optim.designvariableTxt=cnt|optim|text|designvariable
+
+# Response Provider
+fiper.resp.input=cnt|resp|text|input
+fiper.resp.output=cnt|resp|text|output
+fiper.resp.vect1=cnt|resp|text|input1
+fiper.resp.vect2=cnt|resp|text|input2
+fiper.resp.vect3=cnt|resp|test|input3
+fiper.resp.ppout=cnt|resp|test|ppout
+
+# Aurora - Reliability
+fiper.aurora.strat=cnt|aurora|text|strat
+fiper.aurora.rvs=cnt|aurora|object|rvs
+fiper.aurora.lsfs=cnt|aurora|object|lsfs
+fiper.aurora.zerojob=cnt|aurora|object|zerojob
+fiper.aurora.firstjob=cnt|aurora|object|firstjob
+fiper.aurora.output=cnt|aurora|text|output
+
+# autoshank
+fiper.autoshank.param=cnt|autoshank|text|parameter
+fiper.autoshank.seedpart=cnt|ug|binary|autoshank.seed
+fiper.autoshank.outpart=cnt|ug|binary|solid
+fiper.autoshank.outpart.tags=cnt|ug|binary|solid.tags
+
+# icem
+fiper.icem.ug=cnt|ug|binary|solid
+fiper.icem.replay=cnt|icem|text|replay
+fiper.icem.boco=cnt|icem|text|boco
+fiper.icem.familyboco=cnt|icem|text|familyboco
+fiper.icem.tetin=cnt|icem|text|tetin
+fiper.icem.domain=cnt|icem|binary|domain
+fiper.icem.block=cnt|icem|text|mesh
+fiper.icem.strat=cnt|icem|text|strategy
+fiper.text.mesh.std=cnt|fiper|text|mesh
+
+# CadServices
+fiper.cadservices.assm.ug.tar.gz=cnt|cadservices|binary|ug.tar.gz
+fiper.cadservices.part.ug=cnt|cadservices|binary|ug
+fiper.cadservices.strat=cnt|cadservices|text|strategy
+fiper.cadservices.geom.properties=cnt|cadservices|text|geom.properties
+
+# siesta
+fiper.siesta.mesh=cnt|siesta|text|mesh.uif
+fiper.siesta.tag=cnt|siesta|text|tag.uif
+fiper.siesta.meshtag=cnt|siesta|text|mesh.tag.uif
+
+# BCProvider
+fiper.text.boundarycondition=cnt|fiper|text|boundaryCondition
+fiper.object.boundarycondition=cnt|fiper|object|boundaryCondition
+
+#PatranProvider
+fiper.patran.neutral.geometry=cnt|patran|text|discretized.geometry.neutral
+
+# numericalanalysis
+fiper.numericalanalysis.doeMatrix=cnt|numericalanalysis|text|doeTable
+fiper.numericalanalysis.paramMatrix=cnt|numericalanalysis|text|paramTable
+
+# ansys
+fiper.ansys.db              = cnt|ansys|binary|database
+fiper.ansys.prep7           = cnt|ansys|text|prep7
+fiper.mesh                  = cnt|*|text|mesh
+fiper.ansys.mesh            = cnt|ansys|text|mesh
+fiper.ansys.mac             = cnt|ansys|text|macro
+fiper.service.properties    = cnt|ansys|text|service properties
+fiper.ansys.rst             = cnt|ansys|binary|rst
+fiper.ansys.rth             = cnt|ansys|binary|rth
+fiper.ansys.mode            = cnt|ansys|binary|mode
+fiper.ansys.apdl            = cnt|ansys|text|apdl
+fiper.ansys.output          = cnt|ansys|*|out
+fiper.ansys.text.batch      = cnt|ansys|text|batch
+
+fiper.ansys.text.output.stress	= cnt|ansys|text|output.stress
+fiper.ansys.text.output.volume  = cnt|ansys|text|output.volume
+fiper.ansys.text.load	        = cnt|ansys|text|natural.prep7.solu
+fiper.ansys.text.bc.nat	        = cnt|ansys|text|natural.prep7.solu
+fiper.ansys.text.mat  	        = cnt|ansys|text|materials.prep7
+fiper.ansys.text.bc.all         = cnt|ansys|text|bc.prep7.solu
+fiper.ansys.text.bc.dof         = cnt|ansys|text|bc.essential.prep7.solu
+fiper.ansys.text.bc.ce	        = cnt|ansys|text|bc.essential.prep7
+fiper.ansys.text.solu           = cnt|ansys|text|solu
+fiper.ansys.text.post1.stress 	= cnt|ansys|text|post1.stress
+fiper.ansys.text.post1.volume 	= cnt|ansys|text|post1.volume
+
+# script
+fiper.script.text.strat		= cnt|script|text|strategy
+fiper.script.text.script	= cnt|script|text|script
+
+fiper.ansys.mesh.prep7=cnt|ansys|text|mesh.prep7
+
+# Combustor MDO
+fiper.MDO.SQL.input            	= cnt|MDO|SQL|input

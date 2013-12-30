@@ -1,0 +1,154 @@
+<?xml version='1.0' encoding='ISO-8859-1' standalone='yes'?>
+<!-- 
+ /*
+ * Copyright 2010 the original author or authors.
+ * Copyright 2010 SorcerSoft.org.
+ *  
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+-->
+<project name="Arithmetic" default="all" basedir=".">
+	<property name="module.name" value="arithmetic" />
+	<!-- set global properties -->
+	<import file="../../common-build.xml" />
+	<property name="src" value="./src" />
+
+	<!-- other packages locations -->
+	<!-- PROVIDERS -->
+	<property name="jrmp.arithmetic.prv" value="./provider/jrmp" />
+	<property name="jeri.arithmetic.prv" value="./provider/jeri" />
+	<property name="beans.arithmetic.prv" value="./provider/beans" />
+	<property name="fat.arithmetic.prv" value="./provider/fat" />
+	<property name="semismart.arithmetic.prv" value="./provider/semismart" />
+	<property name="smart.arithmetic.prv" value="./provider/smart" />
+	<property name="server.arithmetic.prv" value="./provider/server" />
+	<property name="spb-server.arithmetic.prv" value="./provider/spb-server" />
+	<property name="partner.arithmetic.prv" value="./provider/partner" />
+	<property name="ssl-jeri.arithmetic.prv" value="./provider/ssl-jeri" />
+	<property name="ssl-jeri-ma.arithmetic.prv" value="./provider/ssl-jeri-ma" />
+	<property name="ssl-jeri-pv.arithmetic.prv" value="./provider/ssl-jeri-pv" />
+	<property name="ssl-jeri-ca.arithmetic.prv" value="./provider/ssl-jeri-ca" />
+	<property name="ssl-serviceui.arithmetic.prv" value="./requestor/secure-arithmetic-serviceui" />
+
+	<!-- REQUESTORS -->
+	<property name="parameter.arithmetic.req" value="./requestor/parameter" />
+	<property name="cast.arithmetic.req" value="./requestor/cast" />
+
+	<!-- The sources to compile -->
+	<patternset id="ant.java">
+		<include name="sorcer/arithmetic/**/*.java" />
+		<exclude name="**/SAVE/*.java" />
+		<exclude name="**/BAK/*.java" />
+	</patternset>
+
+	<patternset id="ant.classes">
+		<include name="sorcer/arithmetic/**/*.class" />
+	</patternset>
+
+	<patternset id="ant.jars">
+		<include name="jrmp-arithmetic.jar" />
+		<include name="jrmp-arithmetic-dl.jar" />
+	</patternset>
+
+	<path id="project.classpath">
+		<pathelement location="${classes}" />
+		<pathelement location="${sorcer.lib}/sorcer-prv.jar" />
+		<path refid="jaxp.path" />
+		<path refid="jini.path" />
+		<path refid="rio.path" />
+	</path>
+
+	<path id="javadocs.classpath">
+		<pathelement location="${jini.lib}/rio/serviceui.jar" />
+		<pathelement location="${support.lib}/ant-ext.jar" />
+		<pathelement location="${support.lib}/ant.jar" />
+	</path>
+
+	<target name="compile" depends="compileSources" />
+	<target name="all" depends="prepare, compile, jars, allModules" />
+	<target name="jars" depends="arithmetic-ui.jar, arithmetic-frame-ui.jar, arithmetic-component-ui.jar, calculator-ui.jar" />
+	<target name="arithmetic" depends="arithmetic-ui.jar" />
+
+	<target name="docs" depends="prepare, compile">
+		<javadoc packagenames="org.jini.rio.tools.ant.*" maxmemory="100M" sourcepath="${src}" destdir="${docs}/api" Author="true" Version="true" Use="true" windowtitle="Arithmetic Examples" doctitle="&lt;h1&gt;Arithmetic Examples;/h1&gt;" bottom="&lt;i&gt;Copyright (c) 2002-2006 Texas tech University, All Rights Reserved.&lt;/i&gt;">
+			<group title="Arithmetic Examples" packages="sorcer.arithmetic.*" />
+			<classpath refid="project.classpath" />
+		</javadoc>
+	</target>
+
+	<target name="arithmetic-ui.jar">
+		<classdepandjar jarfile="${sorcer-dl.lib}/arithmetic-ui.jar" files="true">
+			<classpath refid="project.classpath" />
+			<in name="sorcer" />
+			<in name="jgapp" />
+			<topclass name="sorcer.arithmetic.ui.ArithmeticUI" />
+			<topclass name="sorcer.core.context.IndexedContext" />
+			<topclass name="sorcer.ui.serviceui.UIComponentFactory" />
+			<topclass name="com.artima.lookup.util.ConsistentSet" />
+		</classdepandjar>
+	</target>
+
+	<target name="arithmetic-frame-ui.jar">
+		<classdepandjar jarfile="${sorcer-dl.lib}/arithmetic-frame-ui.jar" files="true">
+			<classpath refid="project.classpath" />
+			<in name="sorcer" />
+			<in name="jgapp" />
+			<topclass name="sorcer.arithmetic.ui.ArithmeticFrameUI" />
+			<topclass name="sorcer.core.context.IndexedContext" />
+			<topclass name="sorcer.ui.serviceui.UIFrameFactory" />
+			<topclass name="com.artima.lookup.util.ConsistentSet" />
+		</classdepandjar>
+	</target>
+
+	<target name="arithmetic-component-ui.jar">
+		<classdepandjar jarfile="${sorcer-dl.lib}/arithmetic-component-ui.jar" files="true">
+			<classpath refid="project.classpath" />
+			<in name="sorcer" />
+			<in name="jgapp" />
+			<topclass name="sorcer.arithmetic.ui.ArithmeticFrame" />
+			<topclass name="sorcer.core.context.IndexedContext" />
+			<topclass name="sorcer.ui.serviceui.UIComponentFactory" />
+			<topclass name="com.artima.lookup.util.ConsistentSet" />
+		</classdepandjar>
+	</target>
+
+	<target name="calculator-ui.jar">
+		<classdepandjar jarfile="${sorcer-dl.lib}/calculator-ui.jar" files="true">
+			<classpath refid="project.classpath" />
+			<in name="sorcer" />
+			<in name="jgapp" />
+			<topclass name="sorcer.arithmetic.ui.CalculatorUI" />
+			<topclass name="sorcer.core.context.IndexedContext" />
+			<topclass name="sorcer.ui.serviceui.UIComponentFactory" />
+			<topclass name="com.artima.lookup.util.ConsistentSet" />
+		</classdepandjar>
+	</target>
+
+	<!-- build the core, complementary and examples modules -->
+	<target name="allModules" depends="compile">
+		<echo message="Building ARITHMETIC jars ...." />
+		<!-- <ant antfile="build.xml" dir="${sorcer.auditor}" /> -->
+		<ant antfile="jrmp-arithmetic-prv-build.xml" dir="${jrmp.arithmetic.prv}" target="jars" inheritAll="false" />
+		<ant antfile="jeri-arithmetic-prv-build.xml" dir="${jeri.arithmetic.prv}" target="jars" inheritAll="false" />
+		<ant antfile="beans-arithmetic-prv-build.xml" dir="${beans.arithmetic.prv}" target="jars" inheritAll="false" />
+		<ant antfile="fat-arithmetic-prv-build.xml" dir="${fat.arithmetic.prv}" target="jars" inheritAll="false" />
+		<ant antfile="semismart-arithmetic-prv-build.xml" dir="${semismart.arithmetic.prv}" target="jars" inheritAll="false" />
+		<ant antfile="smart-arithmetic-prv-build.xml" dir="${smart.arithmetic.prv}" target="jars" inheritAll="false" />
+		<ant antfile="server-arithmetic-prv-build.xml" dir="${server.arithmetic.prv}" target="jars" inheritAll="false" />
+		<ant antfile="partner-arithmetic-prv-build.xml" dir="${partner.arithmetic.prv}" target="jars" inheritAll="false" />
+		<ant antfile="parameter-arithmetic-req-build.xml" dir="${parameter.arithmetic.req}" target="jars" inheritAll="false" />
+		<ant antfile="arithmetic-cast-req-build.xml" dir="${cast.arithmetic.req}" target="jars" inheritAll="false" />
+		<ant antfile="ssl-jeri-arithmetic-prv-build.xml" dir="${ssl-jeri.arithmetic.prv}" target="jars" inheritAll="false" />
+		<ant antfile="secure-arithmetic-serviceui-req-build.xml" dir="${ssl-serviceui.arithmetic.prv}" target="jars" inheritAll="false" />
+	</target>
+</project>

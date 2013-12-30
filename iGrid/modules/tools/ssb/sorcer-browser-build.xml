@@ -1,0 +1,133 @@
+<?xml version='1.0' encoding='ISO-8859-1' standalone='yes'?>
+<!--
+ * Copyright 2009 the original author or authors.
+ * Copyright 2009 SorcerSoft.org.
+ *  
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ -->
+
+<project name="SORCER Service Browser" default="all" basedir=".">
+	<property name="module.name" value="ssb" />
+	<property name="module.run.dir" value="ssb" />
+
+	<!-- set global properties -->
+	<import file="../../common-build.xml" />
+	<property name="src" value="./src" />
+
+	<!-- The sources to compile -->
+	<patternset id="ant.java">
+		<include name="sorcer/ssb/**/*.java" />
+		<exclude name="**/SAVE/*.java" />
+		<exclude name="**/BAK/*.java" />
+	</patternset>
+
+	<patternset id="ant.classes">
+		<include name="sorcer/ssb/**/*.class" />
+	</patternset>
+
+	<patternset id="ant.jars">
+		<include name="${module.name}.jar" />
+	</patternset>
+
+	<path id="project.classpath">
+		<pathelement location="${classes}" />
+		<pathelement location="${sorcer.lib}/sorcer-prv.jar" />
+		<pathelement location="${lib}/river/lib/outrigger.jar" />
+		<pathelement location="./lib/jsc-admin.jar" />
+
+		<path refid="jini.path" />
+		<path refid="rio.path" />
+	</path>
+
+	<path id="javadocs.classpath">
+		<pathelement location="${common.lib}/rio/serviceui-1.1a.jar" />
+		<pathelement location="${common.lib}rio//ant-ext.jar" />
+		<pathelement location="${ant.home}/lib/ant.jar" />
+		<pathelement location="./lib/jsc-admin.jar" />
+	</path>
+
+	<target name="compile" depends="compileSources" />
+	<target name="jars" depends="ssb.jar, sb.jar" />
+	<target name="all" depends="prepare, jars" />
+
+	<target name="sb.jar" depends="compile">
+			<classdepandjar jarfile="${sorcer-ext.lib}/sb.jar" files="true" debug="false">
+				<classpath refid="project.classpath" />
+				<in name="sorcer.ssb" />
+				<in name="sorcer.ui.serviceui" />
+				<topclass name="sorcer.ssb.ServiceBrowser" />
+				<topclass name="sorcer.ui.serviceui.UIFrameFactory" />
+				<topclass name="sorcer.ui.serviceui.UIComponentFactory" />
+				<topclass name="sorcer.ssb.osx.OSXAdapter" />
+				<!--fileset dir="${iGrid.home}/classes">
+					<include name="sorcer/util/sorcer.env" />
+				</fileset-->
+				<fileset dir="./" includes="rt-images/" />
+				<fileset dir="./" includes="html/" />
+			</classdepandjar>
+		</target>
+	
+	<target name="ssb.jar" depends="compile">
+		<classdepandjar jarfile="${sorcer-ext.lib}/${module.name}.jar" files="true" debug="false">
+			<classpath refid="project.classpath" />
+			<in name="sorcer.ssb" />
+			<in name="sorcer.service" />
+			<in name="sorcer.core" />
+			<in name="sorcer.util" />
+			<in name="sorcer.tools" />
+			<in name="sorcer.ui.serviceui" />
+			<out name="sorcer.util.bdb.objects" />
+			<topclass name="sorcer.ssb.SorcerServiceBrowser" />
+			<topclass name="sorcer.ui.serviceui.UIFrameFactory" />
+			<topclass name="sorcer.ui.serviceui.UIComponentFactory" />
+			<topclass name="sorcer.tools.webster.InternalWebster" />
+			<topclass name="sorcer.ssb.osx.OSXAdapter" />
+			<!--fileset dir="${iGrid.home}/classes">
+				<include name="sorcer/util/sorcer.env" />
+			</fileset-->
+			<fileset dir="./" includes="rt-images/" />
+			<fileset dir="./" includes="html/" />
+		</classdepandjar>
+	</target>
+
+	<target name="docs" depends="prepare, compile">
+		<javadoc packagenames="org.jini.rio.tools.ant.*" maxmemory="100M" sourcepath="${src}" destdir="${docs}/api" Author="true" Version="true" Use="true" windowtitle="SORCER Service Browser" doctitle="&lt;h1&gt;SORCER Service Browser;/h1&gt;" bottom="&lt;i&gt;Copyright (c) 2008-2009 AFRL/WPAFB, All Rights Reserved.&lt;/i&gt;">
+			<group title="SORCER Service Browser" packages="sorcer.ssb.*" />
+			<classpath refid="project.classpath" />
+		</javadoc>
+	</target>
+
+	<target name="copy-run-prv-files">
+		<mkdir dir="${iGrid.home}/bin/browser/${module.run.dir}/configs" />
+		<mkdir dir="${iGrid.home}/bin/browser/bin" />
+		<mkdir dir="${iGrid.home}/bin/browser/policy" />
+		<mkdir dir="${iGrid.home}/bin/browser/logs" />
+		<copy todir="${iGrid.home}/bin/browser/configs">
+			<fileset dir="configs">
+				<include name="*" />
+			</fileset>
+		</copy>
+		<copy todir="${iGrid.home}/bin/examples/${module.run.dir}/bin">
+			<fileset dir="bin">
+				<include name="*" />
+			</fileset>
+		</copy>
+		<copy todir="${iGrid.home}/bin/examples/${module.run.dir}/policy">
+			<fileset dir="policy">
+				<include name="*" />
+			</fileset>
+		</copy>
+		<chmod dir="${iGrid.home}/bin/examples/${module.run.dir}/bin" perm="755" includes="*.sh" />
+	</target>
+
+</project>

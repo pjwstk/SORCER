@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+
+<project name="SSB" default="SORCER Service Browser" basedir=".">
+	<!-- load system environment variables -->
+	<property environment="env" />
+	<import file="${env.IGRID_HOME}/modules/common-run.xml" />
+
+	<target name="SORCER Service Browser">
+		<java classname="sorcer.ssb.SorcerServiceBrowser" fork="yes" maxmemory="1g">
+			<arg value="../configs/ssb.config" />
+			<!--jvmarg value="-Xdock:name=SORCER Service Browser" /-->
+			<classpath>
+				<pathelement location="${sorcer-ext.lib}/ssb.jar" />
+				<pathelement location="${jini.lib}/jsk-lib.jar" />
+				<pathelement location="${jini.lib}/jsk-platform.jar" />
+				<pathelement location="${jini-dl.lib}/outrigger-dl.jar" />
+				<pathelement location="${jini.lib}/serviceui.jar" />
+			</classpath>
+			<sysproperty key="java.protocol.handler.pkgs" value="net.jini.url" />
+			<sysproperty key="java.security.policy" value="../policy/ssb.policy" />
+			<sysproperty key="ssb.logFile" value="../logs/browser.log" />
+			<sysproperty key="ssb.logLen" value="300" />
+
+			<!-- Configuration for remote requestor/provider data access -->
+			<sysproperty key="data.server" value="10.131.5.90" />
+			<sysproperty key="data.server.port" value="9000" />
+			<sysproperty key="data.root.dir" value="${iGrid.home}/data" />
+			<sysproperty key="requestor.data.dir" value="optimization/input" />
+		</java>
+	</target>
+
+</project>

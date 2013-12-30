@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+
+<project name="env tester" default="run" basedir=".">
+	
+	<!-- loads system environment variables -->
+	<property environment="env" />
+	<import file="${env.IGRID_HOME}/modules/common-run.xml" />
+
+	<!-- run main in classname -->
+	<target name="run">
+		<java classname="sorcer.test.accessor.AccessorTester" fork="yes">
+			<arg value="ex5" />
+			<classpath refid="project.classpath" />	
+			<!--sysproperty key="java.rmi.server.codebase" value="${provider.webster.url}/${requestor.name}-dl.jar" /-->
+			<sysproperty key="java.security.policy" value="${iGrid.home}/policy/policy.all" />
+			<sysproperty key="java.util.logging.config.file" value="${iGrid.home}/configs/sorcer.logging" />
+			<sysproperty key="iGrid.home" value="${iGrid.home}" />
+			<!--sysproperty key="sorcer.env.file" value="../configs/sorcer.env" /-->
+			<sysproperty key="sorcer.env.file" value="${iGrid.home}/configs/sorcer.env" />
+		</java>
+	</target>
+	
+	<path id="project.classpath">
+		<pathelement location="${iGrid.home}/classes/" />
+		<pathelement location="${iGrid.home}/common/sorcer/jgapp.jar" />
+		<pathelement location="${sorcer.lib}/${requestor.name}-req.jar" />
+		<pathelement location="${sorcer.lib}/sorcer-prv.jar" />
+		<pathelement location="${sorcer.lib}/sorcer-lib.jar" />
+		<pathelement location="${sorcer-ext.lib}/webster.jar" />
+		<pathelement location="${jini.lib}/jsk-lib.jar" />
+		<pathelement location="${jini.lib}/jsk-platform.jar" />
+		<pathelement location="${jini.lib}/serviceui.jar" />
+		<pathelement location="${rio.lib}/rio-api.jar" />
+	</path>
+	
+</project>

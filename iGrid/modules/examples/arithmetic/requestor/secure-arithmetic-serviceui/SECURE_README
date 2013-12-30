@@ -1,0 +1,41 @@
+1. LoginContext for the provider defined in:
+secure-arithmetic-serviceui/configs/secure-arithmetic-serviceui-prv.config
+
+2. SslServerEndpoint in the provider exporter is defined in
+secure-arithmetic-serviceui/configs/secure-arithmetic-serviceui-prv.config
+
+3. Provider requiring authentication
+If the providers requires to authenticate a particular requestor "requestor"
+in secure-arithmetic-serviceui/configs/secure-arithmetic-serviceui-prv.config
+the following constrains are added:
+ClientAuthentication.YES and new ClientMinPrincipal(requestor)
+
+4. Provider JASS login configuration file is
+secure-arithmetic-serviceui/configs/secure-arithmetic-serviceui-prv.login
+The file is specified in ssl-jeri/bin/ssl-jeri-arithmetic-prv-run.xml via
+<sysproperty key="java.security.auth.login.config" value="../configs/${provider.name}-prv.login" />
+  					
+5. The Service UI requestor JASS login configuration file is 
+secure-arithmetic-serviceui/configs/service-ui.login
+
+6. The Service UI requestor Jini configuration 
+secure-arithmetic-serviceui/configs/service-ui.config
+
+7. Requestor requiring authentication, provider's poof of identity 
+(not identifying itself a particular principal)adds the constraint:
+ServerAuthentication.YES
+in secure-arithmetic-serviceui/configs/service-ui.config
+
+8. Requestor requiring which principal(s) the server is required to autenticate as.
+In secure-arithmetic-serviceui/configs/service-ui.config 
+the following two constraints are required:
+ServerAuthentication.YES and new ServerMinPrincipal(provider)
+where the "provider" parameter is a prticular provider principal.
+"Can you prove you are "provider"?
+
+9. Key stores and trust stores as in in ssl-jeri/configs
+as described in ssl-jeri/SSL_README
+
+10. The service browser requires a trust store (with the provider's certifcate) 
+to have a proof of identity for the service browser itself.
+-Djavax.net.ssl.trustStore=%IGRID_HOME%\modules\examples\arithmetic\provider\ssl-jeri\configs\ssl-jeri-arithmetic-prv.truststore

@@ -1,0 +1,66 @@
+<?xml version='1.0' encoding='ISO-8859-1' standalone='yes'?>
+
+<!-- Project sorcer -->
+<project name="sorcer" default="clean-all" basedir=".">
+	<!-- Import common buildfile. Leave this alone -->
+	<import file="../common-build.xml" />
+
+	<target name="clean-all" depends="clean-code, clean-logs, clean-reports" />
+
+	<target name="clean-code">
+		<delete includeemptydirs="true" quiet="true">
+			<fileset dir="../../classes" includes="**/*" />
+		</delete>
+		<delete includeemptydirs="true" quiet="true">
+			<fileset dir="../../lib/sorcer/lib" includes="**/*" />
+		</delete>
+		<delete includeemptydirs="true" quiet="true">
+			<fileset dir="../../lib/sorcer/lib-dl" includes="**/*" />
+		</delete>
+		<delete includeemptydirs="true" quiet="true">
+			<fileset dir="../../lib/sorcer/lib-dl" includes="**/*" />
+		</delete>
+		<delete includeemptydirs="true" quiet="true">
+			<fileset dir="../../databases" includes="**/*" />
+		</delete>
+	</target>
+
+	<target name="clean-logs">
+		<delete includeemptydirs="true" quiet="true">
+			<fileset dir="../../bin/logs" includes="**/*" />
+		</delete>
+		<delete includeemptydirs="true" quiet="true">
+			<fileset dir="../../bin/browser/logs" includes="**/*" />
+		</delete>
+		<delete includeemptydirs="true" quiet="true">
+			<fileset dir="../../bin/blitz/logs" includes="**/*" />
+		</delete>
+		<delete includeemptydirs="true" quiet="true">
+			<fileset dir="../../bin/logs" includes="**/*" />
+		</delete>
+		<delete includeemptydirs="true" quiet="true">
+			<fileset dir="../../logs" includes="**/*" />
+		</delete>
+		<delete includeemptydirs="true" quiet="true">
+			<fileset dir="../../logs/remote" includes="**/*" />
+		</delete>
+		<delete includeemptydirs="true" quiet="true">
+			<fileset dir="../../logs/slamonitor.sla_db" includes="**/*" />
+		</delete>
+		<mkdir dir="../../logs/remote" />
+	</target>
+
+	<target name="clean-reports">
+		<delete includeemptydirs="true" quiet="true">
+			<fileset dir="../sorcer/reports" includes="**/*" />
+		</delete>
+	</target>
+
+	<target name="delete-subversion-metadata">
+		<delete includeemptydirs="true">
+			<fileset dir="../sorcer" includes="**/.svn" defaultexcludes="false" />
+		</delete>
+	</target>
+
+
+</project>

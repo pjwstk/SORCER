@@ -1,0 +1,532 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta http-equiv="Content-Type"
+ content="text/html; charset=ISO-8859-1">
+  <title>SORCER nsh</title>
+<style type="text/css">
+<!--
+.mono {
+	font-family: Courier New, Courier, monospace;
+}
+-->
+</style>
+</head>
+<body>
+A  SORCER Network SHell (nsh) provides a command line interface for interfacing with the SORCER environment. The command
+line interface for nsh is described in the following sections:<br>
+<ul>
+  <li><a href="#Synopsis_">Synopsis</a></li>
+  <li><a href="#Usage_">Usage</a></li>
+  <li><a href="#Configuring_the_CLI">Configuring the nsh<br>
+    <br>
+    </a></li>
+</ul>
+<big><span style="font-weight: bold;"><a name="Synopsis_"></a>Synopsis</span></big>
+<br>
+The  nsh provides the following default arguments:<br>
+<br style="font-family: monospace;">
+<table
+ border="0" cellpadding="2" cellspacing="2"
+ style="text-align: left; background-color: rgb(255, 255, 244); width: 100%;">
+  <tbody>
+    <tr>
+<td style="vertical-align: top;"><pre class="mono" style="font-family: monospace;"><code>${IGRID_HOME}/bin/shell/bin/nsh [-f &lt;filename&gt;] [options] | [--&lt;application name&gt; | [options] 
+
+<strong>commands</strong>
+    -f &lt;filename&gt; [options]
+    Execute the netlet (Groovy/Java network-centric script) specified by the file &lt;filename&gt;.
+    The shenbang synatx, e.g., #!/path/to/nsh -f can be used directly in executable exertlets.
+    
+<span class="mono" style="font-family: monospace;">    --&lt;application name&gt; | [options]</span>
+    Start a default or custom application, tool or utility. <br>
+    Default nsh application names:
+      <strong>blitz</strong>     Start a Blitz JavaSpaces
+      <strong>browser</strong>   Start a  SORCER service browser
+      <strong>cataloger</strong> Start a SORCER service catalog<strong></strong>
+      <strong>emx</strong>       Start a SORCER Exert Monitoring service
+      <strong>iGrid</strong>     Start Jini basic services along with SORCER OS basic services
+      <strong>jini</strong>      Start Jini basic services
+      <strong>jobber</strong>    Start a SORCER Jobber (a push rendezvous service)
+      <strong>locker</strong>    Start a SORCER service lock manager
+      <strong>logger</strong>    Start a SORCER logging service
+      <strong>mmx</strong>       Start a SORCER Model Monitoring service
+      <strong>sos</strong>       Start basic SORCER operating system services
+      <strong>spacer</strong>    Start a SORCER Spacer (a pull rendezvous service)
+      <strong>webster</strong>   Start a  standalone code server (webster)
+      
+ <pre>
+   For defining custom applications see: Configuring the nsf shell below.
+
+
+	groups=group1,group2,...        Comma separated names of multicast groups to
+    					discover. If "all" is provided, this will be
+                        		translated to DiscoveryGroupManagment.ALL_GROUPS
+          
+	locators=jini://host[:port]     Comma separated names of lookup locators to discover
+          
+	discoveryTimeout=millis         Discovery timeout (in milliseconds)
+ 
+	httpPort=port                   Port to use when starting Webster files
+
+	roots=root1,root2,...		Root directories for Webster
+
+	jars=jar1,jar2,...              Exported classes by this shell (codebase)
+
+	-noHttp				Do not start Webster, mutually exclusive
+					with the httpPort option
+
+	&lt;file name&gt;.config              An overriding configuratin file for this shell
+ </pre>
+          </pre>
+      </td>
+    </tr>
+    <tr></tr>
+  </tbody>
+</table>
+<br>
+<big><span style="font-weight: bold;"><a name="Usage_"></a>Usage</span><br>
+</big>The nsh shell can be run in either an interactive or non-interactive mode. The Unix shebang syntax can be used with the non-interactive nsh shell (<code>#!/bin/nsh -f</code> or <code>#!/usr/bin/env nsh -f</code>) in executable netlets called directly at the Unix prompt. If the non-interactive nsh shell is invoked (without <code>-f &lt;filename&gt; or --&lt;application name&gt;</code>) then for <code>?</code> or <code>help</code> commands the user is presented with the following help info:<br>
+<br style="font-family: monospace;">
+<table
+ border="0" cellpadding="2" cellspacing="2"
+ style="text-align: left; background-color: rgb(255, 255, 244); width: 100%;">
+  <tbody>
+    <tr>
+      <td><pre><code>You can manage and interact with the SORCER network using the following commands:
+
+	cd: 		cd &lt;directory name&gt; | ~
+	chgrp: 		chgrp &lt;groups&gt; | chgrp -r &lt;registrar index&gt; &lt;groups&gt;
+	chport: 	chport &lt;lookup service index&gt; port
+	clear: 		clear -a | -p | -m | -e
+	dir: 		dir [-l]
+	disco: 		disco [&lt;registrar index&gt; | -v]
+	edit: 		edit [&lt;filename&gt;]
+	exert: 		exert [-cc] [[-s | --s | --m] &lt;output filename&gt;] &lt;input filename&gt;
+  	groups: 	groups [-d]
+	gvy: 		gvy &lt;input filename&gt; [-s &lt;output filename&gt;]
+	help: 		help &ld;command> | ? 
+	http: 		http [port=&lt;port-num&gt;] [roots=&lt;http roots&gt;] [jars=&lt;http jars&gt;] | stop
+	ig: 		ig -h | -n
+	info: 		info [-a]
+	ls: 		ls [-l]
+	lup: 		lup  [-s | -p | &lt;service index> | -v | -x] | --d &lt;service index&gt;
+			      | ( -p | -s ) [-n &lt;name attribute value>] [-i &lt;service type name&gt;] 
+	mxe: 		mxe [-m | -m &lt;EMX index&gt; | -v | -x]
+			      | [ -a | -d | -f | -r | -y | &lt;exertion index&gt;] 
+			      | (-e | -c | -cc | -ccc) [&lt;exertion index&gt;] [-s &lt;filename&gt;]
+	pwd: 		pwd
+	start: 		start &lt;application name&gt;
+	stop: 		stop &lt;lookup service index&gt; | all
+
+For help on any of these commands type 'help [&lt;command&gt;]'.
+To leave this program type 'quit'</pre></td>
+  </tr>
+  </tbody>
+</table>
+<strong><br>
+<big style="text-decoration: underline;">Shell specific commands</big></strong><big style="text-decoration: underline;"></big><br>
+<br>
+<span style="font-weight: bold;">Directory based commands</span><br>
+<div style="margin-left: 40px;">
+<table
+ style="text-align: left; width: 100%; background-color: rgb(255, 255, 244);"
+ border="0" cellpadding="2" cellspacing="2">
+  <tbody>
+    <tr>
+      <td style="vertical-align: top;"><code>pwd</code><br>
+      </td>
+      <td style="vertical-align: top;">Path of working directory</td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><code>cd</code><br>
+      </td>
+      <td style="vertical-align: top;">Change directory; the "~"
+character can be used, this will change back to the nsh shell's home directory</td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><code>ls</code><br>
+      </td>
+      <td
+ style="vertical-align: top; background-color: rgb(255, 255, 244);">Directory
+listing of the current working directory</td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><code>dir</code><br>
+      </td>
+      <td style="vertical-align: top;">Synonomous with the ls command</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+<p><span style="font-weight: bold;">Environment</span><br>
+</p>
+<div style="margin-left: 40px;">
+  <table
+ style="text-align: left; width: 100%; background-color: rgb(255, 255, 244);"
+ border="0" cellpadding="2" cellspacing="2">
+  <tbody>
+    <tr>
+      <td style="vertical-align: top;"><code>chgrp</code><br>
+      </td>
+      <td style="vertical-align: top;">Change discovery/lookup groups for this shell</td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><code>chport</code><br></td>
+      <td style="vertical-align: top;">Change a port of a given lookup service in the network</td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><pre>disco</pre></td>
+      <td style="vertical-align: top;">For browsing and inspecting lookup   services in the network </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><code>groups</code><br></td>
+      <td style="vertical-align: top;">Show the nsh shell groups</td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><pre>lup  </pre></td>
+      <td style="vertical-align: top;">For browsing finding and inspecting   services in the network </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><pre>start  </pre></td>
+      <td style="vertical-align: top;">Strarts  SORCER  and user defined services</td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><pre>stop  </pre></td>
+      <td style="vertical-align: top;">Destroys the selected lookup service or all of them</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+<span style="font-weight: bold;"><br>
+Utility</span><br
+ style="font-weight: bold;">
+<div style="margin-left: 40px;">
+<table
+ style="text-align: left; width: 100%; background-color: rgb(255, 255, 244);"
+ border="0" cellpadding="2" cellspacing="2">
+  <tr>
+    <td style="vertical-align: top;"><code>clear</code><br></td>
+    <td style="vertical-align: top;">Removes all fetched shell's resources or a selected service provider, exert monitor, or exertion</td>
+  </tr>
+  <tr>
+    <td style="vertical-align: top;"><pre>edit</pre></td>
+    <td style="vertical-align: top;">Opens the editor specified by $NSH_EDITOR or by the application name  'editor' in the shell initialization file <code>nsh-init.config</code></td>
+  </tr>
+  <tbody>
+    <tr>
+      <td style="vertical-align: top;"><pre>exert</pre></td>
+      <td style="vertical-align: top;">Manages and executes the federation of services specified by the input file</td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><code>gvy</code><br></td>
+      <td style="vertical-align: top;">Execute a Groovy script in a given file</td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><pre>help</pre></td>
+      <td style="vertical-align: top;">Lists all shell commands and  describe each of of them</td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><pre>http  </pre></td>
+      <td style="vertical-align: top;">Starts and stops Webster instances.</td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><code>info</code><br></td>
+      <td style="vertical-align: top;">Shows this shell properties; details are
+        shown for the current user, time logged in, the http server, selected registrar, exert monitor and, (-a) information on applications that can be started by this shell.</td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><pre>mxe  </pre></td>
+      <td style="vertical-align: top;">For monitoring executing exertions in the network </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><pre>mxm  </pre></td>
+      <td style="vertical-align: top;">For monitoring  modeling services in the network </td>
+    </tr>
+    <tr>
+      <td style="vertical-align: top;"><pre>!!
+</pre></td>
+      <td style="vertical-align: top;">Runs the previous command again</td>
+    </tr>
+  </tbody>
+</table>
+<br>
+</div>
+By default, the nsh starts a {@link sorcer.tools.webster.Webster} instance, which is used to
+ serve jars needed by the
+executing exertions (the <code>exert</code> commnad). If a Webster instance is not desired, use the
+<a href="#-noHttp">-noHttp</a> option<br>
+<br>
+<span style="font-weight: bold;">Tip</span><span
+ style="font-weight: bold;"></span><br style="font-weight: bold;">
+<div style="margin-left: 40px;">
+<table
+ style="text-align: left; width: 100%; background-color: rgb(255, 255, 244);"
+ border="0" cellpadding="2" cellspacing="2">
+  <tbody>
+    <tr>
+      <td style="vertical-align: top;"><p>If you are running the nsh on
+        OSX (or other unixes) and ant to use your up &amp; down arrows for
+        command line retrieval, use <a
+ href="http://utopia.knoware.nl/%7Ehlub/uck/rlwrap/">rlwrap</a>.
+        Instead of running &#8220;nsh&#8221;, run instead &#8220;rlwrap nsh&#8221;. Or create an alias
+        in your .bash_profile (or appropriate login shell settings file).<br>
+        <br>
+        <span style="font-family: monospace;"><code>alias nsh='rlwrap ${IGRID_HOME}/bin/shell/bin/nsh'</code></span> </p>
+        <p><strong>rlwrap</strong> is a readline wrapper, a utility that allows the editing of keyboard input for any other command. If not installed, open the terminal and type: <code>sudo port install rlwrap</code></p></td>
+    </tr>
+  </tbody>
+</table>
+<br>
+</div>
+<p><span style="font-family: monospace;"></span><br>
+  <big><span style="font-weight: bold;"><a name="Configuring_the_CLI"></a>Configuring
+the nsh shell</span></big><br>
+The nsh shell startup script can be specifued by  the environmt variable <code>NSH_STARTUP</code> or by <code>$HOME/.nsh/startup</code>. </p>
+<p>User defined classes for the shell can be specified by the environment variable <code>CLASSPATH</code> or in a  shell start configuration. The nsh start configuration file can be specified by the environmt variable <code>NSH_CONF</code> or by <code>$HOME/.nsh/configs/nsh-start.config</code>; the default file is <code>$IGRID_HOME/bin/shell/configs/nsh-start.config</code>. </p>
+<p>The default shell initialization   file <span style="font-family: monospace;"><code>$IGRID_HOME/bin/shell/configs/nsh-init.config</code></span> is used if present. Alternatively an initialization file (with the <code>config</code> extention) can be passed as the first argument to the nsh or placed in <code>$HOME/.nsh/config</code>s. The nsh initialization  file supports the following configuration entries, with component <span
+ style="font-family: monospace;"><code>sorcer.tools.shell.NetworkShell</code></span>. </p>
+<ul>
+  <li><span
+ style="font-weight: bold; font-family: courier new,courier,monospace;">applications</span>
+    <table style="text-align: left; width: 100%;" border="0"
+ cellpadding="2" cellspacing="2">
+      <tbody>
+        <tr>
+          <td
+ style="vertical-align: top; text-align: right; font-weight: bold;">Type:<br>
+          </td>
+          <td style="vertical-align: top;"><code>String[]</code></td>
+        </tr>
+        <tr>
+          <td
+ style="vertical-align: top; text-align: right; font-weight: bold;">Default:<br>
+          </td>
+          <td style="vertical-align: top;"><code>new String[] { &quot;browser&quot;, &quot;browser/bin/service-browser-run.xml&quot;, ... };</code></td>
+        </tr>
+        <tr>
+          <td
+ style="vertical-align: top; text-align: right; font-weight: bold;">Description:<br>
+          </td>
+          <td style="vertical-align: top;">This
+entry will be read at initialization by the nsh shell to determine
+the initial set of related applications (for each application its name and path). </td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+</ul>
+<ul>
+  <li><span
+ style="font-weight: bold; font-family: courier new,courier,monospace;">groups</span>
+    <table style="text-align: left; width: 100%;" border="0"
+ cellpadding="2" cellspacing="2">
+      <tbody>
+        <tr>
+          <td
+ style="vertical-align: top; text-align: right; font-weight: bold;">Type:<br>
+          </td>
+          <td style="vertical-align: top;">String[]</td>
+        </tr>
+        <tr>
+          <td
+ style="vertical-align: top; text-align: right; font-weight: bold;">Default:<br>
+          </td>
+          <td style="vertical-align: top;">{@link
+net.jini.discovery.DiscoveryGroupManagement#ALL_GROUPS} <br>
+          </td>
+        </tr>
+        <tr>
+          <td
+ style="vertical-align: top; text-align: right; font-weight: bold;">Description:<br>
+          </td>
+          <td style="vertical-align: top;">This
+entry will be read at initialization by the nsh shell to determine
+the initial set of multicast discovery groups the nsh should
+participate in. </td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+</ul>
+<ul>
+  <li><span
+ style="font-weight: bold; font-family: courier new,courier,monospace;">httpPort</span>
+    <table style="text-align: left; width: 100%;" border="0"
+ cellpadding="2" cellspacing="2">
+      <tbody>
+        <tr>
+          <td width="8%"
+ style="vertical-align: top; text-align: right; font-weight: bold;">Type:<br>
+          </td>
+          <td width="92%" style="vertical-align: top;">int<br>
+          </td>
+        </tr>
+        <tr>
+          <td
+ style="vertical-align: top; text-align: right; font-weight: bold;">Default:<br>
+          </td>
+          <td style="vertical-align: top;">0</td>
+        </tr>
+        <tr>
+          <td
+ style="vertical-align: top; text-align: right; font-weight: bold;">Description:<br>
+          </td>
+          <td style="vertical-align: top;">The port that Webster should
+be started with. Using the default port (0), Webster is started with an
+anononous port<br>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+</ul>
+<ul>
+  <li><span
+ style="font-weight: bold; font-family: courier new,courier,monospace;">httpRoots</span>
+    <table style="text-align: left; width: 100%;" border="0"
+ cellpadding="2" cellspacing="2">
+      <tbody>
+        <tr>
+          <td
+ style="vertical-align: top; text-align: right; font-weight: bold;">Type:<br>
+          </td>
+          <td style="vertical-align: top;">String[]<br>
+          </td>
+        </tr>
+        <tr>
+          <td
+ style="vertical-align: top; text-align: right; font-weight: bold;">Default:<br>
+          </td>
+          <td style="vertical-align: top;"><code>new String [] { &quot;$IGRID_HOME/lib/sorcer/lib-dl&quot;, &quot;$IGRID_HOME/lib/river/lib-dl&quot;, $IGRID_HOME/lib/eng/lib-dl&quot;, $IGRID_HOME/lib/rio/lib-dl&quot;
+          }</code></td>
+        </tr>
+        <tr>
+          <td
+ style="vertical-align: top; text-align: right; font-weight: bold;">Description:<br>
+          </td>
+          <td style="vertical-align: top;">An array documenting the directories to serve code from. <br>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+  <br>
+  <li><span
+ style="font-weight: bold; font-family: courier new,courier,monospace;">httpJars</span>
+    <table style="text-align: left; width: 100%;" border="0"
+ cellpadding="2" cellspacing="2">
+      <tbody>
+        <tr>
+          <td width="10%" height="41"
+ style="vertical-align: top; text-align: right; font-weight: bold;">Type:<br></td>
+          <td width="90%" style="vertical-align: top;">String[]<br></td>
+        </tr>
+        <tr>
+          <td
+ style="vertical-align: top; text-align: right; font-weight: bold;">Default:<br></td>
+          <td style="vertical-align: top;"><code>new String [] { }</code></td>
+        </tr>
+        <tr>
+          <td
+ style="vertical-align: top; text-align: right; font-weight: bold;">Description:<br></td>
+          <td style="vertical-align: top;">An array documenting the classes to be exported from jar files (codebase). <br></td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+</ul>
+
+<ul>
+  <li><span
+ style="font-weight: bold; font-family: courier new,courier,monospace;">locators</span>
+    <table style="text-align: left; width: 100%;" border="0"
+ cellpadding="2" cellspacing="2">
+      <tbody>
+        <tr>
+          <td
+ style="vertical-align: top; text-align: right; font-weight: bold;">Type:<br>
+          </td>
+          <td style="vertical-align: top;">{@link
+net.jini.core.discovery.LookupLocator}[]<span style="font-weight: bold;"><br>
+          </span></td>
+        </tr>
+        <tr>
+          <td
+ style="vertical-align: top; text-align: right; font-weight: bold;">Default:<br>
+          </td>
+          <td style="vertical-align: top;">null</td>
+        </tr>
+        <tr>
+          <td
+ style="vertical-align: top; text-align: right; font-weight: bold;">Description:<br>
+          </td>
+          <td style="vertical-align: top;">This
+entry will be read at initialization by the nsh shell to determine
+the initial set of specific lookup services the nsh should
+register with. </td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+</ul>
+<ul>
+  <li><span
+ style="font-weight: bold; font-family: courier new,courier,monospace;">noHttp</span>
+    <table style="text-align: left; width: 100%;" border="0"
+ cellpadding="2" cellspacing="2">
+      <tbody>
+        <tr>
+          <td
+ style="vertical-align: top; text-align: right; font-weight: bold;">Type:<br>
+          </td>
+          <td style="vertical-align: top;">boolean<br>
+          </td>
+        </tr>
+        <tr>
+          <td
+ style="vertical-align: top; text-align: right; font-weight: bold;">Default:<br>
+          </td>
+          <td style="vertical-align: top;">false </td>
+        </tr>
+        <tr>
+          <td
+ style="vertical-align: top; text-align: right; font-weight: bold;">Description:<br>
+          </td>
+          <td style="vertical-align: top;">The entry is read at
+startup, if set to true, then a Webster instance will not be created by
+the nsh shell. Not that this entry renders the httpPort and httpRoot entries
+useless<br>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <br>
+  </li>
+  <li><span
+ style="font-weight: bold; font-family: courier new,courier,monospace;">logDir</span>
+    <table style="text-align: left; width: 100%;" border="0"
+ cellpadding="2" cellspacing="2">
+      <tbody>
+        <tr>
+          <td width="9%"
+ style="vertical-align: top; text-align: right; font-weight: bold;">Type:<br></td>
+          <td width="91%" style="vertical-align: top;">String<br></td>
+        </tr>
+        <tr>
+          <td
+ style="vertical-align: top; text-align: right; font-weight: bold;">Default:<br></td>
+          <td style="vertical-align: top;">$IGRID_HOME/bin/shell/logs</td>
+        </tr>
+        <tr>
+          <td
+ style="vertical-align: top; text-align: right; font-weight: bold;">Description:<br></td>
+          <td style="vertical-align: top;">The entry is read at
+            startup to create the shell log file for System.err when the shell is noninteractive.</td>
+        </tr>
+      </tbody>
+    </table>
+  </li>
+</ul>
+</body>
+</html>

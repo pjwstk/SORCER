@@ -1,0 +1,146 @@
+<?xml version='1.0' encoding='ISO-8859-1' standalone='yes'?>
+<!-- 
+ * Copyight (C) 2004 SORCER Lab, Texas Tech University. All rights reserved.
+ * Service-Oriented Computing Environmet: SORCER Cataloger build configuration
+ * Make sure the following variables are changed to reflect your environment:
+ *    IGRID_HOME        	iGrid location
+ *    JAVA_HOME         	JDK Location
+ *	  IGRID_WEBSTER 		The class server (webster) 
+ *	  IGRID_WEBSTER_PORT 	The webster port
+ *    ANT_HOME          	Jakarta Ant location
+ Please see also the ../common-build.xml for classpaths, definitions and targets
+-->
+
+<project name="SORCER Jobber" default="all" basedir=".">
+	<property name="module.name" value="jobber" />
+	<!-- set global properties -->
+	<import file="../../../../../../common-build.xml" />
+	<property name="src" value="../../../../" />
+	<property name="resources" value="${iGrid.home}/modules/sorcer/resources" />
+
+	<!-- The sources to compile -->
+	<patternset id="ant.java">
+		<include name="sorcer/core/provider/jobber/**/*.java" />
+	</patternset>
+
+	<path id="project.classpath">
+		<pathelement location="${classes}/" />
+		<path refid="jini.path" />
+		<path refid="rio.path" />
+		<path refid="jaxp.path" />
+	</path>
+
+	<patternset id="ant.classes">
+		<include name="sorcer/core/provider/jobber/**/*.class" />
+	</patternset>
+
+	<fileset dir="${resources}" id="icons">
+		<include name="sorcer-ico.png" />
+	</fileset>
+
+	<target name="compile" depends="compileSources" />
+	<target name="jars" depends="jobber, spacer, concatenator, copy-run-prv-files" />
+	<target name="jobber" depends="jobber.jar, jobber-dl.jar" />
+	<target name="spacer" depends="concatenator.jar, spacer-dl.jar" />
+	<target name="concatenator" depends="spacer.jar, concatenator-dl.jar" />
+	<target name="all" depends="prepare, compile, jars, copy-run-prv-files" />
+
+	<target name="jobber.jar">
+		<classdepandjar jarfile="${sorcer.lib}/jobber.jar" files="true">
+			<classpath refid="project.classpath" />
+			<in name="sorcer.core.provider" />
+			<out name="sorcer.service" />
+			<topclass name="sorcer.core.provider.jobber.ServiceJobber" />
+		</classdepandjar>
+	</target>
+
+	<target name="jobber-dl.jar">
+		<classdepandjar jarfile="${sorcer-dl.lib}/jobber-dl.jar" files="true">
+			<manifest>
+				<attribute name="Implementation-Title" value="${product.title}" />
+				<attribute name="Implementation-Version" value="${product.name}" />
+				<attribute name="SORCER-Version" value="${product.version}" />
+				<attribute name="SORCER-Build" value="${DSTAMP}" />
+			</manifest>
+			<classpath refid="project.classpath" />
+			<in name="sorcer.core.provider" />
+			<out name="sorcer.service" />
+			<topclass name="sorcer.core.provider.Jobber" />
+			<fileset refid="icons" />
+		</classdepandjar>
+	</target>
+
+	<target name="spacer.jar">
+		<classdepandjar jarfile="${sorcer.lib}/spacer.jar" files="true">
+			<classpath refid="project.classpath" />
+			<in name="sorcer.core.provider.jobber" />
+			<topclass name="sorcer.core.provider.jobber.ServiceSpacer" />
+		</classdepandjar>
+	</target>
+
+	<target name="spacer-dl.jar">
+		<classdepandjar jarfile="${sorcer-dl.lib}/spacer-dl.jar" files="true">
+			<manifest>
+				<attribute name="Implementation-Title" value="${product.title}" />
+				<attribute name="Implementation-Version" value="${product.name}" />
+				<attribute name="SORCER-Version" value="${product.version}" />
+				<attribute name="SORCER-Build" value="${DSTAMP}" />
+			</manifest>
+			<classpath refid="project.classpath" />
+			<in name="sorcer.core.provider" />
+			<topclass name="sorcer.core.provider.Spacer" />
+			<fileset refid="icons" />
+		</classdepandjar>
+	</target>
+
+	<target name="concatenator.jar">
+		<classdepandjar jarfile="${sorcer.lib}/concatenator.jar" files="true">
+			<classpath refid="project.classpath" />
+			<in name="sorcer.core.provider.jobber" />
+			<topclass name="sorcer.core.provider.jobber.ServiceConcatenator" />
+		</classdepandjar>
+	</target>
+
+	<target name="concatenator-dl.jar">
+		<classdepandjar jarfile="${sorcer-dl.lib}/concatenator-dl.jar" files="true">
+			<manifest>
+				<attribute name="Implementation-Title" value="${product.title}" />
+				<attribute name="Implementation-Version" value="${product.name}" />
+				<attribute name="SORCER-Version" value="${product.version}" />
+				<attribute name="SORCER-Build" value="${DSTAMP}" />
+			</manifest>
+			<classpath refid="project.classpath" />
+			<in name="sorcer.core.provider" />
+			<topclass name="sorcer.core.provider.Concatenator" />
+			<fileset refid="icons" />
+		</classdepandjar>
+	</target>
+
+	<target name="copy-run-prv-files">
+		<mkdir dir="${iGrid.home}/bin/sorcer/${module.name}/configs" />
+		<mkdir dir="${iGrid.home}/bin/sorcer/${module.name}/bin" />
+		<mkdir dir="${iGrid.home}/bin/sorcer/${module.name}/policy" />
+		<mkdir dir="${iGrid.home}/bin/sorcer/${module.name}/logs" />
+
+		<copy todir="${iGrid.home}/bin/sorcer/${module.name}/configs">
+			<fileset dir="configs">
+				<include name="*" />
+			</fileset>
+		</copy>
+
+		<copy todir="${iGrid.home}/bin/sorcer/${module.name}/bin">
+			<fileset dir="bin">
+				<include name="*" />
+			</fileset>
+		</copy>
+
+		<copy todir="${iGrid.home}/bin/sorcer/${module.name}/policy">
+			<fileset dir="policy">
+				<include name="*" />
+			</fileset>
+		</copy>
+
+		<chmod dir="${iGrid.home}/bin/sorcer/${module.name}/bin" perm="755" includes="*.sh" />
+	</target>
+
+</project>

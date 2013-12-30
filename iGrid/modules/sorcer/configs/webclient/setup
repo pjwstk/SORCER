@@ -1,0 +1,10 @@
+#!/bin/sh
+
+echo "Copying SORCER webclient config files...\n"
+
+export SORCER_CONF=${IGRID_HOME}/modules/sorcer/configs
+cp  ${SORCER_CONF}/webclient/sorcer.def ${APP_CODEBASE}/sorcer/lnch/
+cp  ${SORCER_CONF}/webclient/sorcer.def ${IGRID_HOME}/appserver/webapps/sorcer/WEB-INF/classes/sorcer/lnch/
+cp  ${SORCER_CONF}/webclient/dm.def ${APP_CODEBASE}/sorcerdm/lnch/
+
+echo "Installing webclient  Done\n"

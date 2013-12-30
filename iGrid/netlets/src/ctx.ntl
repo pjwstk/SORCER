@@ -1,0 +1,13 @@
+#!/usr/bin/env nsh -f
+
+Signature sig = sig("getParametricModel", RectModelBuilder.class);
+
+String dataURL = Sorcer.getWebsterUrl()
+				+ "/geometry/parametric_datafile.txt";
+		String outputURL = Sorcer.getWebsterUrl()
+				+ "/geometry/response_data.txt";
+
+		ModelTask task = parametricTask(
+				outerSig("evaluateResponseTable", sig), 
+					context(parametricTable(dataURL, ", "),
+						responseTable(outputURL, ", "), result("table/out")));

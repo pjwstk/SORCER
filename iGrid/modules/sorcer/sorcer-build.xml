@@ -1,0 +1,652 @@
+<?xml version='1.0' encoding='ISO-8859-1' standalone='yes'?>
+<!-- 
+ * Copyright 2010 the original author or authors.
+ * Copyright 2010 SorcerSoft.org.
+ *  
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ 
+ * Service-Oriented Computing Environment: SORCER build configuration
+ * Make sure the following variables are changed to reflect your environment:
+ *    IGRID_HOME        iGrid location
+ *    JAVA_HOME         JDK location
+ *    ANT_HOME          Apache Ant location
+ Please see also the ../common-build.xml for classpaths, definitions and targets
+-->
+
+<!-- Project sorcer -->
+<project name="sorcer" default="all" basedir=".">
+	<!--project name="sorcer" default="all" basedir="." xmlns:artifact="antlib:org.apache.maven.artifact.ant"-->
+
+	<!-- Import common buildfile. Leave this alone -->
+	<import file="${basedir}/../common-build.xml" />
+
+	<!-- Set this to the name of your module. This has to be unique, 
+	and it is used to compile theses modules and create their documentation folder -->
+	<property name="module.name" value="sorcer" />
+	<!--<property name="sorcer.auditor" value="./src/sorcer/core/provider/auditor" />-->
+	<property name="sorcer.cataloger" value="./src/sorcer/core/provider/cataloger" />
+	<property name="sorcer.jobber" value="./src/sorcer/core/provider/jobber" />
+	<property name="sorcer.exerter" value="./src/sorcer/core/provider/exerter" />
+	<property name="sorcer.exertmonitor" value="./src/sorcer/core/provider/exertmonitor" />
+	<property name="sorcer.logger" value="./src/sorcer/core/provider/logger" />
+	<!--<property name="sorcer.caller" value="./src/sorcer/core/grid/provider/caller" />
+	<property name="sorcer.grider" value="./src/sorcer/core/grid/provider/grider" />
+	<property name="sorcer.methoder" value="./src/sorcer/core/grid/provider/methoder" />-->
+	<property name="sorcer.eval" value="./src/sorcer/core/provider/eval" />
+	<property name="sorcer.dbp" value="./src/sorcer/core/provider/dbp" />
+	<!--<property name="sorcer.dsp" value="./src/sorcer/core/provider/dsp" />
+	<property name="sorcer.policer" value="./src/sorcer/core/provider/policer" />-->
+	<property name="ju-arithmeric" value="./src/junit/sorcer/core/provider" />
+	<property name="ju-parmodel" value="./src/junit/sorcer/core/context/model/par" />
+	<property name="volume-bean" value="./src/junit/sorcer/core/invoker" />
+	<property name="examples.ex6" value="${iGrid.home}/modules/examples/ex6" />
+	<property name="examples.ex10a" value="${iGrid.home}/modules/examples/ex10a" />
+	<property name="preferred_list" value="./configs/preferred.list" />
+
+	<!-- Directory paths where source code can be found relative to the current directory -->
+	<property name="src" value="./src" />
+	<property name="resources" value="./resources" />
+	<property name="junit.src" value="./src" />
+
+	<!-- The sources to compile, relative to your source directory. DO NOT CHANGE! -->
+	<patternset id="ant.java">
+		<include name="sorcer/**/*.java" />
+		<!-- Exclude security related dispatcher for now -->
+		<exclude name="sorcer/core/grid/provider/dispatcher/**/*.java" />
+		<exclude name="sorcer/core/provider/logger/log/*.java" />
+		<exclude name="sorcer/core/provider/logger/log/**/*.java" />
+		<exclude name="sorcer/test/**/*.java" />
+		<exclude name="**/SAVE/*.java" />
+		<exclude name="sorcer/xml/*.java" />
+		<exclude name="**/BAK/*.java" />
+	</patternset>
+
+	<!-- The JUnit sources to be compiled -->
+	<patternset id="junit-ant.java">
+		<include name="junit/sorcer/**/*.java" />
+		<!-- Exclude security related dispatcher for now -->
+		<exclude name="**/SAVE/*.java" />
+		<exclude name="**/BAK/*.java" />
+	</patternset>
+
+	<!-- The classes that result from it, used for "clean-classes" target -->
+	<patternset id="ant.classes">
+		<include name="sorcer/**/*.class" />
+		<include name="junit/sorcer/**/*.class" />
+	</patternset>
+
+	<!-- SORCER icon-->
+	<fileset dir="${resources}" id="icons">
+		<include name="sorcer-ico.png" />
+	</fileset>
+
+	<!-- and the jar files (for cleaning) -->
+	<patternset id="ant.jars">
+		<include name="sorcer-prv.jar" />
+		<include name="sorcer-lib.jar" />
+		<include name="provider-ui.jar" />
+	</patternset>
+
+	<!-- The classpath for this project, refers back to classpath not set in common buildfile -->
+	<path id="project.classpath">
+		<pathelement location="${classes}" />
+		<pathelement location="${support.lib}/junit.jar" />
+		<pathelement location="${sorcer-ext.lib}/webster.jar" />
+		<pathelement location="${blitz.lib}/lockmgr.jar" />
+		<pathelement location="${common.lib}/spki.jar" />
+		<pathelement location="${servlet.api}" />
+		<pathelement location="${common.lib}/classes12.zip" />
+		<pathelement location="${common.lib}/commons-fileupload-1.0.jar" />
+		<pathelement location="${rio.home}/lib-dl/cybernode-api${rio.version}.jar" />
+		<pathelement location="${rio.home}/lib-dl/monitor-api${rio.version}.jar" />
+		<pathelement location="${common.lib}/jffp.jar" />
+		<pathelement location="${common.lib}/org.sadun.util.jar" />
+		<pathelement location="${common.lib}/Jama-1.0.2.jar" />
+		<pathelement location="${common.lib}/je-4.1.21.jar" />
+		<pathelement location="${common.lib}/jfreechart/jfreechart-1.0.14.jar" />
+		<pathelement location="${common.lib}/jfreechart/jcommon-1.0.17.jar" />
+		<pathelement location="${support.lib}/junit-addons-1.4.jar" />
+		<path refid="jaxp.path" />
+		<path refid="jini.path" />
+		<path refid="rio.path" />
+		<path refid="surrogate.path" />
+		<path refid="scaf.path" />
+		<path refid="mckoi.path" />
+		<path refid="jep.path" />
+		<path refid="swing.layout.path" />
+	</path>
+
+	<!-- Build targets-->
+	<target name="all" depends="clean-logs, prepare, compile, jars" />
+	<target name="sorcer-test" depends="clean-logs, junit-prepare, run-test-reports" />
+	<target name="all-test" depends="clean-logs, compile-sorcer, junit-prepare, run-test-reports, jars" />
+	<target name="compile-sorcer" depends="compileSources,junit-compile, provider-junit-fixture" />
+	<target name="compile" depends="top-prepare, prepare, compile-sorcer, copy-config-files, copy-meta-inf-files" />
+	<target name="jars" depends="sorcer-env.jar, sorcer-lib.jar, sorcer-prv.jar, sorcer-prv-dl.jar, sorcer-vfe-lib.jar, sorcer-parmodeling-lib.jar, sorcer-modeling-dl.jar, ssb-support.jar, provider-ui.jar, exertlet-ui.jar, provider-jars, neter-bean.jar, neter-bean-dl.jar, prv-destroyer.jar" />
+
+
+	<!-- Compile the core service provider sources -->
+	<target name="provider-compile">
+		<echo message="Compiling SORCER service providers ...." />
+		<!-- <ant antfile="build.xml" dir="${sorcer.auditor}" /> -->
+		<ant antfile="cataloger-prv-build.xml" dir="${sorcer.cataloger}" target="compile" inheritAll="false" />
+		<ant antfile="jobber-prv-build.xml" dir="${sorcer.jobber}" target="compile" inheritAll="false" />
+		<!--ant antfile="exerter-prv-build.xml" dir="${sorcer.exerter}" target="compile" inheritAll="false" /-->
+		<ant antfile="exertmonitor-prv-build.xml" dir="${sorcer.exertmonitor}" target="compile" inheritAll="false" />
+		<ant antfile="caller-prv-build.xml" dir="${sorcer.caller}" target="compile" inheritAll="false" />
+		<ant antfile="grider-prv-build.xml" dir="${sorcer.grider}" target="compile" inheritAll="false" />
+		<ant antfile="methoder-prv-build.xml" dir="${sorcer.methoder}" target="compile" inheritAll="false" />
+		<ant antfile="logger-prv-build.xml" dir="${sorcer.logger}" target="compile" inheritAll="false" />
+		<ant antfile="policer-prv-build.xml" dir="${sorcer.policer}" target="compile" inheritAll="false" />
+		<!-- added building of SERVME providers -->
+		<ant antfile="qoscataloger-prv-build.xml" dir="${sorcer.qoscataloger}" target="compile" inheritAll="false" />
+		<ant antfile="slamonitor-prv-build.xml" dir="${sorcer.slamonitor}" target="compile" inheritAll="false" />
+		<ant antfile="ondemandprovisioner-prv-build.xml" dir="${sorcer.ondemandprovisioner}" target="compile" inheritAll="false" />
+	</target>
+
+	<!-- Compile the dependent JUnit sources -->
+	<target name="provider-junit-fixture">
+		<echo message="Compiling SORCER JUnit fixture classes ...." />
+		<!-- <ant antfile="build.xml" dir="${sorcer.auditor}" /> -->
+		<ant antfile="arithmetic-prv-build.xml" dir="${ju-arithmeric}" target="jars" inheritAll="false" />
+		<ant antfile="arithmetic-prv-build.xml" dir="${examples.ex6}" target="all" inheritAll="false" />
+		<ant antfile="parmodel-prv-build.xml" dir="${ju-parmodel}" target="jars" inheritAll="false" />
+		<ant antfile="volume-bean-build.xml" dir="${volume-bean}" target="jars" inheritAll="false" />
+		<!--ant antfile="rs-all-build.xml" dir="${examples.ex10a}" target="all" inheritAll="false" /-->
+	</target>
+
+	<!-- Build the core service provider jars -->
+	<target name="provider-jars">
+		<echo message="Building SORCER jars ...." />
+		<!-- <ant antfile="build.xml" dir="${sorcer.auditor}" /> -->
+		<ant antfile="cataloger-prv-build.xml" dir="${sorcer.cataloger}" target="jars" inheritAll="false" />
+		<ant antfile="jobber-prv-build.xml" dir="${sorcer.jobber}" target="jars" inheritAll="false" />
+		<ant antfile="exerter-prv-build.xml" dir="${sorcer.exerter}" target="jars" inheritAll="false" />
+		<ant antfile="exertmonitor-prv-build.xml" dir="${sorcer.exertmonitor}" target="jars" inheritAll="false" />
+		<!--<ant antfile="caller-prv-build.xml" dir="${sorcer.caller}" target="jars" inheritAll="false" />
+		<ant antfile="grider-prv-build.xml" dir="${sorcer.grider}" target="jars" inheritAll="false" />
+		<ant antfile="methoder-prv-build.xml" dir="${sorcer.methoder}" target="jars" inheritAll="false" />-->
+		<ant antfile="logger-prv-build.xml" dir="${sorcer.logger}" target="jars" inheritAll="false" />
+		<ant antfile="dbp-prv-build.xml" dir="${sorcer.dbp}" target="jars" inheritAll="false" />
+		<!--<ant antfile="dsp-prv-build.xml" dir="${sorcer.dsp}" target="jars" inheritAll="false" />-->
+		<!--ant antfile="policer-prv-build.xml" dir="${sorcer.policer}" target="jars" inheritAll="false" /-->
+	</target>
+
+	<!-- No RMI stubs are required for JERI type of providers -->
+	<target name="sorcer-prv.jar">
+		<classdepandjar jarfile="${sorcer.lib}/sorcer-prv.jar" files="true" debug="true">
+			<manifest>
+				<!--attribute name="Class-Path" value="sorcer-lib.jar" /-->
+				<attribute name="Implementation-Title" value="${sorcer-title}" />
+				<attribute name="Implementation-Version" value="${sorcer-version}" />
+				<attribute name="SORCER-Version" value="${sorcer-version}" />
+				<attribute name="SORCER-Build" value="${DSTAMP}" />
+			</manifest>
+			<classpath refid="project.classpath" />
+			<in name="sorcer" />
+			<in name="org.rioproject.admin" />
+			<out name="jini.net" />
+			<out name="com.sun.jini" />
+			<out name="sorcer.client" />
+			<topclass name="sorcer.core.provider.ServiceTasker" />
+			<topclass name="sorcer.core.AdministratableProvider" />
+			<topclass name="sorcer.core.monitor.MonitoringManagement" />
+			<topclass name="sorcer.core.provider.exertmonitor.MonitorSession" />
+			<topclass name="sorcer.service.ExertionInfo" />
+			<topclass name="sorcer.core.provider.ProviderDelegate" />
+			<topclass name="sorcer.jini.lookup.entry.SorcerServiceInfo" />
+			<topclass name="sorcer.jini.lookup.entry.DeployInfo" />
+			<topclass name="com.artima.lookup.util.ConsistentSet" />
+			<topclass name="sorcer.core.context.PositionalContext" />
+			<topclass name="sorcer.core.context.ContextManagementAdapter" />
+			<topclass name="sorcer.util.url.sos.Handler" />
+			<topclass name="sorcer.co.operator" />
+			<topclass name="sorcer.eo.operator" />
+			<topclass name="sorcer.po.operator" />
+			<!--topclass name="sorcer.vo.operator" /-->
+			<topclass name="sorcer.co.tuple.Entry" />
+			<topclass name="sorcer.service.Arg" />
+			<topclass name="net.jini.admin.Administrable" />
+			<topclass name="sorcer.service.Incrementor" />
+			<topclass name="sorcer.util.Stopwatch" />
+			<topclass name="sorcer.ui.serviceui.UIFrameFactory" />
+			<topclass name="sorcer.client.ModelClient" />
+			<topclass name="sorcer.service.ServiceException" />
+			<topclass name="sorcer.util.ServiceDestroyer" />
+			<topclass name="sorcer.util.deploy.DeployHelper" />
+			<topclass name="org.rioproject.admin.ServiceActivityProvider" />
+			<fileset dir="${iGrid.home}/classes">
+				<include name="sorcer/util/sorcer.env" />
+				<include name="sorcer/util/data.formats" />
+			</fileset>
+			<fileset refid="icons" />
+		</classdepandjar>
+
+		<!--artifact:pom id="sorcer-prv.pom" file="sorcer-prv-pom.xml" /-->
+
+		<!--artifact:install file="${sorcer.lib}/sorcer-prv.jar">
+			<pom refid="sorcer-prv.pom" />
+		</artifact:install-->
+
+		<!-- artifact:deploy file="${sorcer.lib}/sorcer-prv.jar">
+			<remoteRepository url="file:///www/repository" />
+			<pom refid="sorcer-prv.pom" />
+		</artifact:deploy-->
+	</target>
+
+	<!-- Builds support for parsing and creating the Sorcer environment -->
+	<target name="sorcer-env.jar">
+		<classdepandjar jarfile="${sorcer.lib}/sorcer-env.jar" files="true">
+			<manifest>
+				<attribute name="Implementation-Title" value="${sorcer-title}" />
+				<attribute name="Implementation-Version" value="${sorcer-version}" />
+				<attribute name="SORCER-Version" value="${sorcer-version}" />
+				<attribute name="SORCER-Build" value="${DSTAMP}" />
+			</manifest>
+			<classpath refid="project.classpath" />
+			<in name="sorcer.util" />
+			<in name="sorcer.core" />
+			<in name="sorcer.service" />
+			<in name="sorcer.util" />
+			<in name="sorcer.jini.lookup.entry" />
+			<out name="sorcer.core.context" />
+			<out name="sorcer.core.dispatch" />
+			<out name="sorcer.core.exertion" />
+			<out name="sorcer.core.invoker" />
+			<out name="sorcer.core.loki" />
+			<out name="sorcer.core.misc" />
+			<out name="sorcer.core.monitor" />
+			<out name="sorcer.core.provider" />
+			<out name="sorcer.core.proxy" />
+			<topclass name="sorcer.util.SorcerEnv" />
+			<topclass name="sorcer.core.SorcerConstants" />
+			<topclass name="sorcer.service.ConfigurationException" />
+			<topclass name="sorcer.jini.lookup.entry.DeployInfo" />
+		</classdepandjar>
+	</target>
+
+	<target name="prv-destroyer.jar">
+		<classdepandjar jarfile="${sorcer.lib}/prv-destroyer.jar" files="true">
+			<manifest>
+				<attribute name="Implementation-Title" value="${sorcer-title}" />
+				<attribute name="Implementation-Version" value="${sorcer-version}" />
+				<attribute name="SORCER-Version" value="${sorcer-version}" />
+				<attribute name="SORCER-Build" value="${DSTAMP}" />
+				<attribute name="Main-Class" value="sorcer.util.ProviderDestroyer" />
+				<attribute name="Class-path" value="sorcer-prv.jar" />
+			</manifest>
+			<classpath refid="project.classpath" />
+			<in name="sorcer.util" />
+			<topclass name="sorcer.util.ProviderDestroyer" />
+		</classdepandjar>
+	</target>
+
+	<target name="sorcer-prv-dl.jar">
+		<classdepandjar jarfile="${sorcer-dl.lib}/sorcer-prv-dl.jar" files="true">
+			<manifest>
+				<attribute name="Implementation-Title" value="${sorcer-title}" />
+				<attribute name="Implementation-Version" value="${sorcer-version}" />
+				<attribute name="SORCER-Version" value="${sorcer-version}" />
+				<attribute name="SORCER-Build" value="${DSTAMP}" />
+			</manifest>
+			<classpath refid="project.classpath" />
+			<!-- Put the full package as much as possible for a smaller jar file -->
+			<in name="sorcer.core" />
+			<in name="sorcer.service" />
+			<in name="sorcer.jini.lookup.entry" />
+			<in name="org.rioproject.admin" />
+			<out name="sorcer.ui" />
+			<out name="sorcer.core.dispatch" />
+			<out name="sorcer.core.context" />
+			<out name="sorcer.core.exertion" />
+			<out name="sorcer.core.invoker" />
+			<out name="sorcer.util" />
+			<out name="sorcer.util.bdb" />
+			<out name="net.jini" />
+			<out name="org.jini" />
+			<out name="com.sun.jini" />
+			<!-- Add provider specific class here, but not the class implementation -->
+			<topclass name="sorcer.core.proxy.ProviderProxy" />
+			<!-- Needed -->
+			<topclass name="sorcer.service.Service" />
+			<topclass name="sorcer.service.Configurable" />
+			<topclass name="sorcer.service.Exerter" />
+			<topclass name="sorcer.service.Context" />
+			<topclass name="sorcer.service.Tasker" />
+			<topclass name="sorcer.service.Positioning" />
+			<topclass name="sorcer.core.AdministratableProvider" />
+			<topclass name="sorcer.jini.lookup.entry.SorcerServiceInfo" />
+			<topclass name="sorcer.core.RemoteContextManagement" />
+			<topclass name="sorcer.ui.serviceui.UIComponentFactory" />
+			<topclass name="sorcer.service.Exec" />
+			<topclass name="sorcer.jini.lookup.entry.DeployInfo" />
+			<topclass name="org.rioproject.admin.ServiceActivityProvider" />
+			<fileset refid="icons" />
+		</classdepandjar>
+	</target>
+
+	<target name="provider-dl-prefgen">
+		<java jar="${jini.lib}/preferredlistgen.jar" fork="true">
+			<arg line="-cp" />
+			<arg path="${sorcer.lib}/sorcer-prv.jar:${common.lib}/jaxrpc.jar:${rio.lib}/rio-ui${rio.version}.jar:${jini.lib}/jsk-platform.jar:${jini.lib}/jsk-lib.jar:${jini.lib}/outrigger.jar" />
+			<arg line="-jar" />
+			<arg path="${sorcer-dl.lib}/sorcer-prv-dl.jar" />
+			<arg line="-default false" />
+			<arg line="-api sorcer.service.Provider" />
+			<arg line="-api sorcer.service.Exerter" />
+			<arg line="-api sorcer.jini.lookup.entry.SorcerServiceInfo" />
+			<arg line="-api sorcer.service.Positioning" />
+			<arg line="-api sorcer.service.Context" />
+			<arg line="-api sorcer.service.Context$1" />
+			<arg line="-api sorcer.service.Strategy" />
+			<arg line="-api sorcer/core/dispatch/-" />
+			<arg line="-api sorcer/core/invoker/-" />
+			<arg line="-api sorcer/core/exertion/-" />
+			<arg line="-api sorcer/core/context/-" />
+			<arg line="-api sorcer/core/loki/-" />
+			<arg line="-api sorcer/util/bdb/-" />
+			<arg line="-api net/jini/-" />
+			<arg line="-api com/sun/jini/outrigger/-" />
+			<arg line="-api com/sun/jini/admin/-" />
+			<arg line="-api com/sun/jini/resource/-" />
+			<arg line="-api com/sun/jini/start/-" />
+			<arg line="-api com/sun/jini/proxy/-" />
+		</java>
+	</target>
+
+	<target name="ssb-support.jar">
+		<classdepandjar jarfile="${sorcer.lib}/ssb-support.jar" files="true" debug="true">
+			<classpath refid="project.classpath" />
+			<in name="net.jini" />
+			<in name="com.sun.jini" />
+			<topclass name="com.sun.jini.outrigger.JavaSpaceAdmin" />
+			<skip name="sorcer.jini.lookup.entry.SorcerServiceInfo" />
+		</classdepandjar>
+	</target>
+
+	<!-- No RMI stubs are required for JERI type of providers -->
+	<target name="sorcer-prv-test.jar">
+		<classdepandjar jarfile="${sorcer-dl.lib}/sorcer-prv-test.jar" preferredlist="${preferred_list}" files="true" debug="true">
+			<manifest>
+				<attribute name="Implementation-Title" value="${sorcer-title}" />
+				<attribute name="Implementation-Version" value="${sorcer-version}" />
+				<attribute name="SORCER-Version" value="${sorcer-version}" />
+				<attribute name="SORCER-Build" value="${DSTAMP}" />
+			</manifest>
+			<classpath refid="project.classpath" />
+
+			<in name="sorcer" />
+			<in name="net.jini.core.lookup" />
+			<topclass name="sorcer.ui.serviceui.UIComponentFactory" />
+
+			<fileset dir="${iGrid.home}/classes">
+				<include name="sorcer/util/sorcer.env" />
+				<include name="sorcer/util/data.formats" />
+			</fileset>
+			<fileset refid="icons" />
+		</classdepandjar>
+	</target>
+
+	<target name="provider-ui.jar">
+		<classdepandjar jarfile="${sorcer-dl.lib}/provider-ui.jar" files="true">
+			<classpath refid="project.classpath" />
+			<in name="sorcer" />
+			<in name="com.artima" />
+			<out name="sorcer.tools" />
+			<topclass name="sorcer.core.provider.ui.ProviderUI" />
+			<topclass name="sorcer.ui.exertlet.EditorView" />
+			<topclass name="sorcer.ui.serviceui.UIComponentFactory" />
+			<topclass name="com.artima.lookup.util.ConsistentSet" />
+		</classdepandjar>
+	</target>
+
+	<target name="sorcer-modeling-lib.jar">
+		<classdepandjar jarfile="${sorcer.lib}/sorcer-modeling-lib.jar" files="true" debug="true">
+			<classpath refid="project.classpath" />
+			<in name="sorcer.core.context.model" />
+			<in name="sorcer.vfe" />
+			<in name="sorcer.client" />
+			<out name="java" />
+			<out name="javax" />
+			<out name="sorcer.service" />
+			<out name="sorcer.jini" />
+			<out name="sorcer.util" />
+			<out name="sorcer.client" />
+			<topclass name="sorcer.vfe.util.ModelBuilder" />
+			<topclass name="sorcer.core.context.model.explore.Explorer" />
+			<topclass name="sorcer.core.context.model.opti.OptimizationModel" />
+			<topclass name="sorcer.core.context.model.opti.Optimizer" />
+			<topclass name="sorcer.core.context.model.explore.ParametricContext" />
+			<topclass name="sorcer.core.context.model.explore.ModelManager" />
+			<topclass name="sorcer.vfe.util.RegularGridTable" />
+			<topclass name="sorcer.client.ModelClient" />
+			<!-- needed by Sorcer Browser for QoS exertlets -->
+			<topclass name="sorcer.core.context.qos.ServiceCostImpl" />
+			<!-- -->
+			<topclass name="sorcer.co.operator" />
+			<topclass name="sorcer.eo.operator" />
+			<topclass name="sorcer.vo.operator" />
+			<topclass name="sorcer.client.ModelClient" />
+			<skip name="sorcer.jini.lookup.entry.SorcerServiceInfo" />
+			<!--fileset dir="${iGrid.home}/classes">
+				<include name="sorcer/util/sorcer.env" />
+				<include name="sorcer/util/data.formats" />
+			</fileset-->
+			<fileset refid="icons" />
+		</classdepandjar>
+	</target>
+
+	<target name="sorcer-parmodeling-lib.jar">
+		<classdepandjar jarfile="${sorcer.lib}/sorcer-parmodeling-lib.jar" files="true" debug="true">
+			<classpath refid="project.classpath" />
+			<in name="sorcer.core.context.model.par" />
+			<in name="sorcer.core.invoker" />
+			<in name="sorcer.service" />
+			<in name="sorcer.co" />
+			<in name="sorcer.po" />
+			<in name="sorcer.vo" />
+			<in name="sorcer.eo" />
+			<out name="java" />
+			<out name="javax" />
+			<out name="sorcer.jini" />
+			<out name="sorcer.util" />
+			<out name="sorcer.service" />
+			<topclass name="sorcer.core.context.model.par.ParModel" />
+			<topclass name="sorcer.core.invoker.GroovyInvoker" />
+			<topclass name="sorcer.core.invoker.ExertInvoker" />
+			<topclass name="sorcer.core.invoker.CmdInvoker" />
+			<topclass name="sorcer.core.invoker.MethodInvoker" />
+			<topclass name="sorcer.core.invoker.RunnableInvoker" />
+			<topclass name="sorcer.core.invoker.CallableInvoker" />
+			<topclass name="sorcer.core.invoker.OptInvoker" />
+			<topclass name="sorcer.core.invoker.AltInvoker" />
+			<topclass name="sorcer.core.invoker.LoopInvoker" />
+			<!-- -->
+			<topclass name="sorcer.co.operator" />
+			<topclass name="sorcer.eo.operator" />
+			<!--topclass name="sorcer.vo.operator" /-->
+			<topclass name="sorcer.po.operator" />
+			<skip name="sorcer.jini.lookup.entry.SorcerServiceInfo" />
+			<!--fileset dir="${iGrid.home}/classes">
+					<include name="sorcer/util/sorcer.env" />
+					<include name="sorcer/util/data.formats" />
+				</fileset-->
+			<fileset refid="icons" />
+		</classdepandjar>
+	</target>
+
+	<target name="sorcer-modeling-dl.jar">
+		<jar destfile="${sorcer-dl.lib}/sorcer-modeling-dl.jar" basedir="${classes}" includes="sorcer/service/Invocation.class,
+				sorcer/service/Evaluation.class,
+				sorcer/vfe/Modeling.class,
+				sorcer/vfe/ParModeling.class,
+				sorcer/vfe/util/ModelTable.class,
+				sorcer/vfe/Optimization.class,	
+				sorcer/vfe/Exploration.class,
+				sorcer/vfe/ResponseModeling.class,
+				sorcer/vfe/ParametricModeling.class,
+				sorcer/vfe/OptimizationModeling.class,
+				sorcer/vfe/ModelingAdmin.class,
+				sorcer/vfe/ModelAdministrable.class,
+				sorcer/vfe/ParametricModelingAdmin.class,
+				sorcer/vfe/OptimizationModelingAdmin.class,
+				sorcer/core/context/model/explore/ExploreException.class,
+				sorcer/core/context/model/opti/SearchException.class" />
+	</target>
+
+	<target name="neter-bean.jar">
+		<classdepandjar jarfile="${sorcer.lib}/neter-bean.jar" files="true">
+			<classpath refid="project.classpath" />
+			<in name="sorcer" />
+			<out name="sorcer.tools" />
+			<topclass name="sorcer.core.provider.exerter.ServiceExerter" />
+		</classdepandjar>
+	</target>
+
+	<target name="neter-bean-dl.jar">
+		<classdepandjar jarfile="${sorcer-dl.lib}/neter-bean-dl.jar" files="true">
+			<classpath refid="project.classpath" />
+			<in name="sorcer.arithmetic.provider" />
+			<topclass name="sorcer.service.Neter" />
+			<fileset refid="icons" />
+		</classdepandjar>
+	</target>
+
+	<target name="sorcer-vfe-lib.jar">
+		<jar jarfile="${sorcer.lib}/sorcer-vfe-lib.jar">
+			<fileset dir="${classes}">
+				<include name="sorcer/vfe/**/*" />
+			</fileset>
+		</jar>
+	</target>
+
+	<target name="exertlet-ui.jar">
+		<classdepandjar jarfile="${sorcer-dl.lib}/exertlet-ui.jar" files="true">
+			<classpath refid="project.classpath" />
+			<in name="sorcer" />
+			<in name="com.artima" />
+			<out name="sorcer.tools" />
+			<out name="sorcer.service" />
+			<topclass name="sorcer.ui.exertlet.NetletEditor" />
+			<topclass name="sorcer.ui.exertlet.NetletUI" />
+			<topclass name="sorcer.ui.serviceui.UIComponentFactory" />
+			<topclass name="com.artima.lookup.util.ConsistentSet" />
+			<fileset dir="${iGrid.home}/modules/sorcer" includes="html/" />
+			<fileset dir="${iGrid.home}/classes">
+				<include name="sorcer/ui/exertlet/netlets.html" />
+				<include name="sorcer/ui/exertlet/icon-info16.png" />
+				<include name="sorcer/ui/exertlet/static-imports.txt" />
+			</fileset>
+		</classdepandjar>
+	</target>
+
+	<target name="sorcer-lib.jar">
+		<classdepandjar jarfile="${sorcer.lib}/sorcer-lib.jar" files="true">
+			<classpath refid="project.classpath" />
+			<in name="sorcer.co" />
+			<in name="sorcer.eo" />
+			<in name="sorcer.vo" />
+			<out name="sorcer.service" />
+			<topclass name="sorcer.co.operator" />
+			<topclass name="sorcer.eo.operator" />
+			<!--topclass name="sorcer.vo.operator" /-->
+			<topclass name="sorcer.core.context.ServiceContext" />
+			<topclass name="sorcer.core.context.PositionalContext" />
+			<topclass name="sorcer.core.context.ArrayContext" />
+			<topclass name="sorcer.core.context.ListContext" />
+			<topclass name="sorcer.core.context.SharedAssociativeContext" />
+			<topclass name="sorcer.core.context.SharedIndexedContext" />
+			<topclass name="sorcer.core.exertion.NetTask" />
+			<topclass name="sorcer.core.exertion.NetJob" />
+			<topclass name="sorcer.core.signature.ServiceSignature" />
+			<topclass name="sorcer.core.context.ControlContext" />
+			<topclass name="sorcer.sdb.Handler" />
+			<skip name="sorcer.jini.lookup.entry.SorcerServiceInfo" />
+		</classdepandjar>
+	</target>
+
+	<target name="copy-meta-inf-files">
+		<mkdir dir="${iGrid.home}/classes/META-INF" />
+		<copy todir="${iGrid.home}/classes/META-INF">
+			<fileset dir="configs">
+				<include name="PREFERRED.LIST" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="clean-logs">
+		<delete includeemptydirs="true" quiet="true">
+			<fileset dir="../../bin/logs" includes="**/*" />
+		</delete>
+		<delete includeemptydirs="true" quiet="true">
+			<fileset dir="../../bin/browser/logs" includes="**/*" />
+		</delete>
+		<delete includeemptydirs="true" quiet="true">
+			<fileset dir="../../bin/blitz/logs" includes="**/*" />
+		</delete>
+		<delete includeemptydirs="true" quiet="true">
+			<fileset dir="../../bin/logs" includes="**/*" />
+		</delete>
+		<delete includeemptydirs="true" quiet="true">
+			<fileset dir="../../logs" includes="**/*" />
+		</delete>
+		<delete includeemptydirs="true" quiet="true">
+			<fileset dir="../../logs/remote" includes="**/*" />
+		</delete>
+		<delete includeemptydirs="true" quiet="true">
+			<fileset dir="../../logs/slamonitor.sla_db" includes="**/*" />
+		</delete>
+		<mkdir dir="../../logs/remote" />
+	</target>
+
+	<target name="delete-subversion-metadata">
+		<delete includeemptydirs="true">
+			<fileset dir="../modules" includes="**/.svn" defaultexcludes="false" />
+		</delete>
+	</target>
+
+	<target name="junit-prepare">
+		<delete includeemptydirs="true" quiet="true">
+			<fileset dir="./reports" includes="**/*" />
+		</delete>
+		<mkdir dir="./reports" />
+	</target>
+
+	<target name="prepare">
+		<mkdir dir="../../lib" />
+		<mkdir dir="../../lib/sorcer/lib" />
+		<mkdir dir="../../lib/sorcer/lib-dl" />
+		<mkdir dir="../../lib/sorcer/lib-ext" />
+		<mkdir dir="../../classes" />
+		<mkdir dir="../../logs/remote" />
+	</target>
+
+	<target name="top-prepare">
+		<mkdir dir="../../bin/logs" />
+		<mkdir dir="../../bin/browser/logs" />
+		<mkdir dir="../../bin/blitz/logs" />
+		<mkdir dir="../../bin/jini/logs" />
+		<mkdir dir="../../bin/webster/logs" />
+		<mkdir dir="../../bin/sorcer" />
+		<mkdir dir="../../bin/examples" />
+		<mkdir dir="../../configs" />
+		<mkdir dir="../../policy" />
+		<mkdir dir="../../lib" />
+		<mkdir dir="../../lib/sorcer/lib" />
+		<mkdir dir="../../lib/sorcer/lib-dl" />
+		<mkdir dir="../../lib/sorcer/lib-ext" />
+		<mkdir dir="../../docs" />
+		<mkdir dir="../../classes" />
+		<mkdir dir="../../logs/remote" />
+	</target>
+</project>

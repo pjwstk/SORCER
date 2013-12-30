@@ -1,0 +1,126 @@
+<?xml version='1.0' encoding='ISO-8859-1' standalone='yes'?>
+<!-- 
+ * Make sure the following variables are changed to reflect your environment:
+ *    IGRID_HOME        	iGrid location
+ *	  IGRID_WEBSTER			The class server hostname (webster) 
+ *	  IGRID_WEBSTER_PORT 	The class server (webster) port
+ *    JAVA_HOME         	JDK Location
+ Please see also the modules/common-build.xml for classpaths, definitions and targets
+-->
+<project name="worker" default="all" basedir=".">
+	<property name="module.name" value="space" />
+	<property name="module.run.dir" value="space" />
+	<property name="provider.name" value="worker" />
+	<property name="preferred_list" value="configs/prv-preferred.list" />
+
+	<!-- set global properties -->
+	<import file="../../../../../common-build.xml" />
+	<property name="src" value="./src" />
+	<property name="resources" value="./resources" />
+
+	<!-- The sources to compile -->
+	<patternset id="ant.java">
+		<include name="sorcer/space/**/*.java" />
+		<exclude name="**/SAVE/*.java" />
+		<exclude name="**/BAK/*.java" />
+	</patternset>
+
+	<fileset dir="${resources}" id="icons">
+		<include name="sorcer-3.jpg" />
+	</fileset>
+
+	<patternset id="ant.classes">
+		<include name="sorcer/space/**/*.class" />
+	</patternset>
+
+	<patternset id="ant.jars">
+		<include name="${provider.name}.jar" />
+		<include name="${provider.name}-dl.jar" />
+	</patternset>
+
+	<path id="project.classpath">
+		<pathelement location="${classes}" />
+		<pathelement location="${lib}/jgapp.jar" />
+		<pathelement location="${lib}/sorcer.jar" />
+		<path refid="jini.path" />
+		<path refid="rio.path" />
+	</path>
+
+	<path id="javadocs.classpath">
+		<pathelement location="${common.lib}/rio/serviceui-1.1a.jar" />
+		<pathelement location="${common.lib}rio/ant-ext.jar" />
+		<pathelement location="${ant.home}/lib/ant.jar" />
+	</path>
+
+	<target name="compile" depends="compileSources" />
+	<target name="jars" depends="${provider.name}, copy-run-prv-files" />
+	<target name="${provider.name}" depends="${provider.name}.jar, ${provider.name}-dl.jar" />
+	<target name="all" depends="prepare, jars" />
+
+	<target name="${provider.name}.jar" depends="compile">
+		<classdepandjar jarfile="${lib}/${provider.name}.jar" files="true" debug="false">
+			<classpath refid="project.classpath" />
+			<in name="sorcer" />
+			<in name="jgapp" />
+			<topclass name="sorcer.space.provider.WorkerProvider" />
+			<fileset dir="${iGrid.home}/classes">
+				<include name="sorcer/util/sorcer.env" />
+				<include name="sorcer/util/data.formats" />
+			</fileset>
+			<fileset refid="icons" />
+		</classdepandjar>
+	</target>
+
+	<target name="${provider.name}-dl.jar" depends="compile">
+		<classdepandjar jarfile="${lib}/${provider.name}-dl.jar" files="true" preferredlist="${preferred_list}" debug="false">
+			<manifest>
+				<attribute name="Implementation-Title" value="${sorcer-title}" />
+				<attribute name="Implementation-Version" value="${sorcer-version}" />
+				<attribute name="SORCER-Version" value="${sorcer-version}" />
+				<attribute name="SORCER-Build" value="${DSTAMP}" />
+			</manifest>
+			<classpath refid="project.classpath" />
+			<in name="sorcer" />
+			<in name="jgapp" />
+			<in name="net.jini" />
+			<in name="com.sun" />
+			<topclass name="sorcer.space.provider.Worker" />
+			<topclass name="sorcer.ui.serviceui.UIFrameFactory" />
+			<topclass name="sorcer.core.AdministratableProvider" />
+			<topclass name="sorcer.jini.lookup.entry.SorcerServiceType" />
+			<topclass name="sorcer.service.RemoteTasker" />
+			<fileset refid="icons" />
+		</classdepandjar>
+	</target>
+
+	<target name="docs" depends="prepare, compile">
+		<javadoc packagenames="org.jini.rio.tools.ant.*" maxmemory="100M" sourcepath="${src}" destdir="${docs}/api" Author="true" Version="true" Use="true" windowtitle="Worker Example" doctitle="&lt;h1&gt;Worker Example;/h1&gt;" bottom="&lt;i&gt;Copyright (c) 2008-2009 AFRL/WPAFB, All Rights Reserved.&lt;/i&gt;">
+			<group title="Worker Provider" packages="sorcer.ext2.provider.*" />
+			<classpath refid="project.classpath" />
+		</javadoc>
+	</target>
+
+	<target name="copy-run-prv-files">
+		<mkdir dir="${iGrid.home}/bin/examples/${module.run.dir}/configs" />
+		<mkdir dir="${iGrid.home}/bin/examples/${module.run.dir}/bin" />
+		<mkdir dir="${iGrid.home}/bin/examples/${module.run.dir}/policy" />
+		<mkdir dir="${iGrid.home}/bin/examples/${module.run.dir}/logs" />
+		<copy todir="${iGrid.home}/bin/examples/${module.run.dir}/configs">
+			<fileset dir="configs">
+				<include name="*" />
+			</fileset>
+		</copy>
+		<copy todir="${iGrid.home}/bin/examples/${module.run.dir}/bin">
+			<fileset dir="bin">
+				<include name="*" />
+			</fileset>
+		</copy>
+		<copy todir="${iGrid.home}/bin/examples/${module.run.dir}/policy">
+			<fileset dir="policy">
+				<include name="*" />
+			</fileset>
+		</copy>
+		<chmod dir="${iGrid.home}/bin/examples/${module.run.dir}/bin" perm="755" includes="*.sh" />
+	</target>
+
+</project>

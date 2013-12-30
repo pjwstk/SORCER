@@ -1,0 +1,48 @@
+README
+Greg McChesney
+Cataloger Update 2008-2009
+
+This update adds a user interface to Cataloger, and creates a framework for context management
+in the SORCER environment.  The new user interface provides the ability to select the provider,
+interface and method. The context is loaded directly from the provider using the methods defined
+in the ContextManagement interface. Various options are available to modify the context including
+adding a path, adding a data node, deleting a path and deleting a data node. Any node can be 
+edited by double clicking on it. 
+
+
+The Cataloger service can be built by running cataloger-prv-build.xml.
+The Cataloger service can be started with bin/jeri-cataloger-run.xml.
+
+Integrated Task Editor
+The integrated task editor is available to every provider, to access it go to the About
+section and click Task Editor. An exertion can be created by pressing the Service button. 
+
+Button Descriptions
+Here we describe what each button on the menu does:
+Add Path - creates a new path node under the currently selected node (path cannot be added under a data node)
+	Add Data Node - adds a data node under the currently selected path (only one per path, and cannot be added to a data node)
+	Remove Item - removes the currently selected item
+	Clear Context - clears the current context from view
+	Load Other-loads a menu with all contexts currently stored for that interface
+	Delete Context - loads a menu of contexts which can be deleted
+	Save Context - Saves the current context loaded as the method name currently selected
+	Save As - Allows for saving custom names
+	Service - Creates an exertion, output is displayed as a tab.
+
+Supported data types for nodes
+The following data types are currently supported as data nodes:
+	String
+	Boolean
+	Integer
+	Double
+	Float
+	Groovy Expression - See the Using the ContextGroovyNode section of notes/Groovy.doc for 
+			information on setting up the provider to process this type.
+	URL - Same as Groovy type it needs to support the ContextNode type, follow the instructions 
+			under the Groovy section.
+
+Known issues currently being addressed:
+	Service does not remove when disappears from the network
+	List view not implemented
+	Backup context not implemented
+

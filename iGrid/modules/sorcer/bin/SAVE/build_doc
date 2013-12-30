@@ -1,0 +1,10 @@
+#!/bin/ksh
+#
+# Build the SORCER api doc
+# Scott Burton, scott.burton@crd.ge.com
+#
+#
+cd ${SORCER_HOME}/src/sorcer
+make doc
+cd ${SORCER_HOME}/bin
+

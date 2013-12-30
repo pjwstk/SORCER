@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+
+<!DOCTYPE web-app
+    PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.2//EN"
+    "http://java.sun.com/j2ee/dtds/web-app_2.2.dtd">
+
+<web-app>
+    <servlet>
+        <servlet-name>
+	    controller
+        </servlet-name>
+        <servlet-class>
+	   jgapp.servlets.ApplicationServlet
+        </servlet-class>
+	<init-param>
+            <param-name>asDir</param-name>
+            <param-value>/db/users/sooriana/www/projects/iGrid/sorcer/appserver/webapps/sorcer/WEB-INF/classes/sorcer/dbas</param-value>
+	</init-param>
+	<init-param>
+            <param-name>registryName</param-name>
+            <param-value>SORCERCommander</param-value>
+	</init-param>
+	<init-param>
+            <param-name>isRemote</param-name>
+            <param-value>false</param-value>
+	</init-param>
+	<init-param>
+            <param-name>registryPort</param-name>
+            <param-value>1026</param-value>
+	</init-param>
+	<init-param>
+	    <param-name>servlet.port</param-name>
+	    <param-value>2026</param-value>
+	</init-param>
+    </servlet>
+
+    <servlet>
+        <servlet-name>
+	    dispatcher
+        </servlet-name>
+        <servlet-class>
+	   sorcer.servlets.ServiceServlet
+        </servlet-class>
+	<init-param>
+            <param-name>asDir</param-name>
+            <param-value>/db/users/sooriana/www/projects/iGrid/sorcer/appserver/webapps/sorcer/WEB-INF/classes/sorcer/dbas</param-value>
+	</init-param>
+	<init-param>
+            <param-name>registryName</param-name>
+            <param-value>SORCERJobber</param-value>
+	</init-param>
+	<init-param>
+            <param-name>isRemote</param-name>
+            <param-value>false</param-value>
+	</init-param>
+	<init-param>
+            <param-name>registryPort</param-name>
+            <param-value>1206</param-value>
+	</init-param>
+	<init-param>
+	    <param-name>servlet.port</param-name>
+	    <param-value>2027</param-value>
+	</init-param>
+    </servlet>
+ 
+     <servlet>
+        <servlet-name>
+	   sorcerdmUpload
+        </servlet-name>
+        <servlet-class>
+	   jgapp.servlets.DMFileUploadHandler
+        </servlet-class>
+	<init-param>
+            <param-name>appProperties</param-name>
+            <param-value>/db/users/sooriana/www/projects/iGrid/sorcer/appserver/webapps/sorcer/WEB-INF/classes/sorcer/lnch/sorcer.def</param-value>
+	</init-param>
+	<init-param>
+            <param-name>asPassword</param-name>
+            <param-value>ac9CcIGfYOa.Y</param-value>
+	</init-param>
+    </servlet>	
+
+    <servlet-mapping>
+        <servlet-name>
+	    controller
+        </servlet-name>
+        <url-pattern>
+            /controller
+        </url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>
+	    dispatcher
+        </servlet-name>
+        <url-pattern>
+            /dispatcher
+        </url-pattern>
+    </servlet-mapping>
+
+     <servlet-mapping>
+        <servlet-name>
+	    sorcerdmUpload
+        </servlet-name>
+        <url-pattern>
+            /sorcerdmUpload
+        </url-pattern>
+    </servlet-mapping>
+
+
+</web-app>
+
+
+

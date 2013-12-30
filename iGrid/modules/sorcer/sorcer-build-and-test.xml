@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='ISO-8859-1' standalone='yes'?>
+
+<project name="sorcer" default="all-test" basedir=".">
+
+	<target name="packages">
+		<ant dir="." antfile="sorcer-build.xml" target="all-test" inheritAll="false" />
+	</target>
+	
+	<target name="all-test" depends="packages">
+	</target>
+	
+</project>

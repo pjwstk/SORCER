@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<!-- 
+Replace MYREQUESTOR with your requestor name and specify property value for "requestor.class."
+Also you might need to adjust the classpath (project.classpath) for your requestors. 
+-->
+
+<project name="Run REQUESTOR_NAME_HERE Requestor" default="run.requestor" basedir=".">
+	
+	<!-- loads system environment variables -->
+	<property environment="env" />
+	<import file="${env.IGRID_HOME}/modules/common-run.xml" />
+	
+	<!-- set property values here -->
+	<property name="requestor.name" value="REQUESTOR_NAME_HERE"/>
+	<property name="requestor.class" value="PACKAGE_NAME_HERE.REQUESTOR_NAME_CLASS_HERE"/>
+	<property name="provider.name" value="PROVIDER_NAME_HERE"/>
+
+	<path id="project.classpath">
+		<pathelement location="${MODULE_TYPE_LIB_DIR}/${requestor.name}-req.jar" />
+		<pathelement location="${sorcer.lib}/jgapp.jar" />
+        <pathelement location="${jini.lib}/jsk-lib.jar" />
+        <pathelement location="${jini.lib}/jsk-platform.jar" />
+        <pathelement location="${common.lib}/sun-util.jar" />
+		<pathelement location="${lib}/river/lib/reggie.jar" />
+		<pathelement location="${lib}/river/lib/serviceui.jar"/>
+	</path>
+
+	<target name="run.requestor">
+		<java classname="${requestor.class}" inputstring="" fork="yes">
+			<classpath refid="project.classpath" />			
+			<sysproperty key="java.util.logging.config.file" value="${iGrid.home}/configs/sorcer.logging" />
+			<sysproperty key="java.security.policy" value="../policy/${requestor.name}-req.policy" />
+			<sysproperty key="java.rmi.server.codebase" value="${provider.webster.url}/${requestor.name}-req.jar" />			
+            <sysproperty key="java.library.path" value="${MODULE_TYPE_LIB_DIR}" />
+		</java>
+	</target>
+	
+</project>

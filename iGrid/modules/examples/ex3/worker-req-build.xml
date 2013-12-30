@@ -1,0 +1,110 @@
+<?xml version='1.0' encoding='ISO-8859-1' standalone='yes'?>
+<!-- 
+ * Make sure the following variables are changed to reflect your environment:
+ *    IGRID_HOME        	iGrid location
+ *	  IGRID_WEBSTER 		The class server (webster) 
+ *	  IGRID_WEBSTER_PORT 	The class server (webster) port
+ *    JAVA_HOME         	JDK Location
+ Please see also the modules/common-build.xml for classpaths, definitions and targets
+-->
+<project name="worker requestor" default="all" basedir=".">
+	<property name="module.name" value="worker-run" />
+	<property name="module.run.dir" value="ex3" />
+	<!-- set global properties -->
+	<import file="../../common-build.xml" />
+	<property name="src" value="./src" />
+
+	<!-- The sources to compile -->
+	<patternset id="ant.java">
+		<include name="sorcer/ex3/runner/**/*.java" />
+		<exclude name="**/SAVE/*.java" />
+		<exclude name="**/BAK/*.java" />
+	</patternset>
+
+	<patternset id="ant.classes">
+		<include name="sorcer/ex3/runner/**/*.class" />
+	</patternset>
+
+	<path id="project.classpath">
+		<pathelement location="${classes}" />
+		<pathelement location="${sorcer.lib}/sorcer-prv.jar" />
+		<pathelement location="${sorcer.lib}/sorcer-lib.jar" />
+		<pathelement location="${sorcer-ext.lib}/webster.jar" />
+		<path refid="jini.path" />
+		<path refid="rio.path" />
+	</path>
+
+	<path id="javadocs.classpath">
+		<path refid="jini.path" />
+		<pathelement location="${common.lib}/buildsupport/ant-ext.jar" />
+		<pathelement location="${common.lib}/buildsupport/ant.jar" />
+	</path>
+
+	<target name="all" depends="prepare, jars" />
+	<target name="compile" depends="compileSources" />
+	<target name="jars" depends="compile, flowWorker-run.jar, sharedWorker-run.jar, pipedWorker-run.jar, copy-run-req-files" />
+
+	<target name="docs" depends="prepare, compile">
+		<javadoc packagenames="org.jini.rio.tools.ant.*" maxmemory="100M" sourcepath="${src}" destdir="${docs}/api" Author="true" Version="true" Use="true" windowtitle="Worker Runner" doctitle="&lt;h1&gt;Worker Runner;/h1&gt;" bottom="&lt;i&gt;Copyright (c) 2008-2009 AFRL/WPAFB, All Rights Reserved.&lt;/i&gt;">
+			<group title="Worker Runner" packages="sorcer.ex3.runner*" />
+			<classpath refid="project.classpath" />
+		</javadoc>
+	</target>
+
+	<target name="flowWorker-run.jar">
+		<classdepandjar jarfile="${sorcer.lib}/flowWorker-run.jar" files="true">
+			<classpath refid="project.classpath" />
+			<in name="sorcer" />
+			<out name="sorcer.util.bdb.objects" />
+			<topclass name="sorcer.ex3.runner.FlowAccessWorkerRunner" />
+			<topclass name="sorcer.core.requestor.ServiceRequestor" />
+			<fileset dir="${iGrid.home}/configs" includes="sorcer/util/sorcer.env" />
+		</classdepandjar>
+	</target>
+
+	<target name="pipedWorker-run.jar">
+		<classdepandjar jarfile="${sorcer.lib}/pipedWorker-run.jar" files="true">
+			<classpath refid="project.classpath" />
+			<in name="sorcer" />
+			<out name="sorcer.util.bdb.objects" />
+			<topclass name="sorcer.ex3.runner.PipedContextWorkerRunner" />
+			<topclass name="sorcer.core.requestor.ServiceRequestor" />
+			<fileset dir="${iGrid.home}/configs" includes="sorcer/util/sorcer.env" />
+		</classdepandjar>
+	</target>
+
+	<target name="sharedWorker-run.jar">
+		<classdepandjar jarfile="${sorcer.lib}/sharedWorker-run.jar" files="true">
+			<classpath refid="project.classpath" />
+			<in name="sorcer" />
+			<out name="sorcer.util.bdb.objects" />
+			<topclass name="sorcer.ex3.runner.SharedContextWorkerRunner" />
+			<topclass name="sorcer.core.requestor.ServiceRequestor" />
+			<fileset dir="${iGrid.home}/configs" includes="sorcer/util/sorcer.env" />
+		</classdepandjar>
+	</target>
+
+	<target name="copy-run-req-files">
+		<mkdir dir="${iGrid.home}/bin/examples/${module.run.dir}/configs" />
+		<mkdir dir="${iGrid.home}/bin/examples/${module.run.dir}/bin" />
+		<mkdir dir="${iGrid.home}/bin/examples/${module.run.dir}/policy" />
+		<mkdir dir="${iGrid.home}/bin/examples/${module.run.dir}/logs" />
+		<copy todir="${iGrid.home}/bin/examples/${module.run.dir}/configs">
+			<fileset dir="configs">
+				<include name="*" />
+			</fileset>
+		</copy>
+		<copy todir="${iGrid.home}/bin/examples/${module.run.dir}/bin">
+			<fileset dir="bin">
+				<include name="*" />
+			</fileset>
+		</copy>
+		<copy todir="${iGrid.home}/bin/examples/${module.run.dir}/policy">
+			<fileset dir="policy">
+				<include name="*" />
+			</fileset>
+		</copy>
+		<chmod dir="${iGrid.home}/bin/examples/${module.run.dir}/bin" perm="755" includes="*.sh" />
+	</target>
+
+</project>

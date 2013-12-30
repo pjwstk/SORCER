@@ -1,0 +1,30 @@
+#!/bin/ksh
+
+# Rio -name Provisioner start utility generated Mon Nov 19 19:31:36 EST 2001
+
+# Set the installation root directory
+export JINI=${JINI_HOME}/lib
+export ROOT=${RIO_HOME}/lib
+
+# Set the included classes
+export CLASSES=$JINI/jini-core.jar:$JINI/jini-ext.jar:$JINI/sun-util.jar:$ROOT/serviceui.jar:$ROOT/loader.jar:$ROOT/jaxp.jar:$ROOT/crimson.jar:$ROOT/xalan.jar
+
+# Set debug options
+export DEBUG="-Dcom.sun.rio.debug -Dcom.sun.jini.reggie.proxy.debug=1 -Dcom.sun.jini.join.debug -Dcom.sun.rio.client.debug"
+
+# Set the LookupLocators for Unicast discovery
+export LOCATORS=
+
+# Set the Lookup Service groups for multicast discovery
+export GROUPS=-Dcom.sun.rio.groups=fiper.DEV
+
+# Set the Policy file
+export POLICY=-Djava.security.policy=${RIO_HOME}/policy/policy.all
+
+java -cp $CLASSES $DEBUG $LOCATORS $GROUPS $POLICY  com.sun.rio.resources.jsb.Loader com.sun.rio.services.monitor.ProvisionMonitorImpl monitor.jar monitor-dl.jar -name Provisioner &
+
+
+
+
+
+
