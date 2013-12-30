@@ -1,118 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="modules/engineering/optimization/matlab/requestor/src"/>
-	<classpathentry kind="src" path="modules/engineering/plotting/src"/>
-	<classpathentry kind="src" path="modules/engineering/junit/opti/opti-model/src"/>
-	<classpathentry kind="src" path="modules/engineering/junit/opti/explorer/src"/>
-	<classpathentry kind="src" path="modules/engineering/junit/opti/mf-explorer/src"/>
-	<classpathentry kind="src" path="modules/engineering/junit/models/src"/>
-	<classpathentry kind="src" path="modules/engineering/junit/opti/rs-model/src"/>
-	<classpathentry kind="src" path="modules/engineering/junit/opti/optimizer/src"/>
-	<classpathentry kind="src" path="modules/engineering/apps/aawtrimopt/requestor/src"/>
-	<classpathentry kind="src" path="modules/engineering/apps/aawtrimopt/provider/src"/>
-	<classpathentry kind="src" path="modules/engineering/apps/caddb/tester/src"/>
-	<classpathentry kind="src" path="modules/engineering/apps/hybridperf/tester/src"/>
-	<classpathentry kind="src" path="modules/engineering/apps/hybridperf/provider/src"/>
-	<classpathentry kind="src" path="modules/engineering/apps/wingnoise/tester/src"/>
-	<classpathentry kind="src" path="modules/engineering/apps/wingnoise/provider/src"/>
-	<classpathentry kind="src" path="modules/engineering/apps/wingdes/tester/src"/>
-	<classpathentry kind="src" path="modules/engineering/apps/weights/requestor/src"/>
-	<classpathentry kind="src" path="modules/engineering/apps/weights/provider/src"/>
-	<classpathentry kind="src" path="modules/engineering/apps/awave/tester/src"/>
-	<classpathentry kind="src" path="modules/engineering/apps/aero2s/tester/src"/>
-	<classpathentry kind="src" path="modules/engineering/apps/flops/tester/src"/>
-	<classpathentry kind="src" path="modules/engineering/apps/excel/tester/src"/>
-	<classpathentry kind="src" path="modules/engineering/apps/aeropost/tester/src"/>
-	<classpathentry kind="src" path="modules/engineering/apps/astros/tester/src"/>
-	<classpathentry kind="src" path="modules/engineering/apps/caddb/requestor/src"/>
-	<classpathentry kind="src" path="modules/engineering/apps/caddb/provider/src"/>
 	<classpathentry kind="src" path="modules/examples/vml-eol/src"/>
-	<classpathentry kind="src" path="modules/engineering/plotting/paraview/provider/src"/>
-	<classpathentry kind="src" path="modules/engineering/plotting/paraview/requestor/src"/>
-	<classpathentry kind="src" path="modules/engineering/apps/mstcperf/requestor/src"/>
-	<classpathentry kind="src" path="modules/engineering/apps/mstcperf/provider/src"/>
-	<classpathentry kind="src" path="modules/engineering/apps/fesystem/provider/src"/>
-	<classpathentry kind="src" path="modules/engineering/apps/fesystem/requestor/src"/>
-	<classpathentry kind="src" path="modules/engineering/apps/av/provider/src"/>
-	<classpathentry kind="src" path="modules/engineering/apps/zeus/requestor/src"/>
-	<classpathentry kind="src" path="modules/engineering/apps/zeus/provider/src"/>
-	<classpathentry kind="src" path="modules/engineering/apps/zaero/provider/src"/>
-	<classpathentry kind="src" path="modules/engineering/apps/zaero/requestor/src"/>
-	<classpathentry kind="src" path="modules/engineering/apps/awave/provider/src"/>
-	<classpathentry kind="src" path="modules/engineering/apps/wingdes/provider/src"/>
-	<classpathentry kind="src" path="modules/engineering/apps/wingdes/requestor/src"/>
-	<classpathentry kind="src" path="modules/engineering/apps/aero2s/provider/src"/>
-	<classpathentry kind="src" path="modules/engineering/apps/awave/requestor/src"/>
-	<classpathentry kind="src" path="modules/engineering/apps/aero2s/requestor/src"/>
-	<classpathentry kind="src" path="modules/engineering/apps/self/requestor/src"/>
-	<classpathentry kind="src" path="modules/engineering/apps/nastranRMK/requestor/src"/>
-	<classpathentry kind="src" path="modules/util/jfreechart/jfreechart-1.0.14/source"/>
-	<classpathentry kind="src" path="modules/engineering/apps/aeropost/requestor/src"/>
-	<classpathentry kind="src" path="modules/engineering/apps/aeropost/provider/src"/>
 	<classpathentry kind="src" path="netlets"/>
 	<classpathentry kind="src" path="modules/tools/shell/src"/>
-	<classpathentry kind="src" path="modules/engineering/apps/tornado/requestor/src"/>
-	<classpathentry kind="src" path="modules/engineering/apps/tornado/provider/src"/>
-	<classpathentry kind="src" path="modules/engineering/apps/friction/provider/src"/>
-	<classpathentry kind="src" path="modules/engineering/apps/friction/requestor/src"/>
-	<classpathentry kind="src" path="modules/engineering/apps/self/provider/src"/>
-	<classpathentry kind="src" path="modules/engineering/apps/rosensuzuki/provider/src"/>
-	<classpathentry kind="src" path="modules/engineering/apps/rosensuzuki/requestor/src"/>
-	<classpathentry kind="src" path="modules/engineering/apps/serviceProvider_Requestor_Template/requestor/src"/>
-	<classpathentry kind="src" path="modules/engineering/apps/serviceProvider_Requestor_Template/provider/src"/>
-	<classpathentry kind="src" path="modules/examples/scott/training/model/src"/>
-	<classpathentry kind="src" path="modules/examples/scott/training/provider/src"/>
-	<classpathentry kind="src" path="modules/examples/scott/training/requestor/src"/>
-	<classpathentry kind="src" path="modules/engineering/junit/src"/>
-	<classpathentry kind="src" path="modules/engineering/apps/generic/requestor/src"/>
-	<classpathentry kind="src" path="modules/engineering/apps/generic/provider/src"/>
-	<classpathentry kind="src" path="modules/engineering/products/esavS1/optimizationModel/src"/>
-	<classpathentry kind="src" path="modules/engineering/apps/mstcgeom/requestor/src"/>
-	<classpathentry kind="src" path="modules/engineering/apps/mstcgeom/provider/src"/>
 	<classpathentry kind="src" path="modules/tools/locker/src"/>
 	<classpathentry kind="src" path="modules/test/bdb/src"/>
-	<classpathentry kind="src" path="modules/engineering/products/qsCsd/requestor/src"/>
-	<classpathentry kind="src" path="modules/engineering/apps/runcommand/provider/src"/>
-	<classpathentry kind="src" path="modules/engineering/products/qsCsd/conminExplorer/src"/>
-	<classpathentry kind="src" path="modules/engineering/products/qsCsd/explorerRequestor/src"/>
-	<classpathentry kind="src" path="modules/engineering/products/qsCsd/dotExplorer/src"/>
-	<classpathentry kind="src" path="modules/engineering/products/qsCsd/optimizationModel/src"/>
-	<classpathentry kind="src" path="modules/examples/scott/model/src"/>
-	<classpathentry kind="src" path="modules/examples/scott/rsopt/requestor/src"/>
-	<classpathentry kind="src" path="modules/examples/scott/requestor/src"/>
-	<classpathentry kind="src" path="modules/examples/scott/provider/src"/>
-	<classpathentry kind="src" path="modules/examples/scott/rsopt/model/src"/>
 	<classpathentry kind="src" path="modules/test/greeter/src"/>
-	<classpathentry kind="src" path="modules/engineering/apps/ldslib/requestor/src"/>
-	<classpathentry kind="src" path="modules/engineering/apps/ldslib/provider/src"/>
-	<classpathentry kind="src" path="modules/engineering/apps/flops/requestor/src"/>
-	<classpathentry kind="src" path="modules/engineering/apps/flops/provider/src"/>
-	<classpathentry kind="src" path="modules/engineering/apps/mobius/provider/src"/>
-	<classpathentry kind="src" path="modules/engineering/apps/mobius/requestor/src"/>
 	<classpathentry kind="src" path="modules/test/junit-testing/src"/>
 	<classpathentry kind="src" path="modules/examples/ex11/src"/>
 	<classpathentry kind="src" path="modules/examples/ex4/src"/>
 	<classpathentry kind="src" path="modules/examples/ex10b/src"/>
-	<classpathentry kind="src" path="modules/engineering/apps/excel/provider/src"/>
-	<classpathentry kind="src" path="modules/engineering/apps/excel/requestor/src"/>
 	<classpathentry kind="src" path="modules/examples/ex10a/src"/>
-	<classpathentry kind="src" path="modules/examples/ex9/src"/>
-	<classpathentry kind="src" path="modules/examples/ex8/src"/>
-	<classpathentry kind="src" path="modules/examples/ex7/src"/>
 	<classpathentry kind="src" path="modules/examples/ex6/src"/>
-	<classpathentry kind="src" path="modules/examples/hello/hello/provider/src"/>
-	<classpathentry kind="src" path="modules/examples/hello/hello/requestor/src"/>
-	<classpathentry kind="src" path="modules/engineering/matlabJNA/provider/src"/>
 	<classpathentry kind="src" path="modules/test/eval/src"/>
-	<classpathentry kind="src" path="modules/engineering/apps/modelcenter/requestor/src"/>
-	<classpathentry kind="src" path="modules/engineering/apps/gridgen/requestor/src"/>
-	<classpathentry kind="src" path="modules/engineering/apps/modelcenter/provider/src"/>
-	<classpathentry kind="src" path="modules/engineering/apps/gridgen/provider/src"/>
-	<classpathentry kind="src" path="modules/engineering/apps/mdice/provider/src"/>
-	<classpathentry kind="src" path="modules/engineering/apps/structuretransform/requestor/src"/>
-	<classpathentry kind="src" path="modules/engineering/apps/nastranRMK/provider/src"/>
-	<classpathentry kind="src" path="modules/engineering/apps/structuretransform/provider/src"/>
-	<classpathentry kind="src" path="modules/engineering/apps/mdice/requestor/src"/>
 	<classpathentry kind="src" path="modules/tools/ssb/src"/>
 	<classpathentry kind="src" path="modules/tools/boot/src"/>
 	<classpathentry kind="src" path="modules/tools/classdepandjar/src"/>
@@ -121,36 +21,11 @@
 	<classpathentry kind="src" path="modules/examples/ex1/src"/>
 	<classpathentry kind="src" path="modules/examples/ex2/src"/>
 	<classpathentry kind="src" path="modules/examples/ex3/src"/>
-	<classpathentry kind="src" path="modules/engineering/apps/m3ct/requestor/src"/>
-	<classpathentry kind="src" path="modules/engineering/apps/maelstrom/requestor/src"/>
-	<classpathentry kind="src" path="modules/engineering/apps/maelstrom/provider/src"/>
-	<classpathentry kind="src" path="modules/engineering/core/src"/>
-	<classpathentry kind="src" path="modules/engineering/optimization/conmin/provider/src"/>
-	<classpathentry kind="src" path="modules/engineering/optimization/conmin/requestor/src"/>
-	<classpathentry kind="src" path="modules/engineering/optimization/dot/provider/src"/>
-	<classpathentry kind="src" path="modules/engineering/optimization/dot/requestor/src"/>
-	<classpathentry kind="src" path="modules/engineering/optimization/jep-ssb/src"/>
-	<classpathentry kind="src" path="modules/engineering/optimization/matlab/provider/src"/>
-	<classpathentry kind="src" path="modules/engineering/boundarycondition/requestor/src"/>
-	<classpathentry kind="src" path="modules/engineering/apps/astros/provider/src"/>
-	<classpathentry kind="src" path="modules/engineering/apps/vortexlattice/provider/src"/>
-	<classpathentry kind="src" path="modules/engineering/test/formatter/src"/>
-	<classpathentry kind="src" path="modules/engineering/utils/src"/>
-	<classpathentry kind="src" path="modules/engineering/numericalanalysis/requestor/src"/>
-	<classpathentry kind="src" path="modules/engineering/numericalanalysis/provider/src"/>
-	<classpathentry kind="src" path="modules/engineering/boundarycondition/provider/src"/>
-	<classpathentry kind="src" path="modules/engineering/apps/avus/provider/src"/>
-	<classpathentry kind="src" path="modules/engineering/apps/ansys/provider/src"/>
-	<classpathentry kind="src" path="modules/engineering/apps/avus/requestor/src"/>
-	<classpathentry kind="src" path="modules/engineering/apps/astros/requestor/src"/>
 	<classpathentry kind="src" path="modules/examples/arithmetic/requestor/secure-arithmetic-serviceui/src"/>
 	<classpathentry kind="src" path="modules/examples/arithmetic/requestor/ssl-jeri-pv/src"/>
 	<classpathentry kind="src" path="modules/examples/arithmetic/requestor/ssl-jeri-ma/src"/>
 	<classpathentry kind="src" path="modules/examples/arithmetic/requestor/ssl-jeri/src"/>
 	<classpathentry kind="src" path="modules/examples/arithmetic/provider/ssl-jeri/src"/>
-	<classpathentry kind="src" path="modules/examples/account/src"/>
-	<classpathentry kind="src" path="modules/examples/jini/src"/>
-	<classpathentry kind="src" path="modules/examples/simple/src"/>
 	<classpathentry kind="src" path="modules/examples/arithmetic/provider/tasker/src"/>
 	<classpathentry kind="src" path="modules/examples/arithmetic/provider/jeri/src"/>
 	<classpathentry kind="src" path="modules/examples/arithmetic/provider/jrmp/src"/>
