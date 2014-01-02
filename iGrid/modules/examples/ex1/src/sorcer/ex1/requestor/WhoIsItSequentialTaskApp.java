@@ -14,7 +14,7 @@ import sorcer.service.Task;
 import sorcer.util.Log;
 import sorcer.util.Sorcer;
 
-public class WhoIsItSequentialTaskRequestor {
+public class WhoIsItSequentialTaskApp {
 
 	private static Logger logger = Log.getTestLog();
 
@@ -30,7 +30,7 @@ public class WhoIsItSequentialTaskRequestor {
 		Exertion task = null;
 		long start = System.currentTimeMillis();
 		for (int i = 0; i < tally; i++) {
-			task = new WhoIsItSequentialTaskRequestor().getExertion();
+			task = new WhoIsItSequentialTaskApp().getExertion();
 			((ServiceExertion)task).setName(task.getName() + "-" + i);
 			task = task.exert();
 			logger.info("got sequentially executed task: " + task.getName());

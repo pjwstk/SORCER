@@ -16,7 +16,7 @@ import sorcer.util.Log;
 import sorcer.util.Sorcer;
 
 @SuppressWarnings("rawtypes")
-public class WhoIsItBatchTaskRequestor {
+public class WhoIsItBatchTaskApp {
 
 	private static Logger logger = Log.getTestLog();
 
@@ -28,7 +28,7 @@ public class WhoIsItBatchTaskRequestor {
 		String providerName = Sorcer.getActualName(args[0]);
 		logger.info("Who is provider \"" + providerName + "\"?");
 		
-		Exertion result = new WhoIsItBatchTaskRequestor().getExertion(providerName)
+		Exertion result = new WhoIsItBatchTaskApp().getExertion(providerName)
 				.exert();
 		logger.info("Exceptions: \n" + result.getExceptions());
 		logger.info("Trace: \n" + result.getTrace());

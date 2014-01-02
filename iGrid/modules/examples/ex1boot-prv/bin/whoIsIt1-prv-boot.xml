@@ -28,10 +28,10 @@ Also you might need to adjust the classpath (provider.classpath) for your provid
 	<!-- start provider -->
 	<target name="run.provider">
 		<java jar="${lib}/boot.jar" fork="yes">
-			<arg value="${iGrid.home}/configs/startup-boot-prv.config" />
+			<arg value="${iGrid.home}/configs/boot-prv.config" />
 			<sysproperty key="sorcer.provider.impl" value="${provider.class}" />
 			<sysproperty key="sorcer.provider.config" value="../configs/${provider.name}1-prv.config" />
-			<sysproperty key="sorcer.provider.codebase.jars" value="${j1} ${j2} ${j3}" />
+			<sysproperty key="sorcer.provider.codebase" value="${j1} ${j2} ${j3}" />
 			<sysproperty key="sorcer.provider.classpath" value="${toString:project.classpath}" />
 			<sysproperty key="iGrid.home" value="${iGrid.home}" />
 			<sysproperty key="sorcer.env.file" value="${iGrid.home}/configs/sorcer.env" />

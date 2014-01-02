@@ -8,8 +8,8 @@
 	<echo message="webster: ${provider.webster.url}" />
 
 	<!-- set property values here -->
-	<property name="requestor.name" value="whoIsItParallelTask" />
-	<property name="requestor.class" value="sorcer.ex1.requestor.WhoIsItParallelTaskRequestor" />
+	<property name="requestor.name" value="whoIsItSequentialTask" />
+	<property name="requestor.class" value="sorcer.ex1.requestor.WhoIsItSequentialTaskApp" />
 
 	<path id="project.classpath">
 		<pathelement location="${sorcer.lib}/${requestor.name}.jar" />
@@ -20,6 +20,7 @@
 
 	<target name="run.requestor">
 		<java classname="${requestor.class}" fork="yes">
+			<arg value="XYZ" />
 			<arg value="5" />
 			<classpath refid="project.classpath" />
 			<sysproperty key="java.util.logging.config.file" value="${iGrid.home}/configs/sorcer.logging" />

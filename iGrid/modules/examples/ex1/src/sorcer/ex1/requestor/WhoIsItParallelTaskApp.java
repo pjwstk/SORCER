@@ -21,7 +21,7 @@ import sorcer.service.Task;
 import sorcer.util.Log;
 import sorcer.util.Sorcer;
 
-public class WhoIsItParallelTaskRequestor {
+public class WhoIsItParallelTaskApp {
 
 	private static Logger logger = Log.getTestLog();
 
@@ -37,7 +37,7 @@ public class WhoIsItParallelTaskRequestor {
 		ExertionCallable ec = null;
 		List<Future<Exertion>> fList = new ArrayList<Future<Exertion>>(tally);
 		ExecutorService pool = Executors.newFixedThreadPool(tally);
-		WhoIsItParallelTaskRequestor req = new WhoIsItParallelTaskRequestor();
+		WhoIsItParallelTaskApp req = new WhoIsItParallelTaskApp();
 		long start = System.currentTimeMillis();
 		for (int i = 0; i < tally; i++) {
 			task = req.getExertion();

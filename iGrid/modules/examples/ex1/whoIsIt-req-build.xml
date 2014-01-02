@@ -59,8 +59,7 @@
 			<in name="sorcer" />
 			<out name="net.jini" />
 			<out name="sorcer.util.bdb.objects" />
-			<topclass name="sorcer.ex1.requestor.WhoIsItPushJobRequestor" />
-			<topclass name="sorcer.ex1.requestor.WhoIsItPushJobRunner" />
+			<topclass name="sorcer.ex1.requestor.WhoIsItPushJobApp" />
 			<fileset dir="${iGrid.home}/configs" includes="sorcer/util/sorcer.env" />
 		</classdepandjar>
 	</target>
@@ -71,8 +70,7 @@
 			<in name="sorcer.ex1" />
 			<in name="sorcer.core.requestor" />
 			<out name="net.jini" />
-			<topclass name="sorcer.ex1.requestor.WhoIsItPullJobRequestor" />
-			<topclass name="sorcer.ex1.requestor.WhoIsItPullJobRunner" />
+			<topclass name="sorcer.ex1.requestor.WhoIsItPullJobApp" />
 			<topclass name="sorcer.core.requestor.ServiceRequestor" />
 			<fileset dir="${iGrid.home}/configs" includes="sorcer/util/sorcer.env" />
 		</classdepandjar>
@@ -84,8 +82,7 @@
 			<in name="sorcer" />
 			<out name="net.jini" />
 			<out name="sorcer.util.bdb.objects" />
-			<topclass name="sorcer.ex1.requestor.WhoIsItTaskRequestor" />
-			<topclass name="sorcer.ex1.requestor.WhoIsItTaskRunner" />
+			<topclass name="sorcer.ex1.requestor.WhoIsItTaskApp" />
 			<fileset dir="${iGrid.home}/configs" includes="sorcer/util/sorcer.env" />
 		</classdepandjar>
 	</target>
@@ -97,7 +94,7 @@
 			<out name="net.jini" />
 			<out name="sorcer.util.bdb.objects" />
 			<out name="sorcer.util.bdb.objects" />
-			<topclass name="sorcer.ex1.requestor.WhoIsItBatchTaskRequestor" />
+			<topclass name="sorcer.ex1.requestor.WhoIsItBatchTaskApp" />
 			<fileset dir="${iGrid.home}/configs" includes="sorcer/util/sorcer.env" />
 		</classdepandjar>
 	</target>
@@ -109,8 +106,7 @@
 			<out name="net.jini" />
 			<out name="sorcer.util.bdb.objects" />
 			<topclass name="sorcer.core.requestor.ServiceRequestor" />
-			<topclass name="sorcer.ex1.requestor.WhoIsItSequentialTaskRequestor" />
-			<topclass name="sorcer.ex1.requestor.WhoIsItSequentialTaskRunner" />
+			<topclass name="sorcer.ex1.requestor.WhoIsItSequentialTaskApp" />
 			<fileset dir="${iGrid.home}/configs" includes="sorcer/util/sorcer.env" />
 		</classdepandjar>
 	</target>
@@ -122,8 +118,7 @@
 				<out name="net.jini" />
 				<out name="sorcer.util.bdb.objects" />
 				<topclass name="sorcer.core.requestor.ServiceRequestor" />
-				<topclass name="sorcer.ex1.requestor.WhoIsItParallelTaskRequestor" />
-				<topclass name="sorcer.ex1.requestor.WhoIsItParallelTaskRunner" />
+				<topclass name="sorcer.ex1.requestor.WhoIsItParallelTaskApp" />
 				<fileset dir="${iGrid.home}/configs" includes="sorcer/util/sorcer.env" />
 			</classdepandjar>
 		</target>

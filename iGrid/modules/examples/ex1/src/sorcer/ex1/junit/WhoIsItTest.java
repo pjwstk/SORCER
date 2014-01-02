@@ -1,4 +1,21 @@
-package sorcer.ex1.junit;
+/**
+ *
+ * Copyright 2013 the original author or authors.
+ * Copyright 2013 Sorcersoft.com S.A.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package sorcer.ex1.requestor;
 
 import static org.junit.Assert.assertEquals;
 
@@ -9,6 +26,7 @@ import java.util.logging.Logger;
 import org.junit.Ignore;
 import org.junit.Test;
 
+import sorcer.core.SorcerConstants;
 import sorcer.core.context.ControlContext;
 import sorcer.core.context.ServiceContext;
 import sorcer.core.exertion.NetJob;
@@ -18,7 +36,6 @@ import sorcer.core.signature.NetSignature;
 import sorcer.core.signature.ObjectSignature;
 import sorcer.ex1.bean.WhoIsItBean1;
 import sorcer.ex1.provider.WhoIsItProvider1;
-import sorcer.ex1.requestor.RequestorMessage;
 import sorcer.service.Context;
 import sorcer.service.Exertion;
 import sorcer.service.Job;
@@ -26,22 +43,22 @@ import sorcer.service.Signature;
 import sorcer.service.Signature.Type;
 import sorcer.service.Strategy;
 import sorcer.service.Task;
-import sorcer.util.SorcerEnv;
+import sorcer.util.Sorcer;
 
 /**
  * @author Mike Sobolewski
  */
-@SuppressWarnings("rawtypes")
-public class WhoIsItTest {
+@SuppressWarnings({ "rawtypes" })
+public class WhoIsItTest implements SorcerConstants {
 
 	private final static Logger logger = Logger
 			.getLogger(WhoIsItTest.class.getName());
 
 	static {
-        System.setProperty("java.security.policy", System.getenv("SORCER_HOME")
+        System.setProperty("java.security.policy", Sorcer.getHome()
                 + "/configs/sorcer.policy");
         System.setSecurityManager(new RMISecurityManager());
-//TODO codebase
+		Sorcer.setCodeBase(new String[] { "whoIsIt-bean-dl.jar",  "sorcer-prv-dl.jar" });
         System.out.println("CLASSPATH :" + System.getProperty("java.class.path"));
         System.out.println("CODEBASE :" + System.getProperty("java.rmi.server.codebase"));
     }
@@ -81,12 +98,13 @@ public class WhoIsItTest {
         }
     }
 
+    @Ignore
     @Test
     public void helloNetworkTask() throws Exception {
         // using requestor/provider message types
         InetAddress inetAddress = InetAddress.getLocalHost();
         String hostname = inetAddress.getHostName();
-        String ipAddress = inetAddress.getHostAddress();
+//        String ipAddress = inetAddress.getHostAddress();
         String providerName = null;
 
         Context context = new ServiceContext("Who Is It?");
@@ -167,8 +185,8 @@ public class WhoIsItTest {
     @Ignore
     @Test
     public void exertJob() throws Exception {
-        String providerName1 = SorcerEnv.getSuffixedName("ABC");
-        String providerName2 = SorcerEnv.getSuffixedName("XYZ");
+        String providerName1 = Sorcer.getSuffixedName("ABC");
+        String providerName2 = Sorcer.getSuffixedName("XYZ");
 
         // define requestor data
         InetAddress inetAddress = InetAddress.getLocalHost();

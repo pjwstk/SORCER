@@ -5,26 +5,38 @@
 	<!-- loads system environment variables -->
 	<property environment="env" />
 	<import file="${env.IGRID_HOME}/modules/common-run.xml" />
-	<echo message="webster: ${provider.webster.url}" />
+	<property name="webster" value="${provider.webster.url}" />
+	<echo message="webster: ${webster}" />
 
-	<!-- set property values here -->
-	<property name="requestor.name" value="whoIsItTask" />
-	<property name="requestor.class" value="sorcer.ex1.requestor.WhoIsItTaskRequestor" />
+	<!-- set property values -->
+	<property name="requestor.name" value="whoIsItPushJob" />
+	<property name="requestor.class" value="sorcer.ex1.requestor.WhoIsItPushJobApp" />
 
+	<!-- define classpath -->
 	<path id="project.classpath">
 		<pathelement location="${sorcer.lib}/${requestor.name}.jar" />
+		<pathelement location="${sorcer.lib}/sorcer-prv.jar" />
+		<pathelement location="${sorcer.lib}/sorcer-lib.jar" />
 		<pathelement location="${jini.lib}/jsk-lib.jar" />
 		<pathelement location="${jini.lib}/jsk-platform.jar" />
 		<pathelement location="${jini.lib}/serviceui.jar" />
 	</path>
 
+	<!-- define codebase -->
+	<property name="j1" value="${webster}/whoIsIt-req-dl.jar" />
+	<property name="j2" value="${webster}/sorcer-prv-dl.jar" />
+	<property name="j3" value="${webster}/sorcer-lib.jar" />
+
+	<!-- start requestor -->
 	<target name="run.requestor">
 		<java classname="${requestor.class}" fork="yes">
-			<arg value="PULL" />
+			<arg value="XYZ" />
+			<arg value="ABC" />
+			<arg value="Jobber" />
 			<classpath refid="project.classpath" />
 			<sysproperty key="java.util.logging.config.file" value="${iGrid.home}/configs/sorcer.logging" />
 			<sysproperty key="java.security.policy" value="../policy/whoIsIt-req.policy" />
-			<sysproperty key="java.rmi.server.codebase" value="${provider.webster.url}/whoIsIt-req-dl.jar" />
+			<sysproperty key="java.rmi.server.codebase" value="${j1} ${j2} ${j3}" />
 			<sysproperty key="sorcer.env.file" value="${iGrid.home}/configs/sorcer.env" />
 		</java>
 	</target>

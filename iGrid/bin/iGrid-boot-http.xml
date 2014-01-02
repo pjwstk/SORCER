@@ -7,7 +7,7 @@
 
 	<property name="iGrid.data" value="${iGrid.home}/data" />
 
-	<target name="services">
+	<target name="services" depends="cleanDBs">
 		<java classname="com.sun.jini.start.ServiceStarter" fork="yes">
             <classpath>
                 <pathelement location="${lib}/boot.jar"/>
@@ -36,6 +36,10 @@
 		</java>
 	</target>
 
+	<target name="cleanDBs" description="Deletes Blitz DB files">
+			<delete dir="${iGrid.home}/logs/dbfiles_blitz" failonerror="false" />
+	</target>
+	
 	<target name="clean" description="Deletes Blitz DB files">
 		<delete dir="${iGrid.home}/logs/dbfiles_blitz" failonerror="false" />
 		<delete dir="${iGrid.home}/logs/dbfiles_monitor" failonerror="false" />
