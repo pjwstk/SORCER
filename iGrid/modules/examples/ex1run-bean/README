@@ -1,5 +1,5 @@
 Examples for service components (beans) running with 
-a required code server (webster) - webster-beans (WB).
+a standalone code server (webster).
 A webster is required for both a service provider and requestor.
 The functionality of providers and requestors is similar 
 as in the example ex1boot-bean.

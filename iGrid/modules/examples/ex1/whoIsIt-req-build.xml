@@ -30,6 +30,7 @@
 		<pathelement location="${sorcer.lib}/sorcer-prv.jar" />
 		<pathelement location="${sorcer.lib}/sorcer-lib.jar" />
 		<pathelement location="${sorcer-ext.lib}/webster.jar" />
+		<pathelement location="${common.lib}/buildsupport/junit.jar" />
 		<path refid="jini.path" />
 		<path refid="rio.path" />
 	</path>
@@ -134,9 +135,7 @@
 			<out name="net.jini" />
 			<out name="sorcer.util.bdb.objects" />
 			<topclass name="sorcer.ex1.requestor.bean.WhoIsItBeanRequestor1" />
-			<topclass name="sorcer.ex1.requestor.bean.WhoIsItBeanRunner1" />
 			<topclass name="sorcer.ex1.requestor.bean.WhoIsItBeanRequestor2" />
-			<topclass name="sorcer.ex1.requestor.bean.WhoIsItBeanRunner2" />
 			<fileset dir="${iGrid.home}/configs" includes="sorcer/util/sorcer.env" />
 		</classdepandjar>
 	</target>
@@ -146,7 +145,6 @@
 			<classpath refid="project.classpath" />
 			<in name="sorcer.ex1" />
 			<out name="net.jini" />
-			<topclass name="sorcer.ex1.WhoIsIt" />
 			<topclass name="sorcer.ex1.WhoIsIt" />
 			<topclass name="sorcer.ex1.requestor.RequestorMessage" />
 		</classdepandjar>

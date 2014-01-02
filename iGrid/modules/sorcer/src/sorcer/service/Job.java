@@ -614,13 +614,16 @@ public abstract class Job extends ServiceExertion implements CompoundExertion {
 	public ServiceExertion substitute(Arg... entries)
 			throws EvaluationException {
 		try {
-			for (Arg e : entries) {
-				if (e instanceof Entry)
-					if (((Entry) e).path().indexOf(name) >= 0)
-						putJobValue(((Entry) e).path(), ((Entry) e).value());
+			if (entries != null) {
+				for (Arg e : entries) {
+					if (e instanceof Entry)
+						if (((Entry) e).path().indexOf(name) >= 0)
+							putJobValue(((Entry) e).path(), ((Entry) e).value());
 
-					else
-						super.putValue(((Entry) e).path(), ((Entry) e).value());
+						else
+							super.putValue(((Entry) e).path(),
+									((Entry) e).value());
+				}
 			}
 		} catch (ContextException ex) {
 			ex.printStackTrace();

@@ -30,11 +30,6 @@
 	<property name="ex4" value="./ex4" />
 	<property name="ex5" value="./ex5" />
 	<property name="ex6" value="./ex6" />
-	<property name="ex6qos" value="ex6qos" />
-	<property name="ex7" value="./ex7" />
-	<property name="ex10a" value="./ex10a" />
-	<property name="ex10b" value="./ex10b" />
-	<property name="ex11" value="./ex11" />
 
 	<!-- Compile the the educational examples -->
 	<target name="build-examples">
@@ -48,17 +43,12 @@
 		<ant antfile="arithmetic-prv-build.xml" dir="${ex6}" target="all" inheritAll="false" />
 		<ant antfile="arithmetic-req-build.xml" dir="${ex6}" target="all" inheritAll="false" />
 		<ant antfile="arithmetic-exertlet-build.xml" dir="${ex6}" target="all" inheritAll="false" />
-		<ant antfile="rs-model-build.xml" dir="${ex7}" target="all" inheritAll="false" />
-		<ant antfile="rs-all-build.xml" dir="${ex10a}" target="all" inheritAll="false" />
-		<ant antfile="rs-all-build.xml" dir="${ex10b}" target="all" inheritAll="false" />
-		<ant antfile="rs-model-accessor-build.xml" dir="${ex11}" target="all" inheritAll="false" />
 	</target>
 
 	<!-- Run JUnit test as specified in local Ant scripts -->
 	<target name="test-all" depends="build-examples">
 		<echo message="Testing SORCER examples ...." />
 		<ant antfile="worker-req-build.xml" dir="${ex2}" target="all-test" inheritAll="false" />
-		<ant antfile="rs-explorer-build.xml" dir="${ex10a}" target="all-test" inheritAll="false" />
 	</target>
 
 </project>

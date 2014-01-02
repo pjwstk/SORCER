@@ -6,6 +6,7 @@ import java.rmi.RemoteException;
 import sorcer.service.Context;
 import sorcer.service.ContextException;
 
+@SuppressWarnings("rawtypes")
 public interface WhoIsIt extends Remote {
 
 	Context getHostName(Context context) throws RemoteException,

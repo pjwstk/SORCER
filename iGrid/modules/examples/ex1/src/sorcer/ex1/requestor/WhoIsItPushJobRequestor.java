@@ -27,7 +27,7 @@ public class WhoIsItPushJobRequestor {
 		// initialize system environment from configs/sorcer.env
 		Sorcer.getEnvProperties();
 		// get the queried provider name
-		String providerName = args[0];
+		String providerName = Sorcer.getActualName(args[0]);
 		logger.info("Who is \"" + providerName + "\"?");
 
 		Exertion result = new WhoIsItPushJobRequestor().getExertion(providerName)

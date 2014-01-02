@@ -11,8 +11,8 @@ import sorcer.service.Context;
 import sorcer.service.ContextException;
 import sorcer.service.Exertion;
 import sorcer.service.ExertionException;
-import sorcer.service.Signature;
 import sorcer.service.Task;
+import sorcer.util.Sorcer;
 
 public class WhoIsItBeanRequestor2 extends ServiceRequestor {
 
@@ -40,8 +40,8 @@ public class WhoIsItBeanRequestor2 extends ServiceRequestor {
 			context.putValue("requestor/address", ipAddress);
 
 			signature = new NetSignature("getHostName",
-					sorcer.ex1.WhoIsIt.class, providerName != null ? providerName : null);
-			
+					sorcer.ex1.WhoIsIt.class, Sorcer.getActualName(providerName));
+
 			task = new NetTask("Who Is It?", signature, context);
 		} catch (Exception e) {
 			throw new ExertionException("Failed to create exertion", e);

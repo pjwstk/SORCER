@@ -15,22 +15,10 @@
 	<!-- define classpath -->
 	<path id="project.classpath">
 		<pathelement location="${sorcer.lib}/${requestor.name}Req.jar" />
-		<pathelement location="${sorcer.lib}/sorcer-prv.jar" />
-		<pathelement location="${sorcer.lib}/sorcer-lib.jar" />
 		<pathelement location="${sorcer-ext.lib}/webster.jar" />
-		<pathelement location="${eng.lib}/eng-lib.jar" />
-		<pathelement location="${common.lib}/jep-2.4.1a.jar" />
 		<pathelement location="${jini.lib}/jsk-lib.jar" />
 		<pathelement location="${jini.lib}/jsk-platform.jar" />
-		<pathelement location="${jini.lib}/serviceui.jar" />
-		<pathelement location="${rio.lib}/rio.jar" />
 	</path>
-
-	<!-- define codebase jars -->
-	<property name="j1" value="whoIsIt-req-dl.jar" />
-	<property name="j2" value="sorcer-prv-dl.jar" />
-	<property name="j3" value="sorcer-lib.jar" />
-	<property name="j4" value="eng-lib.jar" />
 		
 	<!-- start requestor -->
 	<target name="run.requestor">
@@ -38,10 +26,10 @@
 			<arg value="sorcer.ex1.requestor.bean.WhoIsItBeanRequestor1" />
 			<arg value="Bean1-WhoIsIt?" />
 			<classpath refid="project.classpath" />
-			<sysproperty key="iGrid.home" value="${iGrid.home}" />
 			<sysproperty key="sorcer.webster.internal" value="true" />
 			<sysproperty key="sorcer.webster.debug" value="true" />
-			<sysproperty key="sorcer.codbase.jars" value="${j1} ${j2} ${j3} ${j4}" />
+			<sysproperty key="webster.port" value="10000" />
+			<sysproperty key="codebase.jars" value="whoIsIt-req-dl.jar" />
 			<sysproperty key="java.util.logging.config.file" value="${iGrid.home}/configs/sorcer.logging" />
 			<sysproperty key="java.security.policy" value="../policy/${requestor.name}-req.policy" />
 			<sysproperty key="sorcer.env.file" value="${iGrid.home}/configs/sorcer.env" />

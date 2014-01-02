@@ -14,6 +14,7 @@ import sorcer.service.Context;
 import sorcer.service.ContextException;
 import sorcer.util.SorcerUtil;
 
+@SuppressWarnings("rawtypes")
 public class WhoIsItBean2 implements WhoIsIt {
 
 	private ServiceProvider provider;

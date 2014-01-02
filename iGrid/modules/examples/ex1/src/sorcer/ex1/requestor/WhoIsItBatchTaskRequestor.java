@@ -15,6 +15,7 @@ import sorcer.service.Signature.Type;
 import sorcer.util.Log;
 import sorcer.util.Sorcer;
 
+@SuppressWarnings("rawtypes")
 public class WhoIsItBatchTaskRequestor {
 
 	private static Logger logger = Log.getTestLog();
@@ -24,11 +25,11 @@ public class WhoIsItBatchTaskRequestor {
 		// initialize system environment from configs/sorcer.env
 		Sorcer.getEnvProperties();
 		// get the queried provider name
-		String providerName = args[0];
+		String providerName = Sorcer.getActualName(args[0]);
 		logger.info("Who is provider \"" + providerName + "\"?");
 		
 		Exertion result = new WhoIsItBatchTaskRequestor().getExertion(providerName)
-				.exert(null);
+				.exert();
 		logger.info("Exceptions: \n" + result.getExceptions());
 		logger.info("Trace: \n" + result.getTrace());
 		logger.info("Ouptut context: \n" + result.getContext());

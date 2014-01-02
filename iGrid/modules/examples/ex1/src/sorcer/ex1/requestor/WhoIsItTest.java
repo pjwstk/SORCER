@@ -48,7 +48,7 @@ import sorcer.util.Sorcer;
 /**
  * @author Mike Sobolewski
  */
-@SuppressWarnings({ "rawtypes", "unchecked" })
+@SuppressWarnings({ "rawtypes" })
 public class WhoIsItTest implements SorcerConstants {
 
 	private final static Logger logger = Logger
@@ -104,7 +104,7 @@ public class WhoIsItTest implements SorcerConstants {
         // using requestor/provider message types
         InetAddress inetAddress = InetAddress.getLocalHost();
         String hostname = inetAddress.getHostName();
-        String ipAddress = inetAddress.getHostAddress();
+//        String ipAddress = inetAddress.getHostAddress();
         String providerName = null;
 
         Context context = new ServiceContext("Who Is It?");

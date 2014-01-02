@@ -16,7 +16,6 @@
 		<pathelement location="${jini.lib}/jsk-lib.jar" />
 		<pathelement location="${jini.lib}/jsk-platform.jar" />
 		<pathelement location="${jini.lib}/serviceui.jar" />
-		<pathelement location="${rio.lib}/rio.jar" />
 	</path>
 
 	<target name="run.requestor">

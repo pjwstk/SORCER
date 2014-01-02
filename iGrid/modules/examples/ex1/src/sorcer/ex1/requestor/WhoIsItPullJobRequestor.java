@@ -29,9 +29,9 @@ public class WhoIsItPullJobRequestor {
 		Sorcer.getEnvProperties();
 		ServiceExertion.debug = true;
 		// get the queried provider name
-		String providerName1 = args[0];
-		String providerName2 = args[1];
-		String jobberName = args[2];
+		String providerName1 = Sorcer.getActualName(args[0]);
+		String providerName2 = Sorcer.getActualName( args[1]);
+		String jobberName = Sorcer.getActualName(args[2]);
 		
 		logger.info("Who is \"" + providerName1 + "\"?");
 		logger.info("Who is \"" + providerName2 + "\"?");

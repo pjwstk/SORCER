@@ -10,7 +10,6 @@ import sorcer.core.signature.NetSignature;
 import sorcer.service.Context;
 import sorcer.service.Exertion;
 import sorcer.service.ServiceExertion;
-import sorcer.service.Signature;
 import sorcer.service.Task;
 import sorcer.util.Log;
 import sorcer.util.Sorcer;
@@ -33,13 +32,14 @@ public class WhoIsItSequentialTaskRequestor {
 		for (int i = 0; i < tally; i++) {
 			task = new WhoIsItSequentialTaskRequestor().getExertion();
 			((ServiceExertion)task).setName(task.getName() + "-" + i);
-			task = task.exert(null);
+			task = task.exert();
 			logger.info("got sequentially executed task: " + task.getName());
 		}
 		long end = System.currentTimeMillis();
 		System.out.println("Execution time for " + tally + " sequential tasks : " + (end - start) + " ms.");
 	}
 
+	@SuppressWarnings("rawtypes")
 	public Exertion getExertion() throws Exception {
 		String hostname;
 		InetAddress inetAddress = InetAddress.getLocalHost();
