@@ -32,13 +32,12 @@ public class WhoIsItProvider2 extends ServiceTasker implements WhoIsIt {
 			context.putValue("provider/hostname", hostname);
 			String rhn = (String) context.getValue("requestor/hostname");
 			Object m = context.getValue("requestor/message");
-			Message msg;
 			if (m instanceof Message) {
-				 msg = (Message) context.getValue("requestor/message");
+				 Message msg = (Message) context.getValue("requestor/message");
 				 context.putValue("provider/message", new ProviderMessage(msg
 					.getMessage(), getProviderName(), rhn));
 			} else {
-				msg = (Message) context.getValue("requestor/message");
+				Object msg = context.getValue("requestor/message");
 				 context.putValue("provider/message", new ProviderMessage(""+m,
 						 getProviderName(), rhn));
 			}

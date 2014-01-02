@@ -18,12 +18,12 @@
 package sorcer.ex1.requestor.junit;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.net.InetAddress;
 import java.rmi.RMISecurityManager;
 import java.util.logging.Logger;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 import sorcer.core.SorcerConstants;
@@ -184,8 +184,8 @@ public class WhoIsItTest implements SorcerConstants {
 
     @Test
     public void exertJob() throws Exception {
-        String providerName1 = Sorcer.getSuffixedName("ABC");
-        String providerName2 = Sorcer.getSuffixedName("XYZ");
+        String providerName1 = Sorcer.getActualName("ABC");
+        String providerName2 = Sorcer.getActualName("XYZ");
 
         // define requestor data
         InetAddress inetAddress = InetAddress.getLocalHost();
@@ -226,10 +226,14 @@ public class WhoIsItTest implements SorcerConstants {
         logger.info("task 1 trace: " + result.getExertion("Who is it1?").getTrace());
         logger.info("task 2 trace: " + result.getExertion("Who is it2?").getTrace());
 
-        assertEquals(result.getValue("Who are they?/Who is it1?/provider/message"),
-                "Hello " + ipAddress + "!");
-        assertEquals(""+result.getValue("Who are they?/Who is it2?/provider/message"),
-                "Hi XYZ-DEV!; XYZ-DEV:Hi " + ipAddress + "!");
+		assertEquals(
+				result.getValue("Who are they?/Who is it1?/provider/message")
+						.toString(), "Hello " + providerName1 + "; "
+						+ providerName1 + ":Hi " + hostname + "!");
+		assertEquals(
+				result.getValue("Who are they?/Who is it2?/provider/message")
+						.toString(), "Hi " + providerName2 + "!; "
+						+ providerName2 + ":Hi " + hostname + "!");
     }
 
 }
