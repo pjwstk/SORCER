@@ -31,9 +31,17 @@ public class WhoIsItProvider2 extends ServiceTasker implements WhoIsIt {
 			hostname = InetAddress.getLocalHost().getHostName();
 			context.putValue("provider/hostname", hostname);
 			String rhn = (String) context.getValue("requestor/hostname");
-			Message msg = (Message) context.getValue("requestor/message");
-			context.putValue("provider/message", new ProviderMessage(msg
+			Object m = context.getValue("requestor/message");
+			Message msg;
+			if (m instanceof Message) {
+				 msg = (Message) context.getValue("requestor/message");
+				 context.putValue("provider/message", new ProviderMessage(msg
 					.getMessage(), getProviderName(), rhn));
+			} else {
+				msg = (Message) context.getValue("requestor/message");
+				 context.putValue("provider/message", new ProviderMessage(""+m,
+						 getProviderName(), rhn));
+			}
 			
 			Thread.sleep(1000);
 			context.reportException(new RuntimeException("getHostName: slept for 1 sec"));

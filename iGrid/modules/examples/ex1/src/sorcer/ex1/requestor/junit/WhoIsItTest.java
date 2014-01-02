@@ -15,7 +15,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package sorcer.ex1.requestor;
+package sorcer.ex1.requestor.junit;
 
 import static org.junit.Assert.assertEquals;
 
@@ -36,6 +36,7 @@ import sorcer.core.signature.NetSignature;
 import sorcer.core.signature.ObjectSignature;
 import sorcer.ex1.bean.WhoIsItBean1;
 import sorcer.ex1.provider.WhoIsItProvider1;
+import sorcer.ex1.requestor.RequestorMessage;
 import sorcer.service.Context;
 import sorcer.service.Exertion;
 import sorcer.service.Job;
@@ -56,9 +57,9 @@ public class WhoIsItTest implements SorcerConstants {
 
 	static {
         System.setProperty("java.security.policy", Sorcer.getHome()
-                + "/configs/sorcer.policy");
+                + "/configs/policy-all");
         System.setSecurityManager(new RMISecurityManager());
-		Sorcer.setCodeBase(new String[] { "whoIsIt-bean-dl.jar",  "sorcer-prv-dl.jar" });
+		Sorcer.setCodeBase(new String[] { "whoIsIt-req-dl.jar",  "sorcer-prv-dl.jar" });
         System.out.println("CLASSPATH :" + System.getProperty("java.class.path"));
         System.out.println("CODEBASE :" + System.getProperty("java.rmi.server.codebase"));
     }
@@ -98,7 +99,6 @@ public class WhoIsItTest implements SorcerConstants {
         }
     }
 
-    @Ignore
     @Test
     public void helloNetworkTask() throws Exception {
         // using requestor/provider message types
@@ -151,7 +151,6 @@ public class WhoIsItTest implements SorcerConstants {
         assertEquals(result.getContext().getValue("provider/address"), ipAddress);
     }
 
-    @Ignore
     @Test
     public void exertBatchTask() throws Exception {
         InetAddress inetAddress = InetAddress.getLocalHost();
@@ -178,11 +177,11 @@ public class WhoIsItTest implements SorcerConstants {
                 context);
 
         Exertion result = task.exert();
+        logger.info("task context: " + task.getContext());
         assertEquals(result.getContext().getValue("provider/hostname"), hostname);
         assertEquals(result.getContext().getValue("provider/address"), inetAddress.getHostAddress());
     }
 
-    @Ignore
     @Test
     public void exertJob() throws Exception {
         String providerName1 = Sorcer.getSuffixedName("ABC");
