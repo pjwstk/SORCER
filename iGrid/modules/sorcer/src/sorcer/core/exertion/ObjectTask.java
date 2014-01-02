@@ -101,8 +101,6 @@ public class ObjectTask extends Task {
 			else if (dataContext.getArgsPath() != null) {
 				invoker.setArgs(os.getTypes(), (Object[]) getArgs());
 			}
-//			evaluator.setParameters(dataContext);
-//			ZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZZ
 			Object result = invoker.invoke(dataContext);
 			if (result instanceof Context) {
 				if (dataContext.getReturnPath() != null) {

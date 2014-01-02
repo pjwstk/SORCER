@@ -15,6 +15,10 @@ import com.sun.jini.start.LifeCycle;
 
 public class WhoIsItProvider1 extends ServiceTasker implements WhoIsIt {
 
+	public WhoIsItProvider1() throws RemoteException {
+		
+	}
+	
 	public WhoIsItProvider1(String[] args, LifeCycle lifeCycle) throws Exception {
 		super(args, lifeCycle);
 	}
