@@ -52,7 +52,7 @@
 			<classpath refid="project.classpath" />
 			<in name="sorcer" />
 			<out name="sorcer.util.bdb.objects" />
-			<topclass name="sorcer.arithmetic.requestor.ArithmeticExertletRunner" />
+			<topclass name="sorcer.arithmetic.requestor.ArithmeticExertletRequestor" />
 			<topclass name="sorcer.eo.operator" />
 			<fileset dir="${iGrid.home}/configs" includes="sorcer/util/sorcer.env" />
 		</classdepandjar>

@@ -1,49 +1,69 @@
 package sorcer.arithmetic.junit;
 
 import static org.junit.Assert.assertEquals;
+import static sorcer.co.operator.entry;
 import static sorcer.co.operator.from;
 import static sorcer.eo.operator.context;
+import static sorcer.eo.operator.cxt;
 import static sorcer.eo.operator.exert;
 import static sorcer.eo.operator.get;
 import static sorcer.eo.operator.in;
+import static sorcer.eo.operator.input;
 import static sorcer.eo.operator.job;
 import static sorcer.eo.operator.jobContext;
 import static sorcer.eo.operator.out;
 import static sorcer.eo.operator.pipe;
 import static sorcer.eo.operator.result;
 import static sorcer.eo.operator.sig;
+import static sorcer.eo.operator.srv;
 import static sorcer.eo.operator.strategy;
 import static sorcer.eo.operator.task;
 import static sorcer.eo.operator.type;
 import static sorcer.eo.operator.value;
-import static sorcer.po.operator.set;
+import static sorcer.po.operator.invoker;
+import static sorcer.po.operator.model;
+import static sorcer.po.operator.par;
+import static sorcer.po.operator.pars;
+import static sorcer.po.operator.put;
 
 import java.rmi.RMISecurityManager;
 import java.util.logging.Logger;
 
-import junit.sorcer.core.provider.MultiplierImpl;
-import junit.sorcer.core.provider.SubtractorImpl;
-
+import org.junit.Ignore;
 import org.junit.Test;
 
-import sorcer.arithmetic.provider.AdderBuilder;
+import sorcer.arithmetic.provider.Adder;
 import sorcer.arithmetic.provider.AdderImpl;
-import sorcer.arithmetic.provider.ArithmeticImpl;
+import sorcer.arithmetic.provider.Arithmetic;
+import sorcer.arithmetic.provider.Multiplier;
+import sorcer.arithmetic.provider.MultiplierImpl;
+import sorcer.arithmetic.provider.Subtractor;
+import sorcer.arithmetic.provider.SubtractorImpl;
 import sorcer.core.SorcerConstants;
+import sorcer.core.context.PositionalContext;
+import sorcer.core.context.model.par.Par;
 import sorcer.core.context.model.par.ParModel;
+import sorcer.core.exertion.ObjectJob;
+import sorcer.core.exertion.ObjectTask;
+import sorcer.core.provider.Provider;
 import sorcer.core.provider.jobber.ServiceJobber;
+import sorcer.core.signature.ObjectSignature;
+import sorcer.service.Context;
+import sorcer.service.Exertion;
 import sorcer.service.Job;
 import sorcer.service.Signature;
-import sorcer.service.Signature.Direction;
 import sorcer.service.Strategy.Access;
 import sorcer.service.Strategy.Flow;
+import sorcer.service.Strategy.Wait;
 import sorcer.service.Task;
+import sorcer.util.ProviderAccessor;
+import sorcer.util.ProviderLookup;
 import sorcer.util.Sorcer;
 
 /**
  * @author Mike Sobolewski
  */
-@SuppressWarnings({ "unchecked", "rawtypes" })
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class ArithmeticNoNetTest implements SorcerConstants {
 
 	private final static Logger logger = Logger
@@ -53,130 +73,415 @@ public class ArithmeticNoNetTest implements SorcerConstants {
 		System.setProperty("java.security.policy", Sorcer.getHome()
 				+ "/configs/policy.all");
 		System.setSecurityManager(new RMISecurityManager());
-		Sorcer.setCodeBase(new String[] { "ju-arithmetic-beans.jar",
+		Sorcer.setCodeBase(new String[] { "ex6-arithmetic-beans.jar",
 				"sorcer-prv-dl.jar" });
 		System.out.println("CLASSPATH :"
 				+ System.getProperty("java.class.path"));
 	}
+	
+	@Test
+	public void testTaskConcatenation() throws Exception {
+		Task task1 = getAddTask();
+		Task task2 = getMultiplyTask();
+		Task task3 = getSubtractTask();
 
+		Exertion job = new ObjectJob("3tasks");
+		job.addExertion(task1);
+		job.addExertion(task2);
+		job.addExertion(task3);
+		
+		// make the result of second task as the first argument of task
+		// three
+		task2.getContext().connect("out/value", "arg1/value", task3.getContext());
+		// make the result of the first task as the second argument of task
+		// three
+		task1.getContext().connect("out/value", "arg2/value", task3.getContext());
+		
+		job = job.exert();
+
+		logger.info("job context: " + ((Job)job).getJobContext());
+		// result at the provider's default path"
+		assertEquals(((Job)job).getJobValue("3tasks/subtract/result/value"), 400.0);
+	}
 
 	@Test
-	public void adderTaskTest() throws Exception {
-		Task t5 = task(
+	public void testJobHierachicalComposition() throws Exception {
+		Task task1 = getAddTask();
+		Task task2 = getMultiplyTask();
+		Task task3 = getSubtractTask();
+
+		Job internal = new ObjectJob("2tasks");
+		internal.addExertion(task2);
+		internal.addExertion(task1);
+		
+		Exertion job = new ObjectJob("1job1task");
+		job.addExertion(internal);
+		job.addExertion(task3);
+		
+		// make the result of second task as the first argument of task
+		// three
+		task2.getContext().connect("out/value", "arg1/value", task3.getContext());
+		// make the result of the first task as the second argument of task
+		// three
+		task1.getContext().connect("out/value", "arg2/value", task3.getContext());
+		
+		job = job.exert();
+
+		logger.info("job context: " + ((Job)job).getJobContext());
+		// result at the provider's default path"
+		assertEquals(((Job)job).getJobValue("1job1task/subtract/result/value"), 400.0);
+	}
+	
+	@Test
+	public void testJobStrategy() throws Exception {
+		Task task1 = getAddTask();
+		Task task2 = getMultiplyTask();
+		Task task3 = getSubtractTask();
+		
+		Job internal = new ObjectJob("2tasks");
+		internal.addExertion(task2);
+		internal.addExertion(task1);
+		internal.getControlContext().setFlowType(Flow.PAR);
+		internal.getControlContext().setAccessType(Access.PUSH);
+
+		Exertion job = new ObjectJob("1job1task");
+		job.addExertion(internal);
+		job.addExertion(task3);
+		internal.getControlContext().setFlowType(Flow.SEQ);
+		internal.getControlContext().setAccessType(Access.PUSH);
+		
+		// make the result of second task as the first argument of task
+		// three
+		task2.getContext().connect("out/value", "arg1/value", task3.getContext());
+		// make the result of the first task as the second argument of task
+		// three
+		task1.getContext().connect("out/value", "arg2/value", task3.getContext());
+		
+		job = job.exert();
+
+		logger.info("job context: " + ((Job)job).getJobContext());
+		// result at the provider's default path"
+		assertEquals(((Job)job).getJobValue("1job1task/subtract/result/value"), 400.0);
+	}
+	
+	private Task getAddTask() throws Exception {
+		Context context = new PositionalContext("add");
+		context.putInValue("arg1/value", 20.0);
+		context.putInValue("arg2/value", 80.0);
+		// We know that the output is gonna be placed in this path
+		context.putOutValue("out/value", 0.0);
+		Signature method = new ObjectSignature("add", AdderImpl.class);
+		Task task = new ObjectTask("add", method);
+		task.setContext(context);
+		return task;
+	}
+
+	private Task getMultiplyTask() throws Exception {
+		Context context = new PositionalContext("multiply");
+		context.putInValue("arg1/value", 10.0);
+		context.putInValue("arg2/value", 50.0);
+		// We know that the output is gonna be placed in this path
+		context.putOutValue("out/value", 0.0);
+		Signature method = new ObjectSignature("multiply", MultiplierImpl.class);
+		Task task = new ObjectTask("multiply", method);
+		task.setContext(context);
+		return task;
+	}
+
+	private Task getSubtractTask() throws Exception {
+		PositionalContext context = new PositionalContext("subtract");
+		// We want to stick in the result of multiply in here
+		context.putInValueAt("arg1/value", 0.0, 1);
+		// We want to stick in the result of add in here
+		context.putInValueAt("arg2/value", 0.0, 2);
+		Signature method = new ObjectSignature("subtract", SubtractorImpl.class);
+		Task task = new ObjectTask("subtract",
+				"processing results from two previouseky executed tasks", method);
+		task.setContext(context);
+		return task;
+	}
+	
+	@Test
+	public void arithmeticVars() throws Exception {
+		Par y = par("y",
+				invoker("(x1 * x2) - (x3 + x4)", pars("x1", "x2", "x3", "x4")));
+		Object val = value(y, entry("x1", 10.0), entry("x2", 50.0),
+				entry("x3", 20.0), entry("x4", 80.0));
+		// logger.info("y value: " + val);
+		assertEquals(val, 400.0);
+
+	}
+
+	@Test
+	public void createJobModel() throws Exception {
+
+		ParModel vm = model(
+				"Hello Arithmetic #1",
+				// inputs
+				par("x1"), par("x2"), par("x3", 20.0),
+				par("x4", 80.0),
+				// outputs
+				par("t4", invoker("x1 * x2", pars("x1", "x2"))),
+				par("t5", invoker("x3 + x4", pars("x3", "x4"))),
+				par("j1", invoker("t4 - t5", pars("t4", "t5"))));
+
+//		logger.info("t4 value: " + value(par(vm, "t4")));
+		assertEquals(value(par(vm, "t4")), null);
+
+		logger.info("t5 value: " + value(par(vm, "t5")));
+		assertEquals(value(par(vm, "t5")), 100.0);
+
+		// logger.info("j1 value: " + value(par(vm, "j1")));
+		assertEquals(value(par(vm, "j1")), null);
+
+		// logger.info("j1 value: " + value(var(put(vm, entry("x1", 10.0),
+		// entry("x2", 50.0)), "j1")));
+		assertEquals(
+				value(par(put(vm, entry("x1", 10.0), entry("x2", 50.0)), "j1")),
+				400.0);
+		// logger.info("j1 value: " + value(par(vm, "j1")));
+		assertEquals(value(par(vm, "j1")), 400.0);
+
+	}
+
+	@Test
+	public void createMogJob() throws Exception {
+
+		ParModel vm = model(
+				"Hello Arithmetic #2",
+				// inputs
+				par("x1"), par("x2"), par("x3", 20.0), par("x4"),
+				// outputs
+				par("t4", invoker("x1 * x2", pars("x1", "x2"))),
+				par("t5",
+					task("t5",
+						sig("add", AdderImpl.class),
+						cxt("add", in("arg/x3"),
+							in("arg/x4"),
+						result("result/y")))),
+				par("j1", invoker("t4 - t5", pars("t4", "t5"))));
+
+		vm = put(vm, entry("x1", 10.0), entry("x2", 50.0),
+				entry("x4", 80.0));
+				 
+		assertEquals(value(par(vm, "j1")), 400.0);
+	}
+
+	@Test
+	public void contexterTest() throws Exception {
+		// get a context for the template context in the task
+		Task cxtt = task("addContext", sig("getContext", ArithmeticNetTest.createContext()),
+				context("add", input("arg/x1"), input("arg/x2")));
+
+		Context result = context(exert(cxtt));
+//		logger.info("contexter context: " + result);
+		assertEquals(get(result, "arg/x1"), 20.0);
+		assertEquals(get(result, "arg/x2"), 80.0);
+	}
+	
+	@Test
+	public void objectContexterTaskTest() throws Exception {
+		Task t5 = task("t5", sig("add", AdderImpl.class), 
+					type(sig("getContext", ArithmeticNetTest.createContext()), Signature.APD),
+					context("add", in("arg/x1"), in("arg/x2"),
+						result("result/y")));
+		
+		Context result = context(exert(t5));
+//		logger.info("task context: " + result);
+		assertEquals(get(result, "result/y"), 100.0);
+	}
+	
+	@Test
+	public void exertSrvTest() throws Exception {
+		Job srv = createSrv();
+		logger.info("srv job context: " + jobContext(srv));
+		logger.info("srv j1/t3 context: " + context(srv, "j1/t3"));
+		logger.info("srv j1/j2/t4 context: " + context(srv, "j1/j2/t4"));
+		logger.info("srv j1/j2/t5 context: " + context(srv, "j1/j2/t5"));
+
+		srv = exert(srv);
+		logger.info("srv job context: " + jobContext(srv));
+
+		// logger.info("srv value @  t3/arg/x2 = " + get(srv, "j1/t3/arg/x2"));
+		assertEquals(get(srv, "j1/t3/arg/x2"), 100.0);
+	}
+
+	// two level job composition
+	private Job createSrv() throws Exception {
+		Task t3 = srv("t3", sig("subtract", SubtractorImpl.class),
+				cxt("subtract", in("arg/x1"), in("arg/x2"), out("result/y")));
+
+		Task t4 = srv("t4",
+				sig("multiply", MultiplierImpl.class),
+				// cxt("multiply", in("super/arg/x1"), in("arg/x2", 50.0),
+				cxt("multiply", in("arg/x1", 10.0), in("arg/x2", 50.0),
+						out("result/y")));
+
+		Task t5 = srv(
 				"t5",
 				sig("add", AdderImpl.class),
+				cxt("add", in("arg/x1", 20.0), in("arg/x2", 80.0),
+						out("result/y")));
+
+		// Service Composition j1(j2(t4(x1, x2), t5(x1, x2)), t3(x1, x2))
+		// Job j1= job("j1", job("j2", t4, t5, strategy(Flow.PARALLEL,
+		// Access.PULL)), t3,
+		Job job = srv(
+				"j1",
+				sig("execute", ServiceJobber.class),
+				cxt(in("arg/x1", 10.0),
+						result("job/result", from("j1/t3/result/y"))),
+				srv("j2", sig("execute", ServiceJobber.class), t4, t5), t3,
+				pipe(out(t4, "result/y"), in(t3, "arg/x1")),
+				pipe(out(t5, "result/y"), in(t3, "arg/x2")));
+
+		return job;
+	}
+
+	@Ignore
+	@Test
+	public void arithmeticPushTaskTest() throws Exception {
+
+		Task t5 = task(
+				"t5",
+				sig("add", Adder.class),
 				context("add", in("arg, x1", 20.0), in("arg, x2", 80.0),
 						result("result, y")));
 
 		t5 = exert(t5);
 		logger.info("t5 context: " + context(t5));
 		logger.info("t5 value: " + get(t5));
-		assertEquals("Wrong value for 100.0", get(t5), 100.0);
+		assertEquals("Wrong value for 100.0", value(t5), 100.0);
 	}
 
+	@Ignore
 	@Test
 	public void arithmeticMultiServiceTest() throws Exception {
+
 		Task t5 = task(
 				"t5",
-				sig("add", ArithmeticImpl.class),
+				sig("add", Arithmetic.class),
 				context("add", in("arg, x1", 20.0), in("arg, x2", 80.0),
 						result("result, y")));
 
-		assertEquals("Wrong value for 100.0", value(t5), 100.0);
+		t5 = exert(t5);
+		// logger.info("t5 context: " + context(t5));
+		logger.info("t5 value: " + get(t5));
+		assertEquals("Wrong value for 100.0", get(t5), 100.0);
+	}
+
+	@Ignore
+	@Test
+	public void accessArithmeticProviderTest() throws Exception {
+		Provider provider = ProviderAccessor
+				.getProvider(sig("add", Adder.class));
+		logger.info("provider: " + provider.getProviderName());
+
+		provider = ProviderAccessor.getProvider(sig("add", Arithmetic.class));
+		logger.info("provider: " +  provider.getProviderName());
+	}
+
+	@Ignore
+	@Test
+	public void lookupArithmeticProviderTest() throws Exception {
+		Provider provider = ProviderLookup
+				.getProvider(sig("add", Adder.class));
+		logger.info("provider: " + provider.getProviderName());
+
+		provider = ProviderLookup.getProvider(sig("add", Arithmetic.class));
+		logger.info("provider: " +  provider.getProviderName());
 	}
 	
+	@Ignore
 	@Test
-	public void batchTask3Test() throws Exception {
-		// batch for the composition f1(f2(f3((x1, x2), f4(x1, x2)), f5(x1, x2))
-		// shared context with named paths
-		Task batch3 = task("batch3",
-				type(sig("multiply", MultiplierImpl.class, result("subtract/x1", Direction.IN)), Signature.PRE),
-				type(sig("add", AdderImpl.class, result("subtract/x2", Direction.IN)), Signature.PRE),
-				sig("subtract", SubtractorImpl.class, result("result/y", from("subtract/x1", "subtract/x2"))),
-				context(in("multiply/x1", 10.0), in("multiply/x2", 50.0), 
-						in("add/x1", 20.0), in("add/x2", 80.0)));
-		
-		batch3 = exert(batch3);
-		//logger.info("task result/y: " + get(batch3, "result/y"));
-		assertEquals("Wrong value for 400.0", get(batch3, "result/y"), 400.0);
+	public void arithmeticSpaceTaskTest() throws Exception {
+		Task t5 = task(
+				"t5",
+				sig("add", Adder.class),
+				context("add", in("arg/x1", 20.0), in("arg/x2", 80.0),
+						out("result/y", null)), strategy(Access.PULL, Wait.YES));
+
+		logger.info("t5 init context: " + context(t5));
+
+		t5 = exert(t5);
+		logger.info("t5 context: " + context(t5));
+		logger.info("t5 value: " + get(t5, "result/y"));
+		assertEquals("Wrong value for 100.0", get(t5, "result/y"), 100.0);
 	}
-	
-	
+
+	@Ignore
 	@Test
-	public void batchTask4Test() throws Exception {
-		// batch for the composition f1(f2(f3((x1, x2), f4(x1, x2)), f5(x1, x2))
-		// shared context with prefixed paths
-		Task batch3 = task("batch3",
-				type(sig("multiply#op1", MultiplierImpl.class, result("op3/x1", Direction.IN)), Signature.PRE),
-				type(sig("add#op2", AdderImpl.class, result("op3/x2", Direction.IN)), Signature.PRE),
-				sig("subtract", SubtractorImpl.class, result("result/y", from("op3/x1", "op3/x2"))),
-				context(in("op1/x1", 10.0), in("op1/x2", 50.0), 
-						in("op2/x1", 20.0), in("op2/x2", 80.0)));
-		
-		batch3 = exert(batch3);
-		//logger.info("task result/y: " + get(batch3, "result/y"));
-		assertEquals("Wrong value for 400.0", get(batch3, "result/y"), 400.0);
+	public void arithmeticSpaceMultiserviceTaskTest() throws Exception {
+		Task t5 = task(
+				"t5",
+				sig("add", Arithmetic.class),
+				context("add", in("arg/x1", 20.0), in("arg/x2", 80.0),
+						out("result/y", null)), strategy(Access.PULL, Wait.YES));
+
+		logger.info("t5 init context: " + context(t5));
+
+		t5 = exert(t5);
+		logger.info("t5 context: " + context(t5));
+		logger.info("t5 value: " + get(t5, "result/y"));
+		assertEquals("Wrong value for 100.0", get(t5, "result/y"), 100.0);
 	}
-	
-	
+
+	@Ignore
 	@Test
-	public void exertJobPushParTest() throws Exception {
-		Job job = createJob(Flow.PAR, Access.PUSH);
+	public void exertJobPullParTest() throws Exception {
+		Job job = createJob(Flow.PAR);
 		job = exert(job);
-		//logger.info("job j1: " + job);
-		//logger.info("job j1 job context: " + context(job));
+		// logger.info("job j1: " + job);
+		// logger.info("job j1 job context: " + context(job));
 		logger.info("job j1 job context: " + jobContext(job));
-		//logger.info("job j1 value @ j1/t3/result/y = " + get(job, "j1/t3/result/y"));
+		// logger.info("job j1 value @ j1/t3/result/y = " + get(job,
+		// "j1/t3/result/y"));
 		assertEquals(get(job, "j1/t3/result/y"), 400.00);
 	}
-	
+
+	@Ignore
 	@Test
-	public void exertJobPushSeqTest() throws Exception {
-		Job job = createJob(Flow.SEQ, Access.PUSH);
+	public void exertJobPullSeqTest() throws Exception {
+		Job job = createJob(Flow.SEQ);
 		job = exert(job);
-		//logger.info("job j1: " + job);
-		//logger.info("job j1 job context: " + context(job));
+		// logger.info("job j1: " + job);
+		// logger.info("job j1 job context: " + context(job));
 		logger.info("job j1 job context: " + jobContext(job));
-		//logger.info("job j1 value @ j1/t3/result/y = " + get(job, "j1/t3/result/y"));
+		// logger.info("job j1 value @ j1/t3/result/y = " + get(job,
+		// "j1/t3/result/y"));
 		assertEquals(get(job, "j1/t3/result/y"), 400.00);
 	}
-	
+
 	// two level job composition with PULL and PAR execution
-	private Job createJob(Flow flow, Access access) throws Exception {
-		Task t3 = task("t3", sig("subtract", SubtractorImpl.class), 
+	private Job createJob(Flow flow) throws Exception {
+		Task t3 = task(
+				"t3",
+				sig("subtract", Subtractor.class),
 				context("subtract", in("arg/x1", null), in("arg/x2", null),
 						out("result/y", null)));
 
-		Task t4 = task("t4", sig("multiply", MultiplierImpl.class), 
+		Task t4 = task(
+				"t4",
+				sig("multiply", Multiplier.class),
 				context("multiply", in("arg/x1", 10.0), in("arg/x2", 50.0),
 						out("result/y", null)));
 
-		Task t5 = task("t5", sig("add", AdderImpl.class), 
+		Task t5 = task(
+				"t5",
+				sig("add", Adder.class),
 				context("add", in("arg/x1", 20.0), in("arg/x2", 80.0),
 						out("result/y", null)));
-		
+
 		// Service Composition j1(j2(t4(x1, x2), t5(x1, x2)), t3(x1, x2))
-		//Job job = job("j1",
-		Job job = job("j1", sig("service", ServiceJobber.class), 
-				//job("j2", t4, t5),
-				job("j2", t4, t5, sig("service", ServiceJobber.class), 
-						strategy(flow, access)), 
-				t3,
+		// Job job = job("j1",
+		Job job = job(
+				"j1", // sig("service", RemoteJobber.class),
+				// job("j2", t4, t5),
+				job("j2", t4, t5, strategy(flow, Access.PULL)), t3,
 				pipe(out(t4, "result/y"), in(t3, "arg/x1")),
 				pipe(out(t5, "result/y"), in(t3, "arg/x2")));
-				
+
 		return job;
 	}
 	
-	@Test
-	public void addModelTest() throws Exception {
-		ParModel pm = AdderBuilder.getAdderModel();
-		logger.info("x value: " + value(pm, "x"));
-		logger.info("y value: " + value(pm, "y"));
-
-		logger.info("adder value: " + value(pm, "add"));
-		assertEquals(value(pm, "add"), 30.0);
-		set(pm, "x", 20.0);
-		assertEquals(value(pm, "add"), 40.0);
-	}
 }

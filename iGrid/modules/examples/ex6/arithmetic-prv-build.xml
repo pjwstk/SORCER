@@ -59,15 +59,16 @@
 		<classdepandjar jarfile="${sorcer.lib}/ex6-arithmetic-beans.jar" files="true" debug="false">
 			<classpath refid="project.classpath" />
 			<in name="sorcer.arithmetic" />
-			<in name="junit.sorcer.vfe" />
 			<topclass name="sorcer.arithmetic.provider.ArithmeticImpl" />
 			<topclass name="sorcer.arithmetic.provider.AdderImpl" />
 			<topclass name="sorcer.arithmetic.provider.SubtractorImpl" />
 			<topclass name="sorcer.arithmetic.provider.MultiplierImpl" />
 			<topclass name="sorcer.arithmetic.provider.DividerImpl" />
+			<topclass name="sorcer.arithmetic.provider.AveragerImpl" />
 			<topclass name="sorcer.arithmetic.provider.Arithmometer" />
 			<topclass name="sorcer.arithmetic.provider.AdderBuilder" />
 			<topclass name="sorcer.arithmetic.provider.ContextManager" />
+			<topclass name="sorcer.arithmetic.junit.ArithmeticNetTest" />
 			<!--topclass name="junit.sorcer.vfe.VarModelTest" /-->
 			<topclass name="sorcer.arithmetic.provider.AdderBuilder" />
 			<fileset dir=".">
@@ -108,6 +109,7 @@
 			<topclass name="sorcer.arithmetic.provider.Subtractor" />
 			<topclass name="sorcer.arithmetic.provider.Divider" />
 			<topclass name="sorcer.arithmetic.provider.Multiply" />
+			<topclass name="sorcer.arithmetic.provider.Averager" />
 			<fileset refid="icons" />
 		</classdepandjar>
 	</target>

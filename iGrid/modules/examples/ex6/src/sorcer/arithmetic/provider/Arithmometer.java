@@ -1,7 +1,7 @@
 package sorcer.arithmetic.provider;
 
-import static sorcer.eo.operator.revalue;
 import static sorcer.eo.operator.path;
+import static sorcer.eo.operator.revalue;
 
 import java.io.Serializable;
 import java.net.InetAddress;
@@ -30,6 +30,8 @@ public class Arithmometer implements Serializable, SorcerConstants {
 
 	public static final String DIVIDE = "divide";
 	
+	public static final String AVERAGE = "average";
+
 	public static final String RESULT_PATH = "result/value";
 			
 	public final static Logger logger = Logger.getLogger(Arithmometer.class
@@ -105,6 +107,14 @@ public class Arithmometer implements Serializable, SorcerConstants {
 		}
 	}
 
+	public Context average(Context context) throws RemoteException, ContextException {
+		if (context instanceof ArrayContext) {
+			return calculateFromArrayContext(context, AVERAGE);
+		} else {
+			return calculateFromPositionalContext(context, AVERAGE);
+		}
+	}
+	
 	/**
 	 * Calculates the result of arithmetic operation specified by a selector
 	 * (add, subtract, multiply, or divide) from the instance of ArrayContext.
@@ -125,9 +135,9 @@ public class Arithmometer implements Serializable, SorcerConstants {
 		try {
 			// get sorted list of input values
 			List<Double> inputs = (List<Double>)cxt.getInValues();
-			logger.info("inputs: \n" + inputs);
+//			logger.info("inputs: \n" + inputs);
 			List<String> outpaths = cxt.getOutPaths();
-			logger.info("outpaths: \n" + outpaths);
+//			logger.info("outpaths: \n" + outpaths);
 
 			double result = 0;
 			if (selector.equals(ADD)) {
@@ -146,6 +156,12 @@ public class Arithmometer implements Serializable, SorcerConstants {
 				result = inputs.get(0);
 				for (int i = 1; i < inputs.size(); i++)
 					result /= inputs.get(i);
+			} else if (selector.equals(AVERAGE)) {
+				result = inputs.get(0);
+				for (int i = 1; i < inputs.size(); i++)
+					result += inputs.get(i);
+				
+				result = result / inputs.size();
 			}
 
 			logger.info(selector + " result: \n" + result);
@@ -193,22 +209,24 @@ public class Arithmometer implements Serializable, SorcerConstants {
 			throws RemoteException, ContextException {
 		PositionalContext cxt = (PositionalContext) context;
 		try {
+			logger.info("arithmometer context: " + context);
+
 			//logger.info("selector: " + ((ServiceContext)context).getCurrentSelector());
 			// get sorted list of input values
 			List<Double> inputs = (List<Double>)Contexts.getNamedInValues(context);
 			if (inputs == null || inputs.size() == 0) {
 				inputs = (List<Double>)Contexts.getPrefixedInValues(context);
-				logger.info("prefixed inputs: \n" + inputs);
+//				logger.info("prefixed inputs: \n" + inputs);
 			}
 			//logger.info("named inputs: \n" + inputs);
 			if (inputs == null || inputs.size() == 0)
 				inputs = (List<Double>)cxt.getInValues();
-			//logger.info("inputs: \n" + inputs);
+			logger.info("inputs: \n" + inputs);
 			List<String> outpaths = cxt.getOutPaths();
 			//logger.info("outpaths: \n" + outpaths);
 
 			double result = 0.0;
-			if (selector.equals(ADD)) {
+			if (selector.equals(ADD)) {				
 					result = (Double)revalue(inputs.get(0));
 				for (int i = 1; i < inputs.size(); i++)
 					result += (Double)revalue(inputs.get(i));
@@ -225,7 +243,7 @@ public class Arithmometer implements Serializable, SorcerConstants {
 					result -= (Double) revalue(cxt.getInValueAt(2));
 				}
 			} else if (selector.equals(MULTIPLY)) {
-				result = inputs.get(0);
+				result = (Double)revalue(inputs.get(0));
 				for (int i = 1; i < inputs.size(); i++)
 					result *= (Double)revalue(inputs.get(i));
 			} else if (selector.equals(DIVIDE)) {
@@ -233,8 +251,13 @@ public class Arithmometer implements Serializable, SorcerConstants {
 					throw new ContextException("more than two arguments for division");
 				result = (Double)revalue(cxt.getInValueAt(1));
 				result /= (Double)revalue(cxt.getInValueAt(2));
+			} else if (selector.equals(AVERAGE)) {				
+				result = (Double)revalue(inputs.get(0));
+				for (int i = 1; i < inputs.size(); i++) 
+					result += (Double)revalue(inputs.get(i));
+				
+				result = result / inputs.size();	
 			}
-
 			logger.info(selector + " result: \n" + result);
 
 			String outputMessage = "calculated by " + getHostname();
@@ -258,7 +281,6 @@ public class Arithmometer implements Serializable, SorcerConstants {
 		return (Context) context;
 	}
 	
-
 	/**
 	 * Returns name of the local host.
 	 * 
