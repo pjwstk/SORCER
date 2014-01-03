@@ -32,9 +32,6 @@ public class AdderImpl implements Adder {
 	
 	public Context add(Context context) throws RemoteException,
 			ContextException, MonitorException {
-		
-		String serviceIdString = ((ServiceProvider)provider).doThreadMonitor(null);
-
 		Context out = arithmometer.add(context);
 		logger.info("add result: " + out);
 		
@@ -53,8 +50,6 @@ public class AdderImpl implements Adder {
 //		Logger remoteLogger =  provider.getRemoteLogger();
 //		remoteLogger.info("remote logging; add result: " + out);
 		
-		((ServiceProvider)provider).doThreadMonitor(serviceIdString);
-
 		return out;
 	}
 	

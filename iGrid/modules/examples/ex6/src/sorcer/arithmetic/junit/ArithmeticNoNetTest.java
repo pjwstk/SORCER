@@ -80,6 +80,14 @@ public class ArithmeticNoNetTest implements SorcerConstants {
 	}
 	
 	@Test
+	public void testTask() throws Exception {
+		Task task1 = getAddTask();
+		Exertion task = task1.exert();
+		logger.info("task context: " + task.getDataContext());
+		assertEquals(task.getContext().getValue("out/value"), 100.0);
+	}
+	
+	@Test
 	public void testTaskConcatenation() throws Exception {
 		Task task1 = getAddTask();
 		Task task2 = getMultiplyTask();
