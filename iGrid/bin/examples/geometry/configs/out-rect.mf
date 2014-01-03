@@ -1,5 +1,0 @@
-Manifest-Version: 1.0
-Main-Class: sorcer.model.geometry.OutRectCalculator
-Class-path: sorcer-prv.jar sorcer-vfe-lib.jar sorcer-modeling-lib.jar
-Sorcer-Version: @SORCER_VERSION@
-Sorcer-Build: @SORCER_BUILD@
