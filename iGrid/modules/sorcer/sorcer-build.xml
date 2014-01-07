@@ -50,7 +50,6 @@
 	<property name="ju-parmodel" value="./src/junit/sorcer/core/context/model/par" />
 	<property name="volume-bean" value="./src/junit/sorcer/core/invoker" />
 	<property name="examples.ex6" value="${iGrid.home}/modules/examples/ex6" />
-	<property name="examples.ex10a" value="${iGrid.home}/modules/examples/ex10a" />
 	<property name="preferred_list" value="./configs/preferred.list" />
 
 	<!-- Directory paths where source code can be found relative to the current directory -->
@@ -162,7 +161,6 @@
 		<ant antfile="arithmetic-prv-build.xml" dir="${examples.ex6}" target="all" inheritAll="false" />
 		<ant antfile="parmodel-prv-build.xml" dir="${ju-parmodel}" target="jars" inheritAll="false" />
 		<ant antfile="volume-bean-build.xml" dir="${volume-bean}" target="jars" inheritAll="false" />
-		<!--ant antfile="rs-all-build.xml" dir="${examples.ex10a}" target="all" inheritAll="false" /-->
 	</target>
 
 	<!-- Build the core service provider jars -->
@@ -556,7 +554,7 @@
 			<in name="sorcer.co" />
 			<in name="sorcer.eo" />
 			<in name="sorcer.vo" />
-			<out name="sorcer.service" />
+			<in name="sorcer.service" />
 			<topclass name="sorcer.co.operator" />
 			<topclass name="sorcer.eo.operator" />
 			<!--topclass name="sorcer.vo.operator" /-->
