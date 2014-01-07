@@ -45,8 +45,7 @@ public class AccountTest implements SorcerConstants {
 	
 	@Test
 	public void accout1BalanceTest() throws Exception {
-		Task t1 = task(
-				"t1",
+		Task t1 = task("t1",
 				sig("getBalance", SorcerAccount.class, "Account1"),
 				context("balance1", result("balance/amount")));
 
@@ -55,8 +54,7 @@ public class AccountTest implements SorcerConstants {
 	
 	@Test
 	public void accout1DepositTest() throws Exception {
-		Task t2 = task(
-				"t2",
+		Task t2 = task("t2",
 				sig("makeDeposit", SorcerAccount.class, "Account1"),
 				context("deposit", in("deposit/amount", new Money(10000))));
 		t2 = exert(t2);
@@ -66,8 +64,7 @@ public class AccountTest implements SorcerConstants {
 	
 	@Test
 	public void accout2BalanceTest() throws Exception {
-		Task t3 = task(
-				"t3",
+		Task t3 = task("t3",
 				sig("getBalance", SorcerAccount.class, "Account2"),
 				context("balance2", result("balance/amount")));
 		logger.info("t3 value: " + value(t3));
@@ -75,8 +72,7 @@ public class AccountTest implements SorcerConstants {
 	
 	@Test
 	public void accout2WithdrawalTest() throws Exception {
-		Task t4 = task(
-				"t4",
+		Task t4 = task("t4",
 				sig("makeWithdrawal", SorcerAccount.class, "Account2"),
 				context("withdrawl", in("withdrawal/amount", new Money(10000))));
 		
@@ -87,21 +83,17 @@ public class AccountTest implements SorcerConstants {
 	
 	@Test
 	public void transferJobTest() throws Exception {
-		Task t1 = task(
-				"t1",
+		Task t1 = task("t1",
 				sig("getBalance", SorcerAccount.class, "Account1"));
 		
-		Task t2 = task(
-				"t2",
+		Task t2 = task("t2",
 				sig("makeDeposit", SorcerAccount.class, "Account1"),
 				context("deposit", in("deposit/amount", new Money(10000))));
 		
-		Task t3 = task(
-				"t3",
+		Task t3 = task("t3",
 				sig("getBalance", SorcerAccount.class, "Account2"));
 		
-		Task t4 = task(
-				"t4",
+		Task t4 = task("t4",
 				sig("makeWithdrawal", SorcerAccount.class, "Account2"),
 				context("withdrawl", in("withdrawal/amount", new Money(10000)), 
 						result("balance/amount")));
