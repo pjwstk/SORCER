@@ -12,10 +12,9 @@
 	<property name="requestor.class" value="sorcer.account.requestor.AccountTester" />
 
 	<path id="project.classpath">
-		<pathelement location="${iGrid.home}/lib/${requestor.name}.jar" />
-		<pathelement location="${iGrid.home}/common/jini-ext.jar" />
-		<pathelement location="${iGrid.home}/common/sun-util.jar" />
-		<pathelement location="${iGrid.home}/common/serviceui-1.1.jar" />
+		<pathelement location="${sorcer.lib}/${requestor.name}.jar" />
+		<pathelement location="${sorcer.lib}/sorcer-prv.jar" />
+		<path refid="jini.path" />
 	</path>
 
 	<target name="run.requestor">

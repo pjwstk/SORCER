@@ -8,8 +8,8 @@ import java.util.logging.Logger;
 import sorcer.core.SorcerConstants;
 import sorcer.core.provider.ServiceTasker;
 import sorcer.service.Context;
-import sorcer.util.Sorcer;
 import sorcer.util.Log;
+import sorcer.util.Sorcer;
 
 import com.sun.jini.start.LifeCycle;
 

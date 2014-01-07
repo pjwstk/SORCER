@@ -3,30 +3,32 @@ package sorcer.account.requestor;
 import java.rmi.RMISecurityManager;
 import java.util.logging.Logger;
 
+import sorcer.account.provider.Money;
 import sorcer.account.provider.SorcerAccount;
-import sorcer.core.SorcerConstants;
 import sorcer.core.context.ServiceContext;
 import sorcer.core.exertion.NetJob;
 import sorcer.core.exertion.NetTask;
-import sorcer.core.provider.Jobber;
 import sorcer.core.signature.NetSignature;
+import sorcer.service.Context;
 import sorcer.service.Job;
 import sorcer.util.Log;
-import sorcer.util.ProviderAccessor;
+import sorcer.util.Sorcer;
 
-public class AccountTester implements SorcerConstants {
+public class AccountTester {
 
-	private static Logger log = Log.getTestLog();
+	private static Logger logger = Log.getTestLog();
 
+	String CPS = "/";
+	
 	public static void main(String[] args) throws Exception {
 		System.setSecurityManager(new RMISecurityManager());
 		Job result = new AccountTester().test();
-		log.info("result: \n" + result);
+		logger.info("job context: \n" + result.getJobContext());
 	}
 
 	private Job test() throws Exception {
-		Jobber jobber = ProviderAccessor.getJobber();
-		return (jobber != null) ? (Job) jobber.service(getJob(), null) : null;
+		Job result = (Job)getJob().exert();
+		return result;
 	}
 
 	private Job getJob() throws Exception {
@@ -41,10 +43,11 @@ public class AccountTester implements SorcerConstants {
 	private NetTask getDepositTask() throws Exception {
 		ServiceContext context = new ServiceContext(SorcerAccount.ACCOUNT);
 		context.putValue(SorcerAccount.DEPOSIT + CPS + SorcerAccount.AMOUNT,
-				100);
-		context.putValue(SorcerAccount.BALANCE + CPS + SorcerAccount.AMOUNT, 0);
+				new Money(10000)); // $100.00
+		context.putValue(SorcerAccount.BALANCE + CPS + SorcerAccount.AMOUNT,
+				Context.none);
 		NetSignature signature = new NetSignature("makeDeposit",
-				SorcerAccount.class, "Account1");
+				SorcerAccount.class, Sorcer.getActualName("Account1"));
 		NetTask task = new NetTask("account-deposit", signature);
 		task.setContext(context);
 		return task;
@@ -53,10 +56,11 @@ public class AccountTester implements SorcerConstants {
 	private NetTask getWithdrawalTask() throws Exception {
 		ServiceContext context = new ServiceContext(SorcerAccount.ACCOUNT);
 		context.putValue(SorcerAccount.WITHDRAWAL + CPS + SorcerAccount.AMOUNT,
-				100);
-		context.putValue(SorcerAccount.BALANCE + CPS + SorcerAccount.AMOUNT, 0);
+				new Money(10000)); // $100.00
+		context.putValue(SorcerAccount.BALANCE + CPS + SorcerAccount.AMOUNT,
+				Context.none);
 		NetSignature signature = new NetSignature("makeWithdrawal",
-				SorcerAccount.class, "Account2");
+				SorcerAccount.class, Sorcer.getActualName("Account2"));
 		NetTask task = new NetTask("account-withdrawal", signature);
 		task.setContext(context);
 		return task;

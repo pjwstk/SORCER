@@ -22,7 +22,7 @@
 	<property name="module.run.dir" value="account" />
 
 	<!-- set global properties -->
-	<import file="../../common-build.xml" />
+	<import file="../../../common-build.xml" />
 	<property name="src" value="./src" />
 	<property name="resources" value="./resources" />
 
@@ -72,57 +72,35 @@
 	<!-- No RMI stubs are required for JERI type of providers -->
 	<target name="compile" depends="compileSources" />
 	<target name="jars" depends="account, copy-run-prv-files" />
-	<target name="account" depends="partner-account-cc.jar, jeri-account.jar, jeri-account-dl.jar, account-ui.jar, account-mvc-ui.jar, account-requestor.jar, account-requestor-dl.jar" />
+	<target name="account" depends="jeri-account.jar, jeri-account-dl.jar, account-ui.jar, account-mvc-ui.jar, account-requestor.jar, account-requestor-dl.jar" />
 	<target name="all" depends="prepare, jars" />
 
-	<!-- No RMI stubs are required for JERI type of providers -->
-	<target name="partner-account-cc.jar" depends="compile">
-		<classdepandjar jarfile="${lib}/partner-account-cc.jar" files="true" debug="false">
-			<classpath refid="project.classpath" />
-			<in name="sorcer" />
-			<topclass name="sorcer.account.provider.Account" />
-			<topclass name="sorcer.account.provider.SorcerAccount" />
-			<topclass name="sorcer.account.provider.AccountImpl" />
-			<topclass name="sorcer.account.provider.SorcerAccountImpl" />
-			<topclass name="sorcer.core.AdministratableProvider" />
-			<topclass name="sorcer.jini.lookup.entry.SorcerServiceType" />
-			<topclass name="sorcer.service.RemoteTasker" />
-			<fileset refid="icons" />
-		</classdepandjar>
-	</target>
-
 	<target name="account-requestor.jar">
-		<classdepandjar jarfile="${lib}/account-requestor.jar" files="true">
+		<classdepandjar jarfile="${sorcer.lib}/account-requestor.jar" files="true">
 			<classpath refid="project.classpath" />
-			<in name="sorcer" />
-			<in name="net.jini" />
-			<in name="com.sun" />
+			<in name="sorcer.account" />
 			<topclass name="sorcer.account.requestor.AccountTester" />
 			<fileset dir="${iGrid.home}/configs" includes="sorcer/util/sorcer.env" />
 		</classdepandjar>
 	</target>
 
 	<target name="account-requestor-dl.jar">
-		<classdepandjar jarfile="${lib}/account-requestor-dl.jar" files="true">
+		<classdepandjar jarfile="${sorcer.lib}/account-requestor-dl.jar" files="true">
 			<classpath refid="project.classpath" />
-			<in name="sorcer" />
-			<in name="net.jini" />
-			<in name="com.sun" />
+			<in name="sorcer.account.provider" />
+			<topclass name="sorcer.account.provider.AccountImpl" />
 			<topclass name="sorcer.account.provider.SorcerAccount" />
 		</classdepandjar>
 	</target>
 
 	<target name="jeri-account.jar" depends="compile">
-		<classdepandjar jarfile="${lib}/jeri-account.jar" files="true" debug="false">
+		<classdepandjar jarfile="${sorcer.lib}/jeri-account.jar" files="true" debug="false">
 			<classpath refid="project.classpath" />
-			<in name="sorcer" />
-			<in name="net.jini" />
-			<in name="com.sun" />
+			<in name="sorcer.account.provider" />
 			<topclass name="sorcer.account.provider.AccountProvider" />
-			<topclass name="sorcer.service.RemoteTasker" />
-			<topclass name="net.jini.admin.Administrable" />
 			<topclass name="sorcer.account.provider.ui.AccountUI" />
 			<topclass name="sorcer.account.provider.ui.mvc.AccountView" />
+			<topclass name="sorcer.account.provider.SorcerAccount" />
 			<fileset dir="${iGrid.home}/configs">
 				<filename name="sorcer/util/sorcer.env" />
 				<filename name="sorcer/util/data.formats" />
@@ -133,35 +111,30 @@
 
 	<!-- No RMI stubs are required for JERI type of providers -->
 	<target name="jeri-account-dl.jar" depends="compile">
-		<classdepandjar jarfile="${lib}/jeri-account-dl.jar" files="true" debug="false">
+		<classdepandjar jarfile="${sorcer-dl.lib}/jeri-account-dl.jar" files="true" debug="false">
 			<classpath refid="project.classpath" />
-			<in name="sorcer" />
-			<in name="net.jini" />
-			<in name="com.sun" />
-			<topclass name="sorcer.ui.serviceui.UIFrameFactory" />
+			<in name="sorcer.account.provider" />
+			<topclass name="sorcer.account.provider.Account" />
 			<topclass name="sorcer.account.provider.SorcerAccount" />
-			<topclass name="sorcer.jini.lookup.entry.SorcerServiceType" />
-			<topclass name="net.jini.lookup.entry.ServiceInfo" />
-			<topclass name="net.jini.admin.Administrable" />
-			<topclass name="sorcer.service.RemoteTasker" />
-			<topclass name="sorcer.core.AdministratableProvider" />
 			<fileset refid="icons" />
 		</classdepandjar>
 	</target>
 
 	<target name="account-ui.jar">
-		<classdepandjar jarfile="${lib}/account-ui.jar" files="true">
+		<classdepandjar jarfile="${sorcer-dl.lib}/account-ui.jar" files="true">
 			<classpath refid="project.classpath" />
-			<in name="sorcer" />
+			<in name="sorcer.account" />
+			<in name="sorcer.ui" />
 			<topclass name="sorcer.account.provider.ui.AccountUI" />
 			<topclass name="sorcer.ui.serviceui.UIComponentFactory" />
 		</classdepandjar>
 	</target>
 
 	<target name="account-mvc-ui.jar">
-		<classdepandjar jarfile="${lib}/account-mvc-ui.jar" files="true">
+		<classdepandjar jarfile="${sorcer-dl.lib}/account-mvc-ui.jar" files="true">
 			<classpath refid="project.classpath" />
-			<in name="sorcer" />
+			<in name="sorcer.account" />
+			<in name="sorcer.ui" />
 			<topclass name="sorcer.account.provider.ui.mvc.AccountView" />
 			<topclass name="sorcer.ui.serviceui.UIComponentFactory" />
 		</classdepandjar>

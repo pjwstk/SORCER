@@ -5,6 +5,7 @@ import java.rmi.RemoteException;
 
 import sorcer.service.Context;
 
+@SuppressWarnings("rawtypes")
 public interface SorcerAccount extends Remote {
 
 	public Context getBalance(Context account) throws RemoteException;
