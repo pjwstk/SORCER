@@ -28,7 +28,7 @@
 
 	<!-- The sources to compile -->
 	<patternset id="ant.java">
-		<include name="sorcer/**/*.java" />
+		<include name="sorcer/account/**/*.java" />
 		<exclude name="**/SAVE/*.java" />
 		<exclude name="**/BAK/*.java" />
 	</patternset>
@@ -53,12 +53,8 @@
 
 	<path id="project.classpath">
 		<pathelement location="${classes}" />
-		<pathelement location="${lib}/sorcer.jar" />
-		<pathelement location="${lib}/tea.jar" />
-		<pathelement location="${servlet.api}" />
-		<pathelement location="${lib}/classes12.zip" />
-		<pathelement location="${lib}/jintegra.jar" />
-		<path refid="jaxp.path" />
+		<pathelement location="${sorcer.lib}/sorcer.jar" />
+		<pathelement location="${support.lib}/junit.jar" />
 		<path refid="jini.path" />
 		<path refid="rio.path" />
 	</path>

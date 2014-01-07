@@ -13,6 +13,7 @@ import sorcer.util.Sorcer;
 
 import com.sun.jini.start.LifeCycle;
 
+@SuppressWarnings("rawtypes")
 public class AccountProvider extends ServiceTasker implements Account,
 		SorcerAccount, SorcerConstants {
 
@@ -21,7 +22,7 @@ public class AccountProvider extends ServiceTasker implements Account,
 	private Money balance;
 
 	/**
-	 * Constructs an instance of the SORCER account provider implenting
+	 * Constructs an instance of the SORCER account provider implementing
 	 * SorcerAccount and Account. This constructor is required by Jini 2 life
 	 * cycle management.
 	 * 
@@ -66,10 +67,13 @@ public class AccountProvider extends ServiceTasker implements Account,
 				makeWithdrawal(amount);
 				result = getBalance();
 			}
-
+			// set return value
+			if (context.getReturnPath() != null) {
+				context.setReturnValue(result);
+			}
 			logger.info(selector + " result: \n" + result);
 			String outputMessage = "processed by " + getHostname();
-			context.putValue(
+			context.putValue(selector + CPS +
 					SorcerAccount.BALANCE + CPS + SorcerAccount.AMOUNT, result);
 			context.putValue(SorcerAccount.COMMENT, outputMessage);
 
