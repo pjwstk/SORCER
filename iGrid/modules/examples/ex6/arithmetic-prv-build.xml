@@ -39,7 +39,6 @@
 		<pathelement location="${sorcer.lib}/sorcer-prv.jar" />
 		<pathelement location="${support.lib}/junit.jar" />
 		<pathelement location="${common.lib}/je-4.1.21.jar" />
-		<path refid="jaxp.path" />
 		<path refid="jini.path" />
 		<path refid="rio.path" />
 	</path>

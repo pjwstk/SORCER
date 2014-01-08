@@ -113,7 +113,7 @@ public class ArithmeticNetTest implements SorcerConstants {
 		context.putInValue("arg1/value", 20.0);
 		context.putInValue("arg2/value", 80.0);
 		// We know that the output is gonna be placed in this path
-		context.putOutValue("out/value", 0);
+		context.putOutValue("out/value", Context.none);
 		Signature method = new NetSignature("add", Adder.class);
 		Task task = new NetTask("add", method);
 		task.setContext(context);
@@ -125,7 +125,7 @@ public class ArithmeticNetTest implements SorcerConstants {
 		context.putInValue("arg1/value", 10.0);
 		context.putInValue("arg2/value", 50.0);
 		// We know that the output is gonna be placed in this path
-		context.putOutValue("out/value", 0);
+		context.putOutValue("out/value", Context.none);
 		Signature method = new NetSignature("multiply", Multiplier.class);
 		Task task = new NetTask("multiply", method);
 		task.setContext(context);
@@ -152,7 +152,7 @@ public class ArithmeticNetTest implements SorcerConstants {
 				"t5",
 				sig("add", Adder.class),
 				context("add", in("arg, x1", 20.0),
-						in("arg, x2", 80.0), result("result, y")));
+						in("arg, x2", 80.0), result("result/y")));
 		t5 = exert(t5);
 		//logger.info("t5 context: " + context(t5));
 		//logger.info("t5 value: " + get(t5));
@@ -166,7 +166,7 @@ public class ArithmeticNetTest implements SorcerConstants {
 				"t5",
 				sig("average", Averager.class),
 				context("average", in("arg, x1", 20.0),
-						in("arg, x2", 80.0), result("result, y")));
+						in("arg, x2", 80.0), result("result/y")));
 		t5 = exert(t5);
 		logger.info("t5 context: " + context(t5));
 		logger.info("t5 value: " + get(t5));

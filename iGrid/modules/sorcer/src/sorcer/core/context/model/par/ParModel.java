@@ -228,8 +228,14 @@ public class ParModel<T> extends ServiceContext<T> implements Evaluation<T>, Inv
 			throws RemoteException, InvocationException {
 		Object result = null;
 		try {
-			if (context != null)
+			if (context != null) {
 				this.append(context);
+				if (context.getValue("par") != Context.none) {
+					logger.info("ZZZZZZZZZZZZZZZZZZZZ value key: " + getValue("par"));
+					logger.info("ZZZZZZZZZZZZZZZZZZZZ value at: " + getValue((String)context.getValue("par"), entries));
+					return (T)getValue((String)context.getValue("par"));
+				}
+			}
 			if (context.getExecPath() != null) {
 				Object o = get(context.getExecPath().path());
 				if (o instanceof Par) {

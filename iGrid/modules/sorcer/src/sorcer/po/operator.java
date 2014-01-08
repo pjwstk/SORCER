@@ -345,7 +345,7 @@ public class operator {
 		return new GroovyInvoker(expression, pars);
 	}
 	
-	public static Invoker invoker(String expression) {
+	public static Invoker invoker(String expression) { 
 		return new GroovyInvoker(expression);
 	}
 	

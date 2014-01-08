@@ -91,6 +91,11 @@ public class ObjectTask extends Task {
 				else
 					invoker = new MethodInvoker(os.newInstance(), os.getSelector());
 			}
+			logger.info("ZZZZZZZZZZZZZZZZZZ ObjectTask  invoker: " + invoker);
+			logger.info("ZZZZZZZZZZZZZZZZZZ ObjectTask  getArgs(): " + getArgs());
+			logger.info("ZZZZZZZZZZZZZZZZZZ ObjectTask  os.getTypes(): " + os.getTypes());
+			logger.info("ZZZZZZZZZZZZZZZZZZ ObjectTask  dataContext: " + dataContext);
+
 			if (os.getReturnPath() != null)
 				dataContext.setReturnPath(os.getReturnPath());
 			if (getArgs() == null  && os.getTypes() == null) {

@@ -461,6 +461,10 @@ public class Invoker<T> extends Observable implements Identifiable, Scopable, Ev
 		return name;
 	}
 
+	public void setName(String name) {
+		this.name = name;
+	}
+	
 	/* (non-Javadoc)
 	 * @see sorcer.service.Evaluator#evaluate(sorcer.service.Arg[])
 	 */

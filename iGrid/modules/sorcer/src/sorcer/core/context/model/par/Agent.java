@@ -103,7 +103,7 @@ public class Agent<T> extends Par<T> implements Serializable {
 							+ e.getClass().getName() + ": "
 							+ e.getLocalizedMessage());
 		}
-		value = (T)invoker.invoke();
+		value = (T)invoker.invoke(entries);
 		invoker.valueValid(true);
 		return value;
 	}

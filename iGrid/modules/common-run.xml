@@ -113,10 +113,11 @@ To run both (webserver and service) use the XML Ant sysntax as follws:
 		<pathelement location="${common.lib}/groovy/groovy-all-${groovy.version}.jar" />
 		<pathelement location="${rio.lib}/rio-platform${rio.version}.jar" />
 	</path>
-
+	
 	<path id="sorcer.path">
 		<pathelement location="${lib}/boot.jar" />
 		<pathelement location="${lib}/sorcer/lib/sorcer-env.jar" />
+		<pathelement location="${lib}/sorcer/lib/sorcer-lib.jar" />
 		<pathelement location="${lib}/common/groovy/groovy-all-${groovy.version}.jar" />
 		<pathelement location="${rio.home}/lib/rio-platform${rio.version}.jar" />
 		<pathelement location="${rio.home}/lib/rio-start${rio.version}.jar" />

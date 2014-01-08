@@ -33,6 +33,7 @@ import sorcer.service.ArgSet;
 import sorcer.service.Context;
 import sorcer.service.ContextException;
 import sorcer.service.EvaluationException;
+import sorcer.service.Invocation;
 import sorcer.util.SorcerUtil;
 
 /**
@@ -221,6 +222,18 @@ public class MethodInvoker<T> extends Invoker<T> implements MethodInvoking<T> {
 					if (mts.length == 1)
 						m = mts[0];
 				} else {
+//					// exception when Arg... is not specified for the invoke
+					if (target instanceof Invocation && paramTypes.length == 1 
+								&&  paramTypes[0] == Context.class
+									&& selector.equals("invoke"))	{
+						paramTypes = new Class[2];
+						paramTypes[0] = Context.class;
+						paramTypes[1] = Arg[].class;		
+						Object[] parameters2 = new Object[2];
+						parameters2[0] = parameters[0];
+						parameters2[1] = new Arg[0];
+						parameters = parameters2;
+					}
 					m = evalClass.getMethod(selector, paramTypes);
 					if (m == null) {
 						Method[] mts = evalClass.getMethods();
@@ -235,8 +248,23 @@ public class MethodInvoker<T> extends Invoker<T> implements MethodInvoking<T> {
 					}
 				}
 			}
+			
+			logger.severe("**error in object invoker; target = " + target);
+			System.out.println("ZZZZZZZZZZZZZZZ class: " + evalClass);
+			System.out.println("ZZZZZZZZZZZZZZZ context: " + context);
+			System.out.println("ZZZZZZZZZZZZZZZ method: " + m);
+			System.out.println("ZZZZZZZZZZZZZZZ selector: " + selector);
+			System.out.println("ZZZZZZZZZZZZZZZ paramTypes: "
+					+ (paramTypes == null ? "null" : SorcerUtil
+							.arrayToString(paramTypes)));
+			System.out.println("ZZZZZZZZZZZZZZZ parameters: "
+					+ (parameters == null ? "null" : SorcerUtil
+							.arrayToString(parameters)));
+			
 			// ((ServiceContext)context).setCurrentSelector(selector);
 			val = m.invoke(target, parameters);
+			System.out.println("ZZZZZZZZZZZZZZZ val: " + val);
+
 		} catch (Exception e) {
 			logger.severe("**error in object invoker; target = " + target);
 			System.out.println("class: " + evalClass);

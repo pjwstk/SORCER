@@ -37,7 +37,6 @@ import sorcer.service.Task;
 import sorcer.util.Sorcer;
 import sorcer.util.exec.ExecUtils;
 import sorcer.util.exec.ExecUtils.CmdResult;
-import sorcer.util.url.sos.SdbURLStreamHandlerFactory;
 
 /**
  * @author Mike Sobolewski
@@ -49,7 +48,7 @@ public class ParModelServices {
 
 	static {
 		ServiceExertion.debug = true;
-		URL.setURLStreamHandlerFactory(new SdbURLStreamHandlerFactory());
+//		URL.setURLStreamHandlerFactory(new SdbURLStreamHandlerFactory());
 		System.setProperty("java.util.logging.config.file",
 				Sorcer.getHome() + "/configs/sorcer.logging");
 		System.setProperty("java.security.policy", Sorcer.getHome()
@@ -58,27 +57,21 @@ public class ParModelServices {
 		Sorcer.setCodeBase(new String[] { "ju-invoker-beans.jar" });
 	}
 	
-	@BeforeClass 
-	public static void setUpOnce() throws IOException, InterruptedException {
-		CmdResult result = ExecUtils.execCommand("ant -f " + Sorcer.getHome() 
-				+ "/modules/sorcer/src/junit/sorcer/core/invoker/bin/all-model-prv-boot-spawn.xml");
-		System.out.println("out: " + result.getOut());
-		System.out.println("err: " + result.getErr());
-		System.out.println("status: " + result.getExitValue());
-				
-//		result = ExecUtils.execCommand("ant -f " + Sorcer.getHome() 
-//				+ "/modules/sorcer/src/junit/sorcer/core/invoker/bin/all-model-prv-boot-spawn.xml");
-		System.out.println("out: " + result.getOut());
-		System.out.println("err: " + result.getErr());
-		System.out.println("status: " + result.getExitValue());
-		Thread.sleep(2000);
-	}
-	
-	@AfterClass 
-	public static void cleanup() throws RemoteException, InterruptedException {
-		Sorcer.destroyNode(null, Invocation.class);
-//		Sorcer.destroy(null, Invocation.class);
-	}
+//	@BeforeClass 
+//	public static void setUpOnce() throws IOException, InterruptedException {
+//		CmdResult result = ExecUtils.execCommand("ant -f " + Sorcer.getHome() 
+//				+ "/modules/sorcer/src/junit/sorcer/core/context/model/par/bin/all-model-prv-boot-spawn.xml");
+//		System.out.println("out: " + result.getOut());
+//		System.out.println("err: " + result.getErr());
+//		System.out.println("status: " + result.getExitValue());
+//		Thread.sleep(2000);
+//	}
+//	
+//	@AfterClass 
+//	public static void cleanup() throws RemoteException, InterruptedException {
+//		Sorcer.destroyNode(null, Invocation.class);
+////		Sorcer.destroy(null, Invocation.class);
+//	}
 	
 	@Test
 	public void parModelerTest() throws RemoteException, ContextException,
@@ -92,7 +85,7 @@ public class ParModelServices {
 	public void parObjectModelServiceTest() throws RemoteException, ContextException, ExertionException, SignatureException {
 		ParModel pm = ParModeler.getParModel();
 		Task pmt = task(sig("invoke", pm), 
-				context(invoker("expr"), result("invoke/result")));
+				context(entry("par", "expr"), result("invoke/result")));
 		
 		logger.info("result: " + value(pmt));
 		assertEquals(value(pmt), 60.0);
@@ -106,7 +99,7 @@ public class ParModelServices {
 			ExertionException, SignatureException {
 		// the provider in ex6/bin parmodel-prv-run.xml
 		Task pmt = task(sig("invoke", Invocation.class, "ParModel Service"), 
-				context(invoker("expr"), result("invoke/result")));
+				context(entry("par", "expr"), result("invoke/result")));
 		
 //		logger.info("result: " + value(pmt));
 		assertEquals(value(pmt), 60.0);
@@ -119,8 +112,8 @@ public class ParModelServices {
 	public void parNetVarModelServiceTest() throws RemoteException, ContextException, 
 			ExertionException, SignatureException {
 		// the provider in ex6/bin varparmodel-prv-run.xml
-		Task pmt = task(sig("invoke", Invocation.class, "VarParModel Service"), 
-				context(invoker("expr"), result("invoke/result")));
+		Task pmt = task(sig("invoke", Invocation.class, "ParModel Service"), 
+				context(entry("par", "expr"), result("invoke/result")));
 
 //		logger.info("result: " + value(pmt));
 		assertEquals(value(pmt), 60.0);
@@ -135,11 +128,11 @@ public class ParModelServices {
 		
 		ParModel pm = ParModeler.getParModel();
 		Task pmt = task(sig("invoke", pm), context(
-				invoker("getSphereVolume"),
+				entry("par", "getSphereVolume"),
 				result("sphere/volume"),
 				entry("sphere/radius", 20.0),
 				agent("getSphereVolume",
-					"junit.sorcer.vfe.evaluator.service.Volume",
+					"junit.sorcer.core.invoker.service.Volume",
 					new URL(Sorcer.getWebsterUrl()
 							+ "/ju-volume-bean.jar"))));
 		
@@ -156,7 +149,7 @@ public class ParModelServices {
 		
 		// invoking non existing agent and the return value specified
 		Task pmt = task(sig("invoke", pm), context(
-				invoker("getSphereVolume"),
+				entry("par", "getSphereVolume"),
 				result("sphere/volume"),
 				entry("sphere/radius", 20.0),
 				agent("getSphereVolume",
@@ -173,7 +166,7 @@ public class ParModelServices {
 		
 		// the existing agent and the return value specified
 		pmt = task(sig("invoke", pm), context(
-				invoker("getCylinderSurface"),
+				entry("par","getCylinderSurface"),
 				result("cylinder/surface"),
 				entry("cylinder/radius", 1.0), 
 				entry("cylinder/height", 2.0)));
@@ -182,7 +175,7 @@ public class ParModelServices {
 
 		// the existing agent and no return value specified
 		pmt = task(sig("invoke", pm), context(
-				invoker("getCylinderSurface"),
+				entry("par", "getCylinderSurface"),
 				entry("cylinder/radius", 1.0), 
 				entry("cylinder/height", 2.0)));
 

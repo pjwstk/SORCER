@@ -19,6 +19,8 @@ package sorcer.util;
 
 public class AccessorException extends Exception {
 
+	private static final long serialVersionUID = 1L;
+
 	public AccessorException() {
 	}
 

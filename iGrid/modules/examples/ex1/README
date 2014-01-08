@@ -1,18 +1,16 @@
 This example contains Java sources for four examples:
-	ex1boot-bean
-	ex1boot=prv
+	ex1run-bean-http
+	ex1run-prv-http
 	ex1run-bean
 	ex1run-prv
 	
-boot - in the name of the example directory indicates that 
-service providers and requestors are bootstrapped with their own code servers.
-
-run - in the name of the example directory indicates that both
-service providers and requestors require to have a code server (webster) 
-already running.
+http - in the name of the example directory indicates that 
+service providers and requestors are bootstrapped with their own code servers,
+otherwise both service providers and requestors require to have a code server 
+(webster) already running.
 
 To start the SORCER environment for these examples run the Ant script
-${IGRID_HOME}/bin/iGrid-boot-http.xml
+${IGRID_HOME}/bin/iGrid-boot.xml or ${IGRID_HOME}/bin/iGrid-boot-http.xml
 
 To start a service browser run the Ant script
 ${IGRID_HOME}/bin/browser/bin/service-browser-run.xml
