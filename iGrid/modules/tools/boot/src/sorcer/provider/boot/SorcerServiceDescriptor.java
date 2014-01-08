@@ -294,6 +294,12 @@ public class SorcerServiceDescriptor implements ServiceDescriptor {
 		String defaultDir = null;
 		String fs = File.separator;
 		String iGridHome = System.getProperty("iGrid.home");
+		// if system property not set use the env value
+		if (iGridHome == null) {
+			iGridHome = System.getenv("IGRID_HOME");
+			if (iGridHome != null)
+				System.setProperty("iGrid.home", iGridHome);
+		}
 		if (iGridHome == null) {
 			logger.info("'iGrid.home' not defined, no default platformDir");
 		} else {

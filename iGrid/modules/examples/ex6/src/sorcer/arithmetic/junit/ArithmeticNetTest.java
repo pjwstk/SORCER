@@ -82,31 +82,6 @@ public class ArithmeticNetTest implements SorcerConstants {
 		System.out.println("CLASSPATH :" + System.getProperty("java.class.path"));
 		System.setProperty("java.protocol.handler.pkgs", "sorcer.util.url|org.rioproject.url");
 	}
-
-//	@BeforeClass 
-//	public static void setUpOnce() throws IOException, InterruptedException {
-//		String antBuild = Sorcer.getHome()
-//				+ "/modules/sorcer/src/junit/sorcer/core/provider/bin/boot-all-spawn.xml";
-//		File antFile = new File(antBuild);
-//		Project project = new Project();
-//		project.init();
-//		ProjectHelper.configureProject(project, antFile);
-//		project.executeTarget("all-arithmetic");
-//		Thread.sleep(2000);
-//	}
-	
-//	@AfterClass 
-//	public static void cleanup() throws RemoteException, InterruptedException {
-//		Sorcer.destroyNode(null, Adder.class);
-//	}
-	
-//	@Test
-//	public void getCatalogTest() throws Exception {
-//		Cataloger catalog = ProviderAccessor.getCataloger();
-//		System.out.println("Cataloger: " + catalog);
-//		String[] pnames = catalog.getProviderList();
-//		logger.info("cataloger pnames: " + pnames);
-//	}
 	
 	private Task getAddTask() throws Exception {
 		Context context = new PositionalContext("add");

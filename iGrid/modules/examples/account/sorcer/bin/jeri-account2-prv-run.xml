@@ -23,7 +23,6 @@ Also you might need to adjust the classpath (provider.classpath) for your provid
 			<sysproperty key="sorcer.provider.config" value="../configs/${provider.name}2-prv.config" />
 			<sysproperty key="sorcer.provider.codebase" value="${provider.name}-dl.jar" />
 			<sysproperty key="sorcer.provider.classpath" value="${sorcer.lib}/${provider.name}.jar" />
-			<sysproperty key="iGrid.home" value="${iGrid.home}" />
 			<sysproperty key="sorcer.env.file" value="${iGrid.home}/configs/sorcer.env" />
 			<sysproperty key="java.security.policy" value="../policy/${provider.name}-prv.policy" />
 			<sysproperty key="java.util.logging.config.file" value="${iGrid.home}/configs/sorcer.logging" />
