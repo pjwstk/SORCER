@@ -9,13 +9,12 @@ import sorcer.core.SorcerConstants;
 import sorcer.core.provider.ServiceTasker;
 import sorcer.service.Context;
 import sorcer.util.Log;
-import sorcer.util.Sorcer;
 
 import com.sun.jini.start.LifeCycle;
 
 @SuppressWarnings("rawtypes")
 public class AccountProvider extends ServiceTasker implements Account,
-		SorcerAccount, SorcerConstants {
+		ServiceAccount, SorcerConstants {
 
 	private static Logger logger = Log.getTestLog();
 
@@ -36,34 +35,37 @@ public class AccountProvider extends ServiceTasker implements Account,
 		balance = new Money(Integer.parseInt(cents));
 	}
 
-	public Context getBalance(Context context) throws RemoteException {
-		return process(context, SorcerAccount.BALANCE);
+	public Context getBalance(Context context) throws RemoteException,
+			AccountException {
+		return process(context, ServiceAccount.BALANCE);
 	}
 
-	public Context makeDeposit(Context context) throws RemoteException {
-		return process(context, SorcerAccount.DEPOSIT);
+	public Context makeDeposit(Context context) throws RemoteException,
+			AccountException {
+		return process(context, ServiceAccount.DEPOSIT);
 	}
 
-	public Context makeWithdrawal(Context context) throws RemoteException {
-		return process(context, SorcerAccount.WITHDRAWAL);
+	public Context makeWithdrawal(Context context) throws RemoteException,
+			AccountException {
+		return process(context, ServiceAccount.WITHDRAWAL);
 	}
 
 	private Context process(Context context, String selector)
-			throws RemoteException {
+			throws RemoteException, AccountException {
 		try {
 			logger.info("input context: \n" + context);
 
 			Money result = null, amount = null;
-			if (selector.equals(SorcerAccount.BALANCE)) {
+			if (selector.equals(ServiceAccount.BALANCE)) {
 				result = getBalance();
-			} else if (selector.equals(SorcerAccount.DEPOSIT)) {
-				amount = (Money) context.getValue(SorcerAccount.DEPOSIT + CPS
-						+ SorcerAccount.AMOUNT);
+			} else if (selector.equals(ServiceAccount.DEPOSIT)) {
+				amount = (Money) context.getValue(ServiceAccount.DEPOSIT + CPS
+						+ ServiceAccount.AMOUNT);
 				makeDeposit(amount);
 				result = getBalance();
-			} else if (selector.equals(SorcerAccount.WITHDRAWAL)) {
-				amount = (Money) context.getValue(SorcerAccount.WITHDRAWAL
-						+ CPS + SorcerAccount.AMOUNT);
+			} else if (selector.equals(ServiceAccount.WITHDRAWAL)) {
+				amount = (Money) context.getValue(ServiceAccount.WITHDRAWAL
+						+ CPS + ServiceAccount.AMOUNT);
 				makeWithdrawal(amount);
 				result = getBalance();
 			}
@@ -74,18 +76,16 @@ public class AccountProvider extends ServiceTasker implements Account,
 			logger.info(selector + " result: \n" + result);
 			String outputMessage = "processed by " + getHostname();
 			context.putValue(selector + CPS +
-					SorcerAccount.BALANCE + CPS + SorcerAccount.AMOUNT, result);
-			context.putValue(SorcerAccount.COMMENT, outputMessage);
+					ServiceAccount.BALANCE + CPS + ServiceAccount.AMOUNT, result);
+			context.putValue(ServiceAccount.COMMENT, outputMessage);
 
 		} catch (Exception ex) {
-			// ContextException, UnknownHostException
-			throw new RemoteException(selector + " process execption", ex);
+			throw new AccountException(ex);
 		}
 		return context;
 	}
 
 	public Money getBalance() throws RemoteException {
-		String cents = Sorcer.getProperty("provider.balance");
 		return balance;
 	}
 

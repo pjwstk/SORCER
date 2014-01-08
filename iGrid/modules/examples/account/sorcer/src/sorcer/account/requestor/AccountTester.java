@@ -4,7 +4,7 @@ import java.rmi.RMISecurityManager;
 import java.util.logging.Logger;
 
 import sorcer.account.provider.Money;
-import sorcer.account.provider.SorcerAccount;
+import sorcer.account.provider.ServiceAccount;
 import sorcer.core.context.ServiceContext;
 import sorcer.core.exertion.NetJob;
 import sorcer.core.exertion.NetTask;
@@ -14,6 +14,7 @@ import sorcer.service.Job;
 import sorcer.util.Log;
 import sorcer.util.Sorcer;
 
+@SuppressWarnings("rawtypes")
 public class AccountTester {
 
 	private static Logger logger = Log.getTestLog();
@@ -41,26 +42,26 @@ public class AccountTester {
 	}
 
 	private NetTask getDepositTask() throws Exception {
-		ServiceContext context = new ServiceContext(SorcerAccount.ACCOUNT);
-		context.putValue(SorcerAccount.DEPOSIT + CPS + SorcerAccount.AMOUNT,
+		ServiceContext context = new ServiceContext(ServiceAccount.ACCOUNT);
+		context.putValue(ServiceAccount.DEPOSIT + CPS + ServiceAccount.AMOUNT,
 				new Money(10000)); // $100.00
-		context.putValue(SorcerAccount.BALANCE + CPS + SorcerAccount.AMOUNT,
+		context.putValue(ServiceAccount.BALANCE + CPS + ServiceAccount.AMOUNT,
 				Context.none);
 		NetSignature signature = new NetSignature("makeDeposit",
-				SorcerAccount.class, Sorcer.getActualName("Account1"));
+				ServiceAccount.class, Sorcer.getActualName("Account1"));
 		NetTask task = new NetTask("account-deposit", signature);
 		task.setContext(context);
 		return task;
 	}
 
 	private NetTask getWithdrawalTask() throws Exception {
-		ServiceContext context = new ServiceContext(SorcerAccount.ACCOUNT);
-		context.putValue(SorcerAccount.WITHDRAWAL + CPS + SorcerAccount.AMOUNT,
+		ServiceContext context = new ServiceContext(ServiceAccount.ACCOUNT);
+		context.putValue(ServiceAccount.WITHDRAWAL + CPS + ServiceAccount.AMOUNT,
 				new Money(10000)); // $100.00
-		context.putValue(SorcerAccount.BALANCE + CPS + SorcerAccount.AMOUNT,
+		context.putValue(ServiceAccount.BALANCE + CPS + ServiceAccount.AMOUNT,
 				Context.none);
 		NetSignature signature = new NetSignature("makeWithdrawal",
-				SorcerAccount.class, Sorcer.getActualName("Account2"));
+				ServiceAccount.class, Sorcer.getActualName("Account2"));
 		NetTask task = new NetTask("account-withdrawal", signature);
 		task.setContext(context);
 		return task;

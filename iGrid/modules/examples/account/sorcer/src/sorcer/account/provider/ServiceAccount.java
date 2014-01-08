@@ -6,13 +6,16 @@ import java.rmi.RemoteException;
 import sorcer.service.Context;
 
 @SuppressWarnings("rawtypes")
-public interface SorcerAccount extends Remote {
+public interface ServiceAccount extends Remote {
 
-	public Context getBalance(Context account) throws RemoteException;
+	public Context getBalance(Context account) throws RemoteException,
+			AccountException;
 
-	public Context makeDeposit(Context account) throws RemoteException;
+	public Context makeDeposit(Context account) throws RemoteException,
+			AccountException;
 
-	public Context makeWithdrawal(Context account) throws RemoteException;
+	public Context makeWithdrawal(Context account) throws RemoteException,
+			AccountException;
 
 	public final static String ACCOUNT = "accout";
 

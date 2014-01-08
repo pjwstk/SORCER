@@ -85,7 +85,7 @@
 			<classpath refid="project.classpath" />
 			<in name="sorcer.account.provider" />
 			<topclass name="sorcer.account.provider.AccountImpl" />
-			<topclass name="sorcer.account.provider.SorcerAccount" />
+			<topclass name="sorcer.account.provider.ServiceAccount" />
 		</classdepandjar>
 	</target>
 
@@ -96,7 +96,7 @@
 			<topclass name="sorcer.account.provider.AccountProvider" />
 			<topclass name="sorcer.account.provider.ui.AccountUI" />
 			<topclass name="sorcer.account.provider.ui.mvc.AccountView" />
-			<topclass name="sorcer.account.provider.SorcerAccount" />
+			<topclass name="sorcer.account.provider.ServiceAccount" />
 			<fileset dir="${iGrid.home}/configs">
 				<filename name="sorcer/util/sorcer.env" />
 				<filename name="sorcer/util/data.formats" />
@@ -111,7 +111,7 @@
 			<classpath refid="project.classpath" />
 			<in name="sorcer.account.provider" />
 			<topclass name="sorcer.account.provider.Account" />
-			<topclass name="sorcer.account.provider.SorcerAccount" />
+			<topclass name="sorcer.account.provider.ServiceAccount" />
 			<fileset refid="icons" />
 		</classdepandjar>
 	</target>

@@ -1,14 +1,6 @@
 package sorcer.account.provider;
 
-import java.rmi.Remote;
 import java.rmi.RemoteException;
-
-import net.jini.admin.Administrable;
-import net.jini.core.transaction.Transaction;
-import net.jini.core.transaction.TransactionException;
-import sorcer.core.provider.Provider;
-import sorcer.service.Exertion;
-import sorcer.service.ExertionException;
 
 public class AccountImpl implements Account {
 	private Money balance;
@@ -50,45 +42,5 @@ public class AccountImpl implements Account {
 			throw new OverdraftException(false);
 		}
 		return;
-	}
-
-	private Provider partner;
-
-	private Administrable admin;
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see sorcer.core.provider.proxy.Partnership#getPartner()
-	 */
-	public Remote getInner() throws RemoteException {
-		return (Remote) partner;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see sorcer.base.Service#service(sorcer.base.Exertion)
-	 */
-	public Exertion service(Exertion exertion, Transaction transaction)
-			throws RemoteException, ExertionException, TransactionException {
-		return partner.service(exertion, null);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see net.jini.admin.Administrable#getAdmin()
-	 */
-	public Object getAdmin() throws RemoteException {
-		return admin;
-	}
-
-	public void setInner(Object provider) {
-		partner = (Provider) provider;
-	}
-
-	public void setAdmin(Object admin) {
-		this.admin = (Administrable) admin;
 	}
 }

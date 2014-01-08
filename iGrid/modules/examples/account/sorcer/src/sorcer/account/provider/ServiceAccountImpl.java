@@ -18,22 +18,22 @@ import sorcer.service.Exertion;
 import sorcer.service.ExertionException;
 import sorcer.util.Log;
 
-public class SorcerAccountImpl implements Account, SorcerAccount, SorcerConstants {
+public class ServiceAccountImpl implements Account, ServiceAccount, SorcerConstants {
 
 	private static Logger logger = Log.getTestLog();
 
 	private Money balance;
 
 	public Context getBalance(Context context) throws RemoteException {
-		return process(context, SorcerAccount.BALANCE);
+		return process(context, ServiceAccount.BALANCE);
 	}
 
 	public Context makeDeposit(Context context) throws RemoteException {
-		return process(context, SorcerAccount.DEPOSIT);
+		return process(context, ServiceAccount.DEPOSIT);
 	}
 
 	public Context makeWithdrawal(Context context) throws RemoteException {
-		return process(context, SorcerAccount.WITHDRAWAL);
+		return process(context, ServiceAccount.WITHDRAWAL);
 	}
 
 	private Context process(Context context, String selector)
@@ -42,16 +42,16 @@ public class SorcerAccountImpl implements Account, SorcerAccount, SorcerConstant
 			logger.info("input context: \n" + context);
 
 			Money result = null, amount = null;
-			if (selector.equals(SorcerAccount.BALANCE)) {
+			if (selector.equals(ServiceAccount.BALANCE)) {
 				result = getBalance();
-			} else if (selector.equals(SorcerAccount.DEPOSIT)) {
-				amount = (Money) context.getValue(SorcerAccount.DEPOSIT + CPS
-						+ SorcerAccount.AMOUNT);
+			} else if (selector.equals(ServiceAccount.DEPOSIT)) {
+				amount = (Money) context.getValue(ServiceAccount.DEPOSIT + CPS
+						+ ServiceAccount.AMOUNT);
 				makeDeposit(amount);
 				result = getBalance();
-			} else if (selector.equals(SorcerAccount.WITHDRAWAL)) {
-				amount = (Money) context.getValue(SorcerAccount.WITHDRAWAL
-						+ CPS + SorcerAccount.AMOUNT);
+			} else if (selector.equals(ServiceAccount.WITHDRAWAL)) {
+				amount = (Money) context.getValue(ServiceAccount.WITHDRAWAL
+						+ CPS + ServiceAccount.AMOUNT);
 				makeWithdrawal(amount);
 				result = getBalance();
 			}
@@ -59,8 +59,8 @@ public class SorcerAccountImpl implements Account, SorcerAccount, SorcerConstant
 			logger.info(selector + " result: \n" + result);
 			String outputMessage = "processed by " + getHostname();
 			context.putValue(
-					SorcerAccount.BALANCE + CPS + SorcerAccount.AMOUNT, result);
-			context.putValue(SorcerAccount.COMMENT, outputMessage);
+					ServiceAccount.BALANCE + CPS + ServiceAccount.AMOUNT, result);
+			context.putValue(ServiceAccount.COMMENT, outputMessage);
 
 		} catch (Exception ex) {
 			// ContextException, UnknownHostException
@@ -69,7 +69,7 @@ public class SorcerAccountImpl implements Account, SorcerAccount, SorcerConstant
 		return context;
 	}
 
-	public SorcerAccountImpl(Money startingBalance) throws RemoteException {
+	public ServiceAccountImpl(Money startingBalance) throws RemoteException {
 		balance = startingBalance;
 	}
 

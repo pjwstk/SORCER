@@ -6,7 +6,6 @@ import java.rmi.RemoteException;
 import java.util.logging.Logger;
 
 import sorcer.account.provider.Account;
-import sorcer.account.provider.Money;
 
 public class AccountDispatcher implements ActionListener {
 
