@@ -36,7 +36,7 @@ public class ArithmeticExerterTest implements SorcerConstants {
 	
 	@Test
 	public void exertExerter() throws Exception {
-		Job exertion = NetArithmeticTest.getJobInJobNetArithmeticJob();
+		Job exertion = ArithmeticNetTest.getJobInJobNetArithmeticJob();
 		Task task = new NetTask("exert", new NetSignature("exert",
 				Exerter.class),
 				new ServiceContext(exertion));

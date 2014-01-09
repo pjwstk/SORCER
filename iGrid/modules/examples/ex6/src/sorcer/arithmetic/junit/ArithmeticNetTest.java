@@ -83,46 +83,8 @@ public class ArithmeticNetTest implements SorcerConstants {
 		System.setProperty("java.protocol.handler.pkgs", "sorcer.util.url|org.rioproject.url");
 	}
 	
-	private Task getAddTask() throws Exception {
-		Context context = new PositionalContext("add");
-		context.putInValue("arg1/value", 20.0);
-		context.putInValue("arg2/value", 80.0);
-		// We know that the output is gonna be placed in this path
-		context.putOutValue("out/value", Context.none);
-		Signature method = new NetSignature("add", Adder.class);
-		Task task = new NetTask("add", method);
-		task.setContext(context);
-		return task;
-	}
-
-	private Task getMultiplyTask() throws Exception {
-		Context context = new PositionalContext("multiply");
-		context.putInValue("arg1/value", 10.0);
-		context.putInValue("arg2/value", 50.0);
-		// We know that the output is gonna be placed in this path
-		context.putOutValue("out/value", Context.none);
-		Signature method = new NetSignature("multiply", Multiplier.class);
-		Task task = new NetTask("multiply", method);
-		task.setContext(context);
-		return task;
-	}
-
-	private Task getSubtractTask() throws Exception {
-		PositionalContext context = new PositionalContext("subtract");
-		// We want to stick in the result of multiply in here
-		context.putInValueAt("arg1/value", 0.0, 1);
-		// We want to stick in the result of add in here
-		context.putInValueAt("arg2/value", 0.0, 2);
-		Signature method = new NetSignature("subtract", Subtractor.class);
-		Task task = new NetTask("subtract",
-				"processing results from two previous tasks", method);
-		task.setContext(context);
-		return task;
-	}
-	
 	@Test
 	public void arithmeticProviderTest() throws Exception {
-		
 		Task t5 = task(
 				"t5",
 				sig("add", Adder.class),
@@ -136,7 +98,6 @@ public class ArithmeticNetTest implements SorcerConstants {
 	
 	@Test
 	public void averagerProviderTest() throws Exception {
-		
 		Task t5 = task(
 				"t5",
 				sig("average", Averager.class),
@@ -230,125 +191,8 @@ public class ArithmeticNetTest implements SorcerConstants {
 	assertEquals(get(out, "result/y"), 100.00);
 	}
 	
-	@Test
-	public void arithmeticEolExertleter() throws Exception {
-		// get the current value of the exertlet
-		Task task = task("eval", sig("getValue", Evaluation.class, "Arithmetic Exertleter"));
-		logger.info("j1/t3/result/y: " + value(task, "j1/t3/result/y"));
-		assertEquals(value(task, "j1/t3/result/y"), 400.0);
-	
-		// change both the contexts completely
-		Context multiplyContext = context("multiply", in("arg/x1", 10.0), in("arg/x2", 70.0));
-		Context addContext = context("add", in("arg/x1", 90.0), in("arg/x2", 110.0));
-		Context invokeContext = context("invoke");
-		link(invokeContext, "t4", multiplyContext);
-		link(invokeContext, "t5", addContext);
-		task = task("invoke", sig("invoke", Invocation.class, "Arithmetic Exertleter"), invokeContext);
-		logger.info("j1/t3/result/y: " + value(task, "j1/t3/result/y"));
-		assertEquals(value(task, "j1/t3/result/y"), 500.0);
-	
-		// change partially the contexts
-		multiplyContext = context("multiply", in("arg/x1", 20.0));
-		addContext = context("add", in("arg/x1", 80.0));
-		invokeContext = context("invoke");
-		link(invokeContext, "t4", multiplyContext);
-		link(invokeContext, "t5", addContext);
-		task = task("invoke", sig("invoke", Invocation.class, "Arithmetic Exertleter"), invokeContext);
-//		logger.info("j1/t3/result/y: " + value(task, "j1/t3/result/y"));
-		assertEquals(value(task, "j1/t3/result/y"), 1210.0);		
-				
-		// reverse the state of the exertleter
-		multiplyContext = context("multiply", in("arg/x1", 10.0), in("arg/x2", 50.0));
-		addContext = context("add", in("arg/x1", 80.0), in("arg/x2", 20.0));
-		invokeContext = context("invoke");
-		link(invokeContext, "t4", multiplyContext);
-		link(invokeContext, "t5", addContext);
-		task = task("invoke", sig("invoke", Invocation.class, "Arithmetic Exertleter"), invokeContext);
-//		logger.info("j1/t3/result/y: " + value(task, "j1/t3/result/y"));
-		assertEquals(value(task, "j1/t3/result/y"), 400.0);
-	}
-	
-	@Test
-	public void arithmeticApiExertleter() throws Exception {
-		// get the current value of the exertlet
-		NetSignature signature = new NetSignature("getValue", Evaluation.class, 
-				Sorcer.getActualName("Arithmetic Exertleter"));
-		Task task = new NetTask("eval", signature);
-		Task result = (Task)task.exert();		
-		Context out = (Context)result.getReturnValue();
-		logger.info("result: " + result);
-//		logger.info("j1/t3/result/y: " + out.getValue("j1/t3/result/y"));
-		assertEquals(out.getValue("j1/t3/result/y"), 400.0);
-		
-		
-		// change both the contexts completely
-		Context addContext = new PositionalContext("add");
-		addContext.putInValue("arg/x1", 90.0);
-		addContext.putInValue("arg/x2", 110.0);
-		
-		Context multiplyContext = new PositionalContext("multiply");
-		multiplyContext.putInValue("arg/x1", 10.0);
-		multiplyContext.putInValue("arg/x2", 70.0);
-
-		ServiceContext invokeContext = new ServiceContext("invoke");
-		invokeContext.putLink("t5", addContext, "");
-		invokeContext.putLink("t4", multiplyContext, "");
-		
-		signature = new NetSignature("invoke", Invocation.class, 
-				Sorcer.getActualName("Arithmetic Exertleter"));
-		
-		task = new NetTask("invoke", signature, invokeContext);
-		result = (Task)task.exert();	
-		logger.info("result context: " + result);
-		out = result.getContext();
-		logger.info("result context: " + out);
-//		logger.info("j1/t3/result/y: " + out.getValue("j1/t3/result/y"));
-//		assertEquals(out.getValue("j1/t3/result/y"), 500.0);
-
-		
-		// change partially the contexts
-		addContext = new PositionalContext("add");
-		addContext.putInValue("arg/x1", 80.0);
-		
-		multiplyContext = new PositionalContext("multiply");
-		multiplyContext.putInValue("arg/x1", 20.0);
-
-		invokeContext = new ServiceContext("invoke");
-		invokeContext.putLink("t5", addContext, "");
-		invokeContext.putLink("t4", multiplyContext, "");
-		
-		signature = new NetSignature("invoke", Invocation.class,
-				Sorcer.getActualName("Arithmetic Exertleter"));
-		
-		task = new NetTask("invoke", signature, invokeContext);
-		result = (Task)task.exert();		
-		out = result.getContext();
-//		logger.info("result context: " + out);
-//		logger.info("j1/t3/result/y: " + out.getValue("j1/t3/result/y"));
-		assertEquals(out.getValue("j1/t3/result/y"), 1210.0);
-	
-		
-		// reverse the state of the exertleter
-		addContext = new PositionalContext("t5");
-		addContext.putInValue("arg/x1", 20.0);
-		addContext.putInValue("arg/x2", 80.0);
-		multiplyContext = new PositionalContext("t4");
-		multiplyContext.putInValue("arg/x1", 10.0);
-		multiplyContext.putInValue("arg/x2", 50.0);
-
-		invokeContext = new ServiceContext("invoke");
-		invokeContext.putLink("t5", addContext, "");
-		invokeContext.putLink("t4", multiplyContext, "");
-		
-		signature = new NetSignature("invoke", Invocation.class, 
-				Sorcer.getActualName("Arithmetic Exertleter"));
-		
-		task = new NetTask("invoke", signature, invokeContext);
-		result = (Task)task.exert();		
-		out = result.getContext();
-//		logger.info("result context: " + out);
-//		logger.info("j1/t3/result/y: " + out.getValue("j1/t3/result/y"));
-		assertEquals(out.getValue("j1/t3/result/y"), 400.0);
+	public static Exertion createJob() throws Exception {
+		return createJob(Flow.SEQ, Access.PUSH);
 	}
 	
 	// two level job composition with PULL and PAR execution
@@ -379,10 +223,6 @@ public class ArithmeticNetTest implements SorcerConstants {
 		
 	public static Context createContext() throws Exception {
 		return context("add", input("arg/x1", 20.0), input("arg/x2", 80.0));
-	}
-	
-	public static Exertion createJob() throws Exception {
-		return createJob(Flow.SEQ, Access.PUSH);
 	}
 	
 	@Test
@@ -475,6 +315,44 @@ public class ArithmeticNetTest implements SorcerConstants {
 	}
 
 	@Test
+	public void arithmeticEolExertleter() throws Exception {
+		// get the current value of the exertlet
+		Task task = task("eval", sig("getValue", Evaluation.class, "Arithmetic Exertleter"));
+		logger.info("j1/t3/result/y: " + value(task, "j1/t3/result/y"));
+		assertEquals(value(task, "j1/t3/result/y"), 400.0);
+	
+		// change both the contexts completely
+		Context multiplyContext = context("multiply", in("arg/x1", 10.0), in("arg/x2", 70.0));
+		Context addContext = context("add", in("arg/x1", 90.0), in("arg/x2", 110.0));
+		Context invokeContext = context("invoke");
+		link(invokeContext, "t4", multiplyContext);
+		link(invokeContext, "t5", addContext);
+		task = task("invoke", sig("invoke", Invocation.class, "Arithmetic Exertleter"), invokeContext);
+		logger.info("j1/t3/result/y: " + value(task, "j1/t3/result/y"));
+		assertEquals(value(task, "j1/t3/result/y"), 500.0);
+	
+		// change partially the contexts
+		multiplyContext = context("multiply", in("arg/x1", 20.0));
+		addContext = context("add", in("arg/x1", 80.0));
+		invokeContext = context("invoke");
+		link(invokeContext, "t4", multiplyContext);
+		link(invokeContext, "t5", addContext);
+		task = task("invoke", sig("invoke", Invocation.class, "Arithmetic Exertleter"), invokeContext);
+//		logger.info("j1/t3/result/y: " + value(task, "j1/t3/result/y"));
+		assertEquals(value(task, "j1/t3/result/y"), 1210.0);		
+				
+		// reverse the state of the exertleter
+		multiplyContext = context("multiply", in("arg/x1", 10.0), in("arg/x2", 50.0));
+		addContext = context("add", in("arg/x1", 80.0), in("arg/x2", 20.0));
+		invokeContext = context("invoke");
+		link(invokeContext, "t4", multiplyContext);
+		link(invokeContext, "t5", addContext);
+		task = task("invoke", sig("invoke", Invocation.class, "Arithmetic Exertleter"), invokeContext);
+//		logger.info("j1/t3/result/y: " + value(task, "j1/t3/result/y"));
+		assertEquals(value(task, "j1/t3/result/y"), 400.0);
+	}
+	
+	@Test
 	public void testProvisionedJob() throws Exception {
 		Job f1 = createProvisionedJob();
 		List<Signature> allSigs = f1.getAllSignatures();
@@ -508,17 +386,7 @@ public class ArithmeticNetTest implements SorcerConstants {
 		logger.info("job deploy id: " + did);
 		assertEquals(did, "80f64d24d61547437dfdfec697546191");
 	}
-	
-	@Ignore
-	@Test
-	public void asyncTaskTest() throws Exception {
-		//TODO get result from monitor
-		task("t5",
-				sig("add", Adder.class),
-				context("add", input("arg/x1", 20.0), input("arg/x2", 80.0),
-						output("result/y", null)), strategy(Monitor.YES, Wait.NO));
-	}
-	
+		
 	@Ignore
 	@Test
 	public void deployTest() throws Exception {

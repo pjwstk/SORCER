@@ -28,10 +28,10 @@ import sorcer.util.Sorcer;
  * @author Mike Sobolewski
  */
 @SuppressWarnings({ "rawtypes", "unchecked" })
-public class ObjectArithmeticTest implements SorcerConstants {
+public class ArithmeticNoNetTest implements SorcerConstants {
 
 	private final static Logger logger = Logger
-			.getLogger(ObjectArithmeticTest.class.getName());
+			.getLogger(ArithmeticNoNetTest.class.getName());
 
 	static {
 		System.setProperty("java.security.policy", Sorcer.getHome()
@@ -133,7 +133,7 @@ public class ObjectArithmeticTest implements SorcerConstants {
 		context.putInValue("arg1/value", 20.0);
 		context.putInValue("arg2/value", 80.0);
 		// We know that the output is gonna be placed in this path
-		context.putOutValue("out/value", 0.0);
+		context.putOutValue("out/value",  Context.none);
 		Signature method = new ObjectSignature("add", AdderImpl.class);
 		Task task = new ObjectTask("add", method);
 		task.setContext(context);
@@ -145,7 +145,7 @@ public class ObjectArithmeticTest implements SorcerConstants {
 		context.putInValue("arg1/value", 10.0);
 		context.putInValue("arg2/value", 50.0);
 		// We know that the output is gonna be placed in this path
-		context.putOutValue("out/value", 0.0);
+		context.putOutValue("out/value",  Context.none);
 		Signature method = new ObjectSignature("multiply", MultiplierImpl.class);
 		Task task = new ObjectTask("multiply", method);
 		task.setContext(context);
@@ -155,9 +155,9 @@ public class ObjectArithmeticTest implements SorcerConstants {
 	private static Task getSubtractTask() throws Exception {
 		PositionalContext context = new PositionalContext("subtract");
 		// We want to stick in the result of multiply in here
-		context.putInValueAt("arg1/value", 0.0, 1);
+		context.putInValueAt("arg1/value",  Context.none, 1);
 		// We want to stick in the result of add in here
-		context.putInValueAt("arg2/value", 0.0, 2);
+		context.putInValueAt("arg2/value",  Context.none, 2);
 		Signature method = new ObjectSignature("subtract", SubtractorImpl.class);
 		Task task = new ObjectTask("subtract",
 				"processing results from two previouseky executed tasks", method);

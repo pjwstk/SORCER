@@ -25,7 +25,7 @@ import sorcer.util.Sorcer;
 public class ArithmeticExertleterTest implements SorcerConstants {
 
 	private final static Logger logger = Logger
-			.getLogger(NetArithmeticTest.class.getName());
+			.getLogger(ArithmeticNetTest.class.getName());
 
 	static {
 		System.setProperty("java.security.policy", Sorcer.getHome()

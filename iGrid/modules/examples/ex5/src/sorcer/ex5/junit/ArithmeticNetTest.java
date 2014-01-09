@@ -9,15 +9,16 @@ import org.junit.Test;
 
 import sorcer.core.SorcerConstants;
 import sorcer.core.context.PositionalContext;
+import sorcer.core.context.ServiceContext;
 import sorcer.core.exertion.NetJob;
 import sorcer.core.exertion.NetTask;
-import sorcer.core.exertion.ObjectJob;
 import sorcer.core.signature.NetSignature;
 import sorcer.ex5.provider.Adder;
 import sorcer.ex5.provider.Multiplier;
 import sorcer.ex5.provider.Subtractor;
 import sorcer.service.Context;
-import sorcer.service.Exertion;
+import sorcer.service.Evaluation;
+import sorcer.service.Invocation;
 import sorcer.service.Job;
 import sorcer.service.Signature;
 import sorcer.service.Task;
@@ -26,11 +27,11 @@ import sorcer.util.Sorcer;
 /**
  * @author Mike Sobolewski
  */
-@SuppressWarnings({ "rawtypes" })
-public class NetArithmeticTest implements SorcerConstants {
+@SuppressWarnings({ "rawtypes", "unchecked"})
+public class ArithmeticNetTest implements SorcerConstants {
 
 	private final static Logger logger = Logger
-			.getLogger(NetArithmeticTest.class.getName());
+			.getLogger(ArithmeticNetTest.class.getName());
 
 	static {
 		System.setProperty("java.security.policy", Sorcer.getHome()
@@ -100,12 +101,13 @@ public class NetArithmeticTest implements SorcerConstants {
 		
 		return job;
 	}
+	
 	private static Task getAddTask() throws Exception {
 		Context context = new PositionalContext("add");
 		context.putInValue("arg1/value", 20.0);
 		context.putInValue("arg2/value", 80.0);
 		// We know that the output is gonna be placed in this path
-		context.putOutValue("out/value", 0);
+		context.putOutValue("out/value", Context.none);
 		Signature method = new NetSignature("add", Adder.class);
 		Task task = new NetTask("add", method);
 		task.setContext(context);
@@ -127,13 +129,14 @@ public class NetArithmeticTest implements SorcerConstants {
 	private static Task getSubtractTask() throws Exception {
 		PositionalContext context = new PositionalContext("subtract");
 		// We want to stick in the result of multiply in here
-		context.putInValueAt("arg1/value", 0.0, 1);
+		context.putInValueAt("arg1/value",  Context.none, 1);
 		// We want to stick in the result of add in here
-		context.putInValueAt("arg2/value", 0.0, 2);
+		context.putInValueAt("arg2/value",  Context.none, 2);
 		Signature method = new NetSignature("subtract", Subtractor.class);
 		Task task = new NetTask("subtract",
 				"processing results from two previous tasks", method);
 		task.setContext(context);
 		return task;
 	}
+	
 }
