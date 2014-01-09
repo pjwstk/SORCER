@@ -1,4 +1,4 @@
-package sorcer.ex3.runner;
+package sorcer.ex3.requestor;
 
 import sorcer.core.context.ServiceContext;
 import sorcer.core.exertion.NetJob;
@@ -13,71 +13,76 @@ import sorcer.service.Job;
 import sorcer.service.Strategy.Access;
 import sorcer.service.Strategy.Flow;
 import sorcer.service.Task;
+import sorcer.util.Sorcer;
 
 @SuppressWarnings("rawtypes")
-public class PipedContextWorkerRunner extends ServiceRequestor {
+public class FlowAccessWorkerRequestor extends ServiceRequestor {
 
 	public Exertion getExertion(String... args) throws ExertionException {
 		String requestorName = getProperty("requestor.name");
-		
-		// define requestor data
-		Job job = null;
-		try {
+		String pn1, pn2, pn3;
+        pn1 = Sorcer.getSuffixedName(getProperty("provider.name.1"));
+        pn2 = Sorcer.getSuffixedName(getProperty("provider.name.2"));
+        pn3 = Sorcer.getSuffixedName(getProperty("provider.name.3"));
+        Job job = null;
+        try {
             Context context1 = new ServiceContext("work1");
             context1.putValue("requestor/name", requestorName);
-            context1.putValue("requestor/operand/1", 20);
-            context1.putValue("requestor/operand/2", 80);
+            context1.putValue("requestor/operand/1", 1);
+            context1.putValue("requestor/operand/2", 1);
             context1.putValue("requestor/work", Works.work1);
-            context1.putOutValue("provider/result", Context.none);
+            context1.putValue("to/provider/name", pn1);
 
             Context context2 = new ServiceContext("work2");
             context2.putValue("requestor/name", requestorName);
-            context2.putValue("requestor/operand/1", 10);
-            context2.putValue("requestor/operand/2", 50);
+            context2.putValue("requestor/operand/1", 2);
+            context2.putValue("requestor/operand/2", 2);
             context2.putValue("requestor/work", Works.work2);
-            context2.putOutValue("provider/result", Context.none);
+            context2.putValue("to/provider/name", pn2);
 
             Context context3 = new ServiceContext("work3");
             context3.putValue("requestor/name", requestorName);
-            context3.putInValue("requestor/operand/1", Context.none);
-            context3.putInValue("requestor/operand/2", Context.none);
+            context3.putValue("requestor/operand/1", 3);
+            context3.putValue("requestor/operand/2", 3);
             context3.putValue("requestor/work", Works.work3);
+            context3.putValue("to/provider/name", pn3);
 
-			// pass the parameters from one context to the next context
-			// piping parameters should be annotated via in, out, or inout paths
-			context1.connect("provider/result", "requestor/operand/1", context3);
-			context2.connect("provider/result", "requestor/operand/2", context3);
 
-			// define required services
 			NetSignature signature1 = new NetSignature("doWork",
-					sorcer.ex2.provider.Worker.class);
+					sorcer.ex2.provider.Worker.class, pn1);
 			NetSignature signature2 = new NetSignature("doWork",
-					sorcer.ex2.provider.Worker.class);
+					sorcer.ex2.provider.Worker.class, pn2);
 			NetSignature signature3 = new NetSignature("doWork",
-					sorcer.ex2.provider.Worker.class);
+					sorcer.ex2.provider.Worker.class, pn3);
 
-			// define tasks
 			Task task1 = new NetTask("work1", signature1, context1);
+			task1.setExecTimeRequested(true);
 			Task task2 = new NetTask("work2", signature2, context2);
 			Task task3 = new NetTask("work3", signature3, context3);
-
-			// define a job
-			job = new NetJob("piped");
+			job = new NetJob("flow");
+			job.setExecTimeRequested(true);
 			job.addExertion(task1);
 			job.addExertion(task2);
 			job.addExertion(task3);
+						
+			// PUSH or PULL provider access
+			boolean isPushAccess = getProperty("provider.access.type", "PUSH").equals("PUSH");
+			if (isPushAccess)
+				job.setAccessType(Access.PUSH);
+			else
+				job.setAccessType(Access.PULL);
+			
+			// Exertion control flow PARallel or SEQential
+			boolean iSequential = getProperty("provider.control.flow", "SEQUENTIAL").equals("SEQUENTIAL");
+			if (iSequential)
+				job.setFlowType(Flow.SEQ);
+			else
+				job.setFlowType(Flow.PAR);
+			
+			logger.info("isPushAccess: " + isPushAccess + " iSequential: " + iSequential);
 		} catch (Exception e) {
 			throw new ExertionException("Failed to create exertion", e);
 		}
-
-		// define a job control strategy
-		// use the catalog to delegate the tasks
-		job.setAccessType(Access.PUSH);
-		// either parallel or sequential
-		job.setFlowType(Flow.SEQ);
-		// time the job execution
-		job.setExecTimeRequested(true);
-
 		return job;
 	}
 

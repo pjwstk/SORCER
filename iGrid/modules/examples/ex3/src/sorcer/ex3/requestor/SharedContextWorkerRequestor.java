@@ -1,4 +1,4 @@
-package sorcer.ex3.runner;
+package sorcer.ex3.requestor;
 
 import java.rmi.RemoteException;
 
@@ -18,7 +18,7 @@ import sorcer.service.Strategy.Flow;
 import sorcer.service.Task;
 import sorcer.util.SorcerEnv;
 
-public class    SharedContextWorkerRunner extends ServiceRequestor {
+public class SharedContextWorkerRequestor extends ServiceRequestor {
 	SharedAssociativeContext context = new SharedAssociativeContext(SorcerEnv.getActualSpaceName());
 	
 	public Exertion getExertion(String... args) throws ExertionException {
