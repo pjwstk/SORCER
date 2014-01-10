@@ -16,8 +16,6 @@
 		<pathelement location="${sorcer.lib}/sorcer-prv.jar" />
 		<pathelement location="${jini.lib}/jsk-lib.jar" />
 		<pathelement location="${jini.lib}/jsk-platform.jar" />
-		<pathelement location="${jini.lib}/serviceui.jar" />
-		<pathelement location="${rio.lib}/rio.jar" />
 	</path>
 
 	<target name="run.requestor">
@@ -27,7 +25,6 @@
 			<sysproperty key="java.util.logging.config.file" value="${iGrid.home}/configs/sorcer.logging" />
 			<sysproperty key="java.security.policy" value="../policy/${requestor.name}.policy" />
 			<sysproperty key="java.rmi.server.codebase" value="${provider.webster.url}/${requestor.name}-dl.jar" />
-			<!--sysproperty key="sorcer.env.file" value="sorcer/util/sorcer.env" /-->
 		</java>
 	</target>
 

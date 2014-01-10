@@ -13,6 +13,7 @@ import sorcer.util.Log;
 import sorcer.util.Sorcer;
 import sorcer.util.SorcerEnv;
 
+@SuppressWarnings("rawtypes")
 public class WorkerTaskRequestor {
 
 	private static Logger logger = Log.getTestLog();

@@ -2,7 +2,6 @@ package junit.sorcer.ex2.requestor;
 
 import static org.junit.Assert.assertEquals;
 
-import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.rmi.RemoteException;
@@ -26,12 +25,11 @@ import sorcer.service.ExertionException;
 import sorcer.service.SignatureException;
 import sorcer.util.Log;
 
-import com.gargoylesoftware.base.testing.TestUtil;
-
 /**
  * @author Mike Sobolewski
  * 
  */
+@SuppressWarnings("rawtypes")
 public class WorkerTaskRequestorTest {
 	private static Logger logger = Log.getTestLog();
 	
@@ -63,12 +61,6 @@ public class WorkerTaskRequestorTest {
 	}
 
 	@Test
-	public void contextSerializationTest() throws IOException {
-		// test serialization of the requestor's context
-		TestUtil.testSerialization(context, true);
-	}
-
-	@Test
 	public void providerResultTest() throws RemoteException, ContextException, TransactionException,
 	ExertionException, UnknownHostException, SignatureException {
 
@@ -89,7 +81,8 @@ public class WorkerTaskRequestorTest {
 		Exertion task = new ObjectTask("work", signature, context);
 		task = task.exert();
 		//logger.info("result: " + task);
-		assertEquals(task.getContext().getValue("provider/message"), "Done work: 1111");
+		assertEquals(task.getContext().getValue("provider/message"), 
+				"Done work by: class sorcer.ex2.provider.WorkerProvider");
 	}
 
 	@Test

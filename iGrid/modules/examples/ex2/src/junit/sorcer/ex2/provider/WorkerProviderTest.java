@@ -57,16 +57,6 @@ public class WorkerProviderTest {
         context.putValue("to/provider/name", "Testing Provider");
 	}
 
-	@Test
-	public void contextTest() throws IOException,
-			IllegalAccessException, InvocationTargetException {
-		// test serialization of the provider's context
-		TestUtil.testSerialization(context, true);
-		
-		// test serialization of the provider's context
-		//TestUtil.testClone(context, true);
-	}
-
 	/**
 	 * Test method for {@link sorcer.ex2.provider.WorkerProvider#sayHi(sorcer.service.Context)}.
 	 * @throws IOException 
@@ -75,8 +65,6 @@ public class WorkerProviderTest {
 	public void testSayHi() throws ContextException, IOException {
 		Context result = provider.sayHi(context);
 		//logger.info("result: " + result);
-		// test serialization of the returned context
-		TestUtil.testSerialization(result, true);
 		assertTrue(result.getValue("provider/message").equals("Hi " + hostName + "!"));
 	}
 

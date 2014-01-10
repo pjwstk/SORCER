@@ -82,6 +82,7 @@
 			<in name="sorcer.ex2" />
 			<topclass name="sorcer.ex2.provider.Worker" />
 			<topclass name="sorcer.ex2.provider.InvalidWork" />
+			<topclass name="sorcer.ex2.requestor.Works" />
 		</classdepandjar>
 	</target>
 
