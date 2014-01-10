@@ -14,8 +14,7 @@ public class Works implements Serializable {
 
 	static {
 		work1 = new Work() {
-			public Context exec(Context cxt) throws InvalidWork,
-					ContextException {
+			public Context exec(Context cxt) throws InvalidWork, ContextException {
 				int arg1 = (Integer) cxt.getValue("requestor/operand/1");
 				int arg2 = (Integer) cxt.getValue("requestor/operand/2");
 				int result = arg1 + arg2;
@@ -28,8 +27,7 @@ public class Works implements Serializable {
 		};
 
 		work2 = new Work() {
-			public Context exec(Context cxt) throws InvalidWork,
-					ContextException {
+			public Context exec(Context cxt) throws InvalidWork, ContextException {
 				int arg1 = (Integer) cxt.getValue("requestor/operand/1");
 				int arg2 = (Integer) cxt.getValue("requestor/operand/2");
 				int result = arg1 * arg2;
@@ -42,8 +40,7 @@ public class Works implements Serializable {
 		};
 
 		work3 = new Work() {
-			public Context exec(Context cxt) throws InvalidWork,
-					ContextException {
+			public Context exec(Context cxt) throws InvalidWork, ContextException {
 				int arg1 = (Integer) cxt.getValue("requestor/operand/1");
 				int arg2 = (Integer) cxt.getValue("requestor/operand/2");
 				int result = arg1 - arg2;
@@ -56,12 +53,11 @@ public class Works implements Serializable {
 		};
 
 		work4 = new Work() {
-			public Context exec(Context cxt) throws InvalidWork,
-					ContextException {
-				int arg1 = (Integer) cxt.getValue("requestor/operand/1");
-				int arg2 = (Integer) cxt.getValue("requestor/operand/2");
-				int arg3 = (Integer) cxt.getValue("requestor/operand/3");
-				int result = Math.round((arg1 + arg2 + arg3) / 3);
+			public Context exec(Context cxt) throws InvalidWork, ContextException {
+				int arg1 = (Integer)cxt.getValue("requestor/operand/1");
+				int arg2 = (Integer)cxt.getValue("requestor/operand/2");
+				int arg3 = (Integer)cxt.getValue("requestor/operand/3");
+				int result = Math.round((arg1 + arg2 + arg3)/3);
 				cxt.putOutValue("provider/result", result);
 				if (cxt.getReturnPath() != null) {
 					cxt.setReturnValue(result);

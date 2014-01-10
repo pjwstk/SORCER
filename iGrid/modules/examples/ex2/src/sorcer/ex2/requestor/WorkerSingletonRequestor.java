@@ -11,7 +11,6 @@ import sorcer.core.signature.NetSignature;
 import sorcer.service.Context;
 import sorcer.service.Exertion;
 import sorcer.service.Job;
-import sorcer.service.Signature;
 import sorcer.service.Task;
 import sorcer.util.Log;
 import sorcer.util.Sorcer;
@@ -33,7 +32,7 @@ public class WorkerSingletonRequestor {
 		logger.info("Provider name: " + pn);
 
 		Exertion exertion = new WorkerSingletonRequestor().getExertion(pn);
-		Exertion result = exertion.exert(null);
+		Exertion result = exertion.exert();
 		logger.info("Output context: \n" + result.getContext());
 		logger.info("Output context: \n"
 				+ result.getExertion("work").getContext());
@@ -41,14 +40,18 @@ public class WorkerSingletonRequestor {
 
 	private Exertion getExertion(String pn) throws Exception {
 		String hostname = InetAddress.getLocalHost().getHostName();
+        // get the queried provider name from the command line
+        if (pn!=null) pn = Sorcer.getActualName(pn);
+        logger.info("Suffixed Provider name: " + pn);
 
-		Context context = new ServiceContext("work");
-		context.putValue("requstor/name", hostname);
-		context.putValue("requestor/operand/1", 1);
-		context.putValue("requestor/operand/2", 1);
-		context.putValue("to/provider/name", pn);
+        Context context = new ServiceContext("work");
+        context.putValue("requstor/name", hostname);
+        context.putValue("requestor/operand/1", 4);
+        context.putValue("requestor/operand/2", 4);
+        context.putValue("to/provider/name", pn);
+        context.putValue("requestor/work", Works.work2);
 
-		NetSignature signature = new NetSignature("doWork",
+        NetSignature signature = new NetSignature("doWork",
 				sorcer.ex2.provider.Worker.class, pn);
 
 		Task task = new NetTask("work", signature, context);

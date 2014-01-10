@@ -14,6 +14,7 @@ import org.junit.Test;
 
 import sorcer.core.context.ServiceContext;
 import sorcer.ex2.provider.InvalidWork;
+import sorcer.ex2.provider.Work;
 import sorcer.ex2.provider.WorkerProvider;
 import sorcer.service.Context;
 import sorcer.service.ContextException;
@@ -40,11 +41,20 @@ public class WorkerProviderTest {
 		hostName = InetAddress.getLocalHost().getHostName();
 		provider = new WorkerProvider();
 
-		context = new ServiceContext("work");
-		context.putValue("requestor/name", hostName);
-		context.putValue("requestor/operand/1", 11);
-		context.putValue("requestor/operand/2", 21);
-		context.putValue("to/provider/name", "Testing Provider");
+		Work work = new Work() {
+            public Context exec(Context cxt) throws InvalidWork, ContextException {
+                int arg1 = (Integer)cxt.getValue("requestor/operand/1");
+                int arg2 = (Integer)cxt.getValue("requestor/operand/2");
+                cxt.putOutValue("provider/result", arg1 * arg2);
+                return cxt;
+            }
+        };
+        context = new ServiceContext("work");
+        context.putValue("requestor/name", hostName);
+        context.putValue("requestor/operand/1", 11);
+        context.putValue("requestor/operand/2", 21);
+        context.putValue("requestor/work", work);
+        context.putValue("to/provider/name", "Testing Provider");
 	}
 
 	@Test
