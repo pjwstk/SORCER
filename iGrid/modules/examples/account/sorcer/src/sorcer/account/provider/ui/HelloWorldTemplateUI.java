@@ -1,4 +1,4 @@
-package sorcer.ex1.provider;
+package sorcer.account.provider.ui;
 
 import java.awt.Color;
 import java.awt.FlowLayout;
@@ -18,16 +18,16 @@ import sorcer.ui.serviceui.UIComponentFactory;
 import sorcer.ui.serviceui.UIDescriptorFactory;
 import sorcer.util.Sorcer;
 
-public class HelloWorldImplUI extends JPanel {
+public class HelloWorldTemplateUI extends JPanel {
 
-	private final static Logger logger = Logger.getLogger(HelloWorldImplUI.class
+	private final static Logger logger = Logger.getLogger(HelloWorldTemplateUI.class
 			.getName());
 
 	private ServiceItem item;
     // This variable gives access to the provider who invoked this UI.
 	private Service provider;
 
-	public HelloWorldImplUI(Object obj) {
+	public HelloWorldTemplateUI(Object obj) {
 		super();
 		getAccessibleContext().setAccessibleName("HelloWorld UI");
 		try {
@@ -71,7 +71,7 @@ public class HelloWorldImplUI extends JPanel {
         try {
             URL uiUrl = new URL(Sorcer.getWebsterUrl() + "/" + "");
             uiDesc = UIDescriptorFactory.getUIDescriptor(MainUI.ROLE,
-                    new UIComponentFactory(new URL[] {uiUrl}, HelloWorldImplUI.class.getName()));
+                    new UIComponentFactory(new URL[] {uiUrl}, HelloWorldTemplateUI.class.getName()));
         } catch (Exception ex) {
             logger.severe("HelloWorldImplUI, Problem loading SUI: " +  ex.getMessage());
         }
