@@ -28,22 +28,22 @@ public class FlowAccessWorkerRequestor extends ServiceRequestor {
         try {
             Context context1 = new ServiceContext("work1");
             context1.putValue("requestor/name", requestorName);
-            context1.putValue("requestor/operand/1", 1);
-            context1.putValue("requestor/operand/2", 1);
+            context1.putValue("requestor/operand/1", 20);
+            context1.putValue("requestor/operand/2", 80);
             context1.putValue("requestor/work", Works.work1);
             context1.putValue("to/provider/name", pn1);
 
             Context context2 = new ServiceContext("work2");
             context2.putValue("requestor/name", requestorName);
-            context2.putValue("requestor/operand/1", 2);
-            context2.putValue("requestor/operand/2", 2);
+            context2.putValue("requestor/operand/1", 10);
+            context2.putValue("requestor/operand/2", 50);
             context2.putValue("requestor/work", Works.work2);
             context2.putValue("to/provider/name", pn2);
 
             Context context3 = new ServiceContext("work3");
             context3.putValue("requestor/name", requestorName);
-            context3.putValue("requestor/operand/1", 3);
-            context3.putValue("requestor/operand/2", 3);
+            context3.putValue("requestor/operand/1", 100);
+            context3.putValue("requestor/operand/2", 100);
             context3.putValue("requestor/work", Works.work3);
             context3.putValue("to/provider/name", pn3);
 

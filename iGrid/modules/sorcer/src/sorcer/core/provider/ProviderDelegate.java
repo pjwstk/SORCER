@@ -90,21 +90,17 @@ import sorcer.core.SorcerNotifierProtocol;
 import sorcer.core.context.Contexts;
 import sorcer.core.context.ServiceContext;
 import sorcer.core.context.model.par.ParModel;
-import sorcer.core.dispatch.JobThread;
 import sorcer.core.exertion.ExertionEnvelop;
 import sorcer.core.exertion.NetTask;
-import sorcer.core.exertion.ObjectJob;
 import sorcer.core.loki.member.LokiMemberUtil;
 import sorcer.core.misc.MsgRef;
 import sorcer.core.monitor.MonitoringSession;
 import sorcer.core.provider.ServiceProvider.ProxyVerifier;
 import sorcer.core.provider.exerter.ServiceExerter;
-import sorcer.core.provider.jobber.ServiceJobber;
 import sorcer.core.provider.logger.RemoteHandler;
 import sorcer.core.proxy.Partnership;
 import sorcer.core.proxy.ProviderProxy;
 import sorcer.core.signature.NetSignature;
-import sorcer.core.signature.ObjectSignature;
 import sorcer.core.signature.ServiceSignature;
 import sorcer.jini.jeri.SorcerILFactory;
 import sorcer.jini.lookup.entry.SorcerServiceInfo;
@@ -956,85 +952,25 @@ public class ProviderDelegate implements SorcerConstants {
 		return (Task) forwardTask(task, provider);
 	}
 
-	private Context apdProcess(Task task) throws ExertionException, SignatureException {
+	private Context apdProcess(Task task) throws ExertionException,
+			SignatureException, ContextException {
 		return processContinousely(task, task.getApdProcessSignatures());
 	}
-	
+
 	private Context preprocess(Task task) throws ExertionException,
-			SignatureException {
+			SignatureException, ContextException {
 		return processContinousely(task, task.getPreprocessSignatures());
 	}
 
 	private Context postprocess(Task task) throws ExertionException,
-			SignatureException {
+			SignatureException, ContextException {
 		return processContinousely(task, task.getPostprocessSignatures());
 	}
 
 	private Context processContinousely(Task task, List<Signature> signatures)
-			throws ExertionException, SignatureException {
-		Signature.Type st = signatures.get(0).getType();
-
-		ObjectJob job = new ObjectJob(signatures.get(0).getType() + "-"
-				+ task.getName(), new ObjectSignature("execute",
-				ServiceJobber.class));
-		Task t = null;
-		Signature ss = null;
-		Exertion result = null;
-		try {
-			for (int i = 0; i < signatures.size(); i++) {
-				ss = signatures.get(i);
-				try {
-					t = Task.newTask(task.getName() + "-" + i, ss,
-							task.getContext());
-					ss.setType(Signature.SRV);
-					((ServiceContext) task.getContext()).setCurrentSelector(ss
-							.getSelector());
-					if (ss.getPrefix() != null)
-						((ServiceContext) task.getContext()).setPrefix(ss
-								.getPrefix());
-					if (ss.getReturnPath() != null)
-						((ServiceContext) task.getContext()).setReturnPath(ss
-								.getReturnPath());
-
-					t.setContinous(true);
-				} catch (Exception e) {
-					e.printStackTrace();
-					resetSigantures(signatures, st);
-					throw new ExertionException(e);
-				}
-				job.addExertion(t);
-			}
-			// result = sj.exert();
-			JobThread jobThread = new JobThread(job, provider);
-			jobThread.start();
-			jobThread.join();
-			result = jobThread.getResult();
-			// logger.info("<==== JobThread result: " + result);
-		} catch (Exception e) {
-			e.printStackTrace();
-			resetSigantures(signatures, st);
-			throw new ExertionException(e);
-		}
-		// append accumulated exceptions and trace
-		task.getExceptions().addAll(result.getExceptions());
-		task.getTrace().addAll(result.getTrace());
-		if (((ServiceExertion) result).getStatus() <= Exec.FAILED) {
-			task.setStatus(Exec.FAILED);
-			ExertionException ne = new ExertionException(
-					"Batch signatures failed: " + signatures);
-			task.reportException(ne);
-			resetSigantures(signatures, st);
-			throw ne;
-		}
-		// return the service context of the last exertion
-		resetSigantures(signatures, st);
-		Context ctx;
-		try {
-			ctx = result.getExertions().get(job.size() - 1).getContext();
-		} catch (ContextException e) {
-			throw new ExertionException(e);
-		}
-		return ctx;
+			throws ExertionException, ContextException {
+		ControlFlowManager cfm = new ControlFlowManager(task, this);
+		return cfm.processContinousely(task, signatures);
 	}
 
 	private void resetSigantures(List<Signature> signatures, Signature.Type type) {

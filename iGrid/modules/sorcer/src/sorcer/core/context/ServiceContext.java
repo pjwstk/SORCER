@@ -310,6 +310,8 @@ public class ServiceContext<T> extends Hashtable<String, T> implements
 
 		// specify four SORCER standard composite attributes
 		try {
+			// context path tag
+			setAttribute(PATH_PAR);
 			// annotating input output files associated with source applications
 			setCompositeAttribute(DATA_NODE_TYPE + APS + APPLICATION + APS
 					+ FORMAT + APS + MODIFIER);

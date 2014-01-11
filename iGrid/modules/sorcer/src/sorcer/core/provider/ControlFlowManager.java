@@ -593,7 +593,7 @@ public class ControlFlowManager {
 		return processContinousely(task, task.getPostprocessSignatures());
 	}
 
-	private Context processContinousely(Task task, List<Signature> signatures)
+	public Context processContinousely(Task task, List<Signature> signatures)
 			throws ExertionException, ContextException {
 		Signature.Type type = signatures.get(0).getType();
 		Task t = null;
@@ -602,14 +602,14 @@ public class ControlFlowManager {
 			try {
 				t = task(task.getName() + "-" + i, signatures.get(i), shared);
 				signatures.get(i).setType(Signature.SRV);
-				((ServiceContext)task.getContext()).setCurrentSelector(signatures.get(i).getSelector());
-				((ServiceContext)task.getContext()).setCurrentPrefix(((ServiceSignature)signatures.get(i)).getPrefix());
+				((ServiceContext)shared).setCurrentSelector(signatures.get(i).getSelector());
+				((ServiceContext)shared).setCurrentPrefix(((ServiceSignature)signatures.get(i)).getPrefix());
 
 				List<Signature> tmp = new ArrayList<Signature>(1);
 				tmp.add(signatures.get(i));
 				t.setSignatures(tmp);
 				t.setContinous(true);
-
+				t.setContext(shared);
 				t = t.doTask();
 				signatures.get(i).setType(type);
 				shared = t.getContext();

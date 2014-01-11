@@ -17,8 +17,6 @@
 		<pathelement location="${sorcer.lib}/${requestor.name}.jar" />
 		<pathelement location="${sorcer.lib}/sorcer-prv.jar" />
 		<pathelement location="${sorcer.lib}/sorcer-lib.jar" />
-		<pathelement location="${eng.lib}/eng-lib.jar" />
-		<pathelement location="${common.lib}/jep-2.4.1a.jar" />
 		<pathelement location="${jini.lib}/jsk-lib.jar" />
 		<pathelement location="${jini.lib}/jsk-platform.jar" />
 		<pathelement location="${jini.lib}/serviceui.jar" />

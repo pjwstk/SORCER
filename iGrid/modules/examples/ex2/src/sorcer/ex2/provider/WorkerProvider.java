@@ -3,12 +3,14 @@ package sorcer.ex2.provider;
 import java.net.InetAddress;
 import java.rmi.RemoteException;
 
+import sorcer.core.context.ServiceContext;
 import sorcer.core.provider.ServiceTasker;
 import sorcer.service.Context;
 import sorcer.service.ContextException;
 
 import com.sun.jini.start.LifeCycle;
 
+@SuppressWarnings("rawtypes")
 public class WorkerProvider extends ServiceTasker implements Worker {
 	
 	private String hostName;
@@ -41,11 +43,15 @@ public class WorkerProvider extends ServiceTasker implements Worker {
 	public Context doWork(Context context) throws InvalidWork, RemoteException,
 			ContextException {
         context.putValue("provider/host/name", hostName);
-        Object workToDo = context.getValue("requestor/work");
+        String sigPrefix = ((ServiceContext)context).getCurrentPrefix();
+        String path = "requestor/work";
+        if (sigPrefix != null && sigPrefix.length() > 0)
+        	path = sigPrefix + "/" + path;
+        Object workToDo = context.getValue(path);
         if (workToDo != null && (workToDo instanceof Work)) {
             // requestor's work to be done
             Context out = ((Work)workToDo).exec(context);
-            context.append(out);
+            context.putValue(out.getReturnPath().path, out.getReturnValue());
         } else {
             throw new InvalidWork("No Work found to do at path requestor/work'!");
         }
@@ -61,10 +67,8 @@ public class WorkerProvider extends ServiceTasker implements Worker {
 			try {
 				context.putValue("provider/slept/ms", sleep);
 				Thread.sleep(Integer.parseInt(sleep));
-			} catch (NumberFormatException nfe) {
-				nfe.printStackTrace();
-			} catch (InterruptedException ie) {
-				ie.printStackTrace();
+			} catch (Exception e) {
+				throw new ContextException(e);
 			}
 		return context;
 	}

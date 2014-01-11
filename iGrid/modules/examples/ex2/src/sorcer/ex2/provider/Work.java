@@ -7,5 +7,6 @@ import java.io.Serializable;
 
 public interface Work extends Serializable {
 
-    public Context exec(Context context) throws InvalidWork, ContextException;
+    @SuppressWarnings("rawtypes")
+	public Context exec(Context context) throws InvalidWork, ContextException;
 }

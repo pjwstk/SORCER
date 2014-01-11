@@ -87,6 +87,9 @@ import sorcer.service.Signature.ReturnPath;
 public interface Context<T> extends Mappable<T>, Serializable, Evaluation<T>,
 		Invocation<T>, Contexter<T>, Revaluation {
 
+	/** parameter (par) */
+	final static String PATH_PAR = "par";
+	
 	/** context parameter (cp) */
 	final static String CONTEXT_PARAMETER = "cp";
 
