@@ -30,6 +30,7 @@ import javax.security.auth.Subject;
 import net.jini.core.lookup.ServiceID;
 import net.jini.core.transaction.Transaction;
 import net.jini.core.transaction.TransactionException;
+import net.jini.id.Uuid;
 import sorcer.co.tuple.Entry;
 import sorcer.core.context.ControlContext;
 import sorcer.core.context.ControlContext.ThrowableTrace;
@@ -188,20 +189,20 @@ public abstract class Job extends ServiceExertion implements CompoundExertion {
 	}
 
 	public Exertion getMasterExertion() {
-		String contextName = null;
+		Uuid uuid = null;
 		try {
-			contextName = (String) controlContext.getValue(ControlContext.MASTER_EXERTION);
+			uuid = (Uuid) controlContext.getValue(ControlContext.MASTER_EXERTION);
 		} catch (ContextException ex) {
 			ex.printStackTrace();
 		}
-		if (contextName == null
+		if (uuid == null
 				&& controlContext.getFlowType().equals(ControlContext.SEQUENTIAL)) {
 			return (size() > 0) ? get(size() - 1) : null;
 		} else {
 			Exertion master = null;
 			for (int i = 0; i < size(); i++) {
 				if (((ServiceExertion) get(i)).getId().equals(
-						contextName)) {
+						uuid)) {
 					master = get(i);
 					break;
 				}

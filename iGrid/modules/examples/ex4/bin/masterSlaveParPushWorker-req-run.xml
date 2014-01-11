@@ -8,24 +8,21 @@
 	<echo message="webster: ${provider.webster.url}" />
 
 	<!-- set property values here -->
-	<property name="requestor.name" value="mapWorker-run" />
-	<property name="requestor.class" value="sorcer.core.requestor.ExertionRunner" />
+	<property name="requestor.name" value="masterSlaveWorker" />
+	<property name="requestor.class" value="sorcer.core.requestor.ServiceRequestor" />
 
 	<path id="project.classpath">
-		<pathelement location="${iGrid.home}/lib/${requestor.name}.jar" />
-		<pathelement location="${iGrid.home}/lib/jgapp.jar" />
-		<pathelement location="${iGrid.home}/common/jini-ext.jar" />
-		<pathelement location="${iGrid.home}/common/sun-util.jar" />
-		<pathelement location="${iGrid.home}/common/serviceui-1.1.jar" />
+		<pathelement location="${sorcer.lib}/ex4-worker-req.jar" />
+		<path refid="jini.path" />
 	</path>
 
 	<target name="run.requestor">
 		<java classname="${requestor.class}" fork="yes">
-			<arg value="sorcer.ex3.runner.MapWorkerRunner" />
+			<arg value="sorcer.ex4.requestor.MasterSlaveParPullRequestor" />
 			<classpath refid="project.classpath" />
 			<sysproperty key="java.util.logging.config.file" value="${iGrid.home}/configs/sorcer.logging" />
 			<sysproperty key="java.security.policy" value="../policy/${requestor.name}.policy" />
-			<sysproperty key="java.rmi.server.codebase" value="${provider.webster.url}/worker-dl.jar" />
+			<sysproperty key="java.rmi.server.codebase" value="${provider.webster.url}/worker-req-dl.jar" />
 			<sysproperty key="sorcer.env.file" value="${iGrid.home}/configs/sorcer.env" />
 			<sysproperty key="requestor.properties" value="../configs/worker-run.properties" />
 		</java>

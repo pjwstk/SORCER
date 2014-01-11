@@ -77,10 +77,10 @@ public class MasterSlaveSeqPushRequestor extends ServiceRequestor {
         Task task1 = new NetTask("work1", signature1, context1);
         Task task2 = new NetTask("work2", signature2, context2);
         Task task3 = new NetTask("work3", signature3, context3);
-        Task task4 = new NetTask("work4", signature3, context4);
+        Task task4 = new NetTask("work4", signature4, context4);
 
         // define a job
-        Job job = new NetJob();
+        Job job = new NetJob("master/slave SEQ/PUSH");
         job.addExertion(task1);
         job.addExertion(task4);
         job.addExertion(task2);
@@ -98,6 +98,11 @@ public class MasterSlaveSeqPushRequestor extends ServiceRequestor {
 	    job.setMasterExertion(task4);
 	 
 		return job;
+	}
+	
+	public void postprocess(String... args) throws ExertionException, ContextException {
+		super.postprocess(args);
+		logger.info("<<<<<<<<<< Exex time: " + exertion.getControlContext().getExecTime());		
 	}
 
 }

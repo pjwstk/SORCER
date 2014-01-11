@@ -33,8 +33,12 @@ public class Works implements Serializable {
 				int arg2 = (Integer) cxt.getValue(operand2Path);
 				int result = arg1 + arg2;
 				List<String> outPaths = ((ServiceContext)cxt).getOutPaths();
-				if(outPaths.size() == 1)
-					cxt.putValue(sigPrefix + "/" + outPaths.get(0), result);
+				if(outPaths.size() == 1) {
+					if (sigPrefix.length() > 0)
+						cxt.putValue(sigPrefix + "/" + outPaths.get(0), result);
+					else
+						cxt.putValue(outPaths.get(0), result);
+				}
 				else if (outPaths.size() > 1) {
 					for (String path : outPaths) {
 						String[] mpaths = Contexts.getMarkedPaths(cxt, "par|"+sigPrefix);
@@ -66,8 +70,12 @@ public class Works implements Serializable {
 				int arg2 = (Integer) cxt.getValue(operand2Path);
 				int result = arg1 * arg2;
 				List<String> outPaths = ((ServiceContext)cxt).getOutPaths();
-				if(outPaths.size() == 1)
-					cxt.putValue(sigPrefix + "/" + outPaths.get(0), result);
+				if(outPaths.size() == 1) {
+					if (sigPrefix.length() > 0)
+						cxt.putValue(sigPrefix + "/" + outPaths.get(0), result);
+					else
+						cxt.putValue(outPaths.get(0), result);
+				}
 				else if (outPaths.size() > 1) {
 					for (String path : outPaths) {
 						String[] mpaths = Contexts.getMarkedPaths(cxt, "par|"+sigPrefix);
@@ -100,8 +108,12 @@ public class Works implements Serializable {
 				int arg2 = (Integer) cxt.getValue(operand2Path);
 				int result = arg1 - arg2;
 				List<String> outPaths = ((ServiceContext)cxt).getOutPaths();
-				if(outPaths.size() == 1)
-					cxt.putValue(sigPrefix + "/" + outPaths.get(0), result);
+				if(outPaths.size() == 1) {
+					if (sigPrefix.length() > 0)
+						cxt.putValue(sigPrefix + "/" + outPaths.get(0), result);
+					else
+						cxt.putValue(outPaths.get(0), result);
+				}
 				else if (outPaths.size() > 1) {
 					for (String path : outPaths) {
 						String[] mpaths = Contexts.getMarkedPaths(cxt, "par|"+sigPrefix);
@@ -136,8 +148,12 @@ public class Works implements Serializable {
 				int arg3 = (Integer) cxt.getValue(operand3Path);
 				int result = Math.round((arg1 + arg2 + arg3)/3);
 				List<String> outPaths = ((ServiceContext)cxt).getOutPaths();
-				if(outPaths.size() == 1)
-					cxt.putValue(sigPrefix + "/" + outPaths.get(0), result);
+				if(outPaths.size() == 1) {
+					if (sigPrefix.length() > 0)
+						cxt.putValue(sigPrefix + "/" + outPaths.get(0), result);
+					else
+						cxt.putValue(outPaths.get(0), result);
+				}
 				else if (outPaths.size() > 1) {
 					for (String path : outPaths) {
 						String[] mpaths = Contexts.getMarkedPaths(cxt, "par|"+sigPrefix);
