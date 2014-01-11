@@ -23,6 +23,7 @@
 	<!-- The sources to compile -->
 	<patternset id="ant.java">
 		<include name="sorcer/ex5/provider/**/*.java" />
+		<include name="sorcer/ex5/junit/**/*.java" />
 		<exclude name="**/SAVE/*.java" />
 		<exclude name="**/BAK/*.java" />
 	</patternset>
@@ -62,6 +63,7 @@
 		<classdepandjar jarfile="${sorcer.lib}/ex5-arithmetic-beans.jar" files="true" debug="false">
 			<classpath refid="project.classpath" />
 			<in name="sorcer.ex5.provider" />
+			<in name="sorcer.ex5.junit" />
 			<topclass name="sorcer.ex5.provider.ArithmeticImpl" />
 			<topclass name="sorcer.ex5.provider.AdderImpl" />
 			<topclass name="sorcer.ex5.provider.SubtractorImpl" />
@@ -70,6 +72,7 @@
 			<topclass name="sorcer.ex5.provider.Arithmometer" />
 			<topclass name="sorcer.ex5.provider.Multiply" />
 			<topclass name="sorcer.ex5.provider.Multiply" />
+			<topclass name="sorcer.ex5.junit.ArithmeticNetTest" />
 			<fileset refid="icons" />
 		</classdepandjar>
 	</target>
