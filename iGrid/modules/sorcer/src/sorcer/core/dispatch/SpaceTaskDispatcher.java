@@ -97,9 +97,6 @@ public class SpaceTaskDispatcher extends SpaceExertDispatcher {
 				+ temp.describe());
 
 		ExertionEnvelop resultEnvelop = takeEnvelop(temp);
-		
-		logger.info("\n\n\n\n\n\n**********************************************SpaceTaskDispatcher.collectResults(): resultEnvelop = " + resultEnvelop);
-
 		if (resultEnvelop != null) {
 			logger.finer("collected result envelope  <===================== \n"
 					+ resultEnvelop.describe());

@@ -223,6 +223,7 @@
 			<topclass name="sorcer.util.ServiceDestroyer" />
 			<topclass name="sorcer.util.deploy.DeployHelper" />
 			<topclass name="org.rioproject.admin.ServiceActivityProvider" />
+			<topclass name="sorcer.service.Identifiable" />
 			<fileset dir="${iGrid.home}/classes">
 				<include name="sorcer/util/sorcer.env" />
 				<include name="sorcer/util/data.formats" />

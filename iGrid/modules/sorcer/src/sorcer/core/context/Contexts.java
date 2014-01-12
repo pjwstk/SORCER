@@ -172,11 +172,11 @@ public class Contexts implements SorcerConstants {
 	}
 
 	public static List<?> getNamedOutValues(Context context) throws ContextException {
-		List inpaths = Contexts.getNamedOutPaths(context);
-		if (inpaths == null) 
+		List outpaths = Contexts.getNamedOutPaths(context);
+		if (outpaths == null) 
 			return null;
-		List list = new ArrayList(inpaths.size());
-		for (Object path : inpaths)
+		List list = new ArrayList(outpaths.size());
+		for (Object path : outpaths)
 			try {
 				list.add(context.getValue((String) path));
 			} catch (ContextException e) {

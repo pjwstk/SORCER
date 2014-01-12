@@ -57,21 +57,6 @@ public class ArithmeticNetBlockTest implements SorcerConstants {
 		System.setProperty("java.protocol.handler.pkgs", "sorcer.util.url|org.rioproject.url");
 	}
 	
-	@BeforeClass
-	public static void setUpOnce() throws IOException, InterruptedException,
-			ExertionException, ContextException {
-		String antBuild = Sorcer.getHome()
-				+ "/modules/sorcer/src/junit/sorcer/core/provider/bin/boot-all-spawn.xml";
-		File antFile = new File(antBuild);
-		exert(task("all-arithmetic", antFile));
-	}
-
-//	@AfterClass
-//	public static void cleanup() throws RemoteException, InterruptedException,
-//			SignatureException {
-//		Sorcer.destroyNode(null, Adder.class);
-//	}
-	
 	@Test
 	public void contextAltTest() throws Exception {
 		Task t4 = task("t4", sig("multiply", Multiplier.class), 
@@ -155,7 +140,7 @@ public class ArithmeticNetBlockTest implements SorcerConstants {
 	}
 	
 	@Test
-	public void varBlockTest() throws Exception {
+	public void parsBlockTest() throws Exception {
 		Task t4 = task("t4", sig("multiply", Multiplier.class), 
 				context("multiply", in("arg/x1", 10.0), in("arg/x2", 50.0),
 						result("block/result")));

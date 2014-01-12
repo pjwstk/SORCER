@@ -21,6 +21,7 @@ import java.rmi.RemoteException;
 import java.util.Set;
 
 import sorcer.core.SorcerConstants;
+import sorcer.core.context.ServiceContext;
 import sorcer.core.context.model.par.ParModel;
 import sorcer.core.exertion.AltExertion;
 import sorcer.core.exertion.LoopExertion;
@@ -92,6 +93,11 @@ public class CatalogBlockDispatcher extends CatalogExertDispatcher implements
 			xrt.startExecTime();
 			for (int i = 0; i < inputXrts.size(); i++) {
 				se = (ServiceExertion) inputXrts.get(i);
+				try {
+					((ServiceContext)se.getContext()).setBlockScope(xrt.getContext());
+				} catch (ContextException ce) {
+					throw new ExertionException(ce);
+				}
 				// Provider is expecting exertion to be in context
 				try {
 					se.getContext().setExertion(se);
@@ -146,7 +152,7 @@ public class CatalogBlockDispatcher extends CatalogExertDispatcher implements
 					throw new ExertionException(e);
 				}
 			}
-
+			
 			state = DONE;
 			dispatchers.remove(xrt.getId());
 			xrt.stopExecTime();
@@ -194,14 +200,15 @@ public class CatalogBlockDispatcher extends CatalogExertDispatcher implements
 //			((ParModel)((Block)xrt).getContext()).appendNew(((OptExertion)exertion).getContext());
 //		}
 		
-		Context cxt = xrt.getContext();
+		ServiceContext cxt = (ServiceContext)xrt.getContext();
 		if (exertion.getContext().getReturnPath() != null)
-			cxt.putValue(exertion.getContext().getReturnPath().path, exertion.getContext().getReturnValue()); 
+			cxt.putOutValue(exertion.getContext().getReturnPath().path, exertion.getContext().getReturnValue()); 
 		else 
-			exertion.getContext().append(cxt);
-
-		if (cxt.getReturnPath() != null)
-			cxt.putValue(cxt.getReturnPath().path, cxt.getReturnValue()); 
+			cxt.appendNewEntries(exertion.getContext());
+		
+		((ServiceContext)exertion.getContext()).setBlockScope(null);
+//		if (cxt.getReturnPath() != null)
+//			cxt.putValue(cxt.getReturnPath().path, cxt.getReturnValue()); 
 	}
 	
 	private void reset() {

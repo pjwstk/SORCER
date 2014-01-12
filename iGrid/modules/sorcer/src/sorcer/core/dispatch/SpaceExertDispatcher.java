@@ -208,11 +208,10 @@ abstract public class SpaceExertDispatcher extends ExertDispatcher
 			}
 			throw new ExertionException("Taking exertion envelop failed", e);
 		}
-
-		logger.info("Not able ta take a valid task for exertionID: " 
-				+ ((ExertionEnvelop)template).exertionID 
-				+ "; in state = " + state + "; template state = " 
-				+ ((ExertionEnvelop)template).state);
+//		logger.info("Not able ta take a valid task for exertionID: " 
+//				+ ((ExertionEnvelop)template).exertionID 
+//				+ "; in state = " + state + "; template state = " 
+//				+ ((ExertionEnvelop)template).state);
 		
 		return null;
 	}

@@ -211,6 +211,35 @@ public class operator {
 		return map;
 	}
 	
+	public static Loop loop(int to) {
+		Loop loop = new Loop(to);
+		return loop;
+	}
+
+	public static Loop loop(int from, int to) {
+		Loop loop = new Loop(from, to);
+		return loop;
+	}
+	
+	public static Loop loop(String template, int to) {
+		Loop loop = new Loop(template, 1, to);
+		return loop;
+	}
+	
+	public static Loop loop(List<String> templates, int to) {
+		Loop loop = new Loop(templates, to);
+		return loop;
+	}
+	
+	public static Loop loop(String template, int from, int to) {
+		Loop loop = new Loop(template, from, to);
+		return loop;
+	}
+	
+	public static List<String> names(Loop loop, String prefix) {
+		return loop.getNames(prefix);
+	}
+	
 	public static String[] names(String name, int size, int from) {
 		List<String> out = new ArrayList<String>();
 		for (int i = from - 1; i < from + size - 1; i++) {

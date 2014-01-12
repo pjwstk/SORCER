@@ -112,7 +112,7 @@ public interface Exertion extends Service, Mappable, Evaluation<Object>, Invocat
 	 * @return an added component exertion
 	 * @throws ContextException 
 	 */
-	public Exertion addExertion(Exertion component) throws ContextException;
+	public Exertion addExertion(Exertion component) throws ExertionException;
 	
 	/**
 	 * Returns a data service context (service data) of this exertion to be

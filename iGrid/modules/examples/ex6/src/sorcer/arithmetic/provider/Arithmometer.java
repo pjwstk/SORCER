@@ -251,23 +251,42 @@ public class Arithmometer implements Serializable, SorcerConstants {
 					throw new ContextException("more than two arguments for division");
 				result = (Double)revalue(cxt.getInValueAt(1));
 				result /= (Double)revalue(cxt.getInValueAt(2));
-			} else if (selector.equals(AVERAGE)) {				
-				result = (Double)revalue(inputs.get(0));
-				for (int i = 1; i < inputs.size(); i++) 
-					result += (Double)revalue(inputs.get(i));
-				
-				result = result / inputs.size();	
+			} else if (selector.equals(AVERAGE)) {
+				if (inputs.size() == 0) {
+					inputs = (List<Double>) Contexts.getNamedOutValues(context);
+					if (((ServiceContext) context).getBlockScope() != null)
+						inputs.addAll(((ServiceContext) ((ServiceContext) context)
+								.getBlockScope()).getOutValues());
+				}
+				result = (Double) revalue(inputs.get(0));
+				for (int i = 1; i < inputs.size(); i++)
+					result += (Double) revalue(inputs.get(i));
+
+				result = result / inputs.size();
 			}
 			logger.info(selector + " result: \n" + result);
 
 			String outputMessage = "calculated by " + getHostname();
 			if (context.getReturnPath() != null) {
+				String outpath = context.getReturnPath().path;
+				if (outpath.indexOf("${name}") >= 0) {
+					String out = outpath.replace("${name}", 
+							((ServiceContext)context).getExertion().getName());
+					context.getReturnPath().path = out;
+				}
 				((ServiceContext)context).setReturnValue(result);
 			}
 			else if (outpaths.size() == 1) {
 				// put the result in the existing output path
-				cxt.putValue(outpaths.get(0), result);
-				cxt.putValue(path(outpaths.get(0), ArrayContext.DESCRIPTION), outputMessage);
+				String outpath = outpaths.get(0);
+				if (outpath.indexOf("${name}") >= 0) {
+					if (outpath.indexOf("${name}") >= 0) {
+						outpath = outpath.replace("${name}", 
+							((ServiceContext)context).getExertion().getName());
+					}
+				}
+				cxt.putValue(outpath, result);
+				cxt.putValue(path(outpath, ArrayContext.DESCRIPTION), outputMessage);
 			} else {
 				cxt.putValue(RESULT_PATH, result);
 				cxt.putValue(path(RESULT_PATH, ArrayContext.DESCRIPTION), outputMessage);

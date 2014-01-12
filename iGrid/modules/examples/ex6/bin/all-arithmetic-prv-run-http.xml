@@ -5,15 +5,14 @@
 	<import file="${env.IGRID_HOME}/modules/common-run.xml" />
 
 	<target name="all-arithmetic">
-		<java classname="com.sun.jini.start.ServiceStarter" classpathref="sorcer.path" fork="yes">
-			<arg value="../configs/boot-all.config" />
+		<java jar="${lib}/boot.jar" fork="yes">
+			<arg value="../configs/start-all-arithmetic-http.config" />
 			<sysproperty key="iGrid.home" value="${iGrid.home}" />
 			<sysproperty key="sorcer.env.file" value="${iGrid.home}/configs/sorcer.env" />
-			<sysproperty key="java.rmi.server.useCodebaseOnly" value="false" />
+            <sysproperty key="java.rmi.server.useCodebaseOnly" value="false" />
 			<sysproperty key="java.security.policy" value="../policy/arithmetic-beans-prv.policy" />
 			<sysproperty key="java.util.logging.config.file" value="${iGrid.home}/configs/sorcer.logging" />
-			<sysproperty key="java.protocol.handler.pkgs" value="net.jini.url|sorcer.util.bdb.sos|org.rioproject.url" />
-			<sysproperty key="java.rmi.server.RMIClassLoaderSpi" value="org.rioproject.rmi.ResolvingLoader" />
+			<sysproperty key="webster.port" value="60009" />
 		</java>
 	</target>
 

@@ -29,6 +29,7 @@ import java.util.logging.Logger;
 import net.jini.core.lookup.ServiceItem;
 import net.jini.core.lookup.ServiceTemplate;
 import net.jini.core.transaction.Transaction;
+import sorcer.co.Loop;
 import sorcer.co.tuple.Entry;
 import sorcer.co.tuple.ExecPath;
 import sorcer.co.tuple.InEntry;
@@ -59,7 +60,6 @@ import sorcer.core.exertion.ObjectBlock;
 import sorcer.core.exertion.ObjectJob;
 import sorcer.core.exertion.ObjectTask;
 import sorcer.core.exertion.OptExertion;
-import sorcer.core.invoker.Invoker;
 import sorcer.core.provider.Jobber;
 import sorcer.core.provider.Provider;
 import sorcer.core.provider.Spacer;
@@ -102,6 +102,7 @@ import sorcer.service.Strategy.Opti;
 import sorcer.service.Strategy.Provision;
 import sorcer.service.Strategy.Wait;
 import sorcer.service.Task;
+import sorcer.util.ObjectCloner;
 import sorcer.util.ServiceAccessor;
 import sorcer.util.Sorcer;
 import sorcer.util.bdb.objects.SorcerDatabaseViews.Store;
@@ -2309,4 +2310,28 @@ public class operator {
 		return deployment;
 	}
 	
+	public static Exertion add(Exertion compound, Exertion component)
+			throws ExertionException {
+		compound.addExertion(component);
+		return compound;
+	}
+		
+	public static Block block(Loop loop, Exertion exertion)
+			throws ExertionException, SignatureException {
+		List<String> names = loop.getNames(exertion.getName());
+		Block block;
+		if (exertion instanceof NetTask || exertion instanceof NetJob
+				|| exertion instanceof NetBlock) {
+			block = new NetBlock(exertion.getName() + "-block");
+		} else {
+			block = new ObjectBlock(exertion.getName() + "-block");
+		}
+		Exertion xrt = null;
+		for (String name : names) {
+			xrt = (Exertion) ObjectCloner.cloneAnnotatedWithNewIDs(exertion);
+			((ServiceExertion) xrt).setName(name);
+			block.addExertion(xrt);
+		}
+		return block;
+	}
 }

@@ -22,7 +22,6 @@ import java.rmi.RemoteException;
 import java.security.NoSuchAlgorithmException;
 import java.security.Principal;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.GregorianCalendar;
@@ -57,7 +56,6 @@ import sorcer.service.Signature.ReturnPath;
 import sorcer.service.Signature.Type;
 import sorcer.service.Strategy.Access;
 import sorcer.service.Strategy.Flow;
-import sorcer.service.Strategy.Provision;
 
 @SuppressWarnings("rawtypes")
 public abstract class ServiceExertion implements Exertion, Revaluation,

@@ -98,7 +98,7 @@ public abstract class Job extends ServiceExertion implements CompoundExertion {
 	 *            The first Exertion of the job.
 	 * @throws ContextException 
 	 */
-	public Job(Exertion exertion) throws ContextException {
+	public Job(Exertion exertion) throws ExertionException {
 		addExertion(exertion);
 	}
 
@@ -219,10 +219,14 @@ public abstract class Job extends ServiceExertion implements CompoundExertion {
 	 * @see sorcer.service.Exertion#addExertion(sorcer.service.Exertion)
 	 */
 	@Override
-	public Exertion addExertion(Exertion ex) throws ContextException {
+	public Exertion addExertion(Exertion ex) throws ExertionException {
 		exertions.add(ex);
 		((ServiceExertion) ex).setIndex(exertions.indexOf(ex));
-		controlContext.registerExertion(ex);
+		try {
+			controlContext.registerExertion(ex);
+		} catch (ContextException e) {
+			throw new ExertionException(e);
+		}
 		((ServiceExertion) ex).setParentId(getId());
 		return this;
 	}
@@ -241,7 +245,7 @@ public abstract class Job extends ServiceExertion implements CompoundExertion {
 
 	}
 
-	public Job addExertion(Exertion exertion, int priority) throws ContextException {
+	public Job addExertion(Exertion exertion, int priority) throws ExertionException {
 		addExertion(exertion);
 		controlContext.setPriority(exertion, priority);
 		return this;

@@ -79,10 +79,14 @@ public abstract class Block extends ServiceExertion implements CompoundExertion 
 	 * @see sorcer.service.Exertion#addExertion(sorcer.service.Exertion)
 	 */
 	@Override
-	public Exertion addExertion(Exertion ex) throws ContextException {
+	public Exertion addExertion(Exertion ex) throws ExertionException {
 		exertions.add(ex);
 		((ServiceExertion) ex).setIndex(exertions.indexOf(ex));
-		controlContext.registerExertion(ex);
+		try {
+			controlContext.registerExertion(ex);
+		} catch (ContextException e) {
+			throw new ExertionException(e);
+		}
 		((ServiceExertion) ex).setParentId(getId());
 		return this;
 	}
@@ -91,7 +95,7 @@ public abstract class Block extends ServiceExertion implements CompoundExertion 
 		this.exertions = exertions;
 	}
 
-	public void setExertions(Exertion[] exertions) throws ContextException {
+	public void setExertions(Exertion[] exertions) throws ExertionException {
 		for (Exertion e :exertions)
 			addExertion(e);
 	}

@@ -166,6 +166,8 @@ public class ServiceContext<T> extends Hashtable<String, T> implements
 	 */
 	protected Hashtable metacontext;
 
+	protected Context blockScope;
+
 	/** The exertion that uses this context */
 	protected ServiceExertion exertion;
 
@@ -1659,6 +1661,22 @@ public class ServiceContext<T> extends Hashtable<String, T> implements
 		return null;
 	}
 	
+	public Context appendNewEntries(Context context) throws ContextException {
+		if (context != null) {
+			Map<String, Object> contextMap = (Map) context;
+			Iterator it = contextMap.entrySet().iterator();
+			while (it.hasNext()) {
+				Map.Entry<String, Object> pairs = (Map.Entry) it.next();
+				if (!containsKey(pairs.getKey())) {
+					put(pairs.getKey(), (T)pairs.getValue());
+				}
+			}
+			if (containsKey(Condition._closure_))
+				remove(Condition._closure_);
+		}
+		return this;
+	}
+		
 	/* (non-Javadoc)
 	 * @see sorcer.service.Context#append(sorcer.service.Context)
 	 */
@@ -3106,6 +3124,14 @@ public class ServiceContext<T> extends Hashtable<String, T> implements
 		return null;
 	}
 
+	public Context getBlockScope() {
+		return blockScope;
+	}
+
+	public void setBlockScope(Context blockScope) {
+		this.blockScope = blockScope;
+	}
+	
 //	/* (non-Javadoc)
 //	 * @see sorcer.service.Service#service(sorcer.service.Exertion, net.jini.core.transaction.Transaction)
 //	 */

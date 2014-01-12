@@ -503,7 +503,7 @@ public class ControlContext extends ServiceContext implements Strategy {
 		return getAttributeValue(ex, NOTIFY_EXEC);
 	}
 
-	public void registerExertion(Exertion ex) throws ContextException {
+	public void registerExertion(Exertion ex) throws ContextException  {
 		if (ex instanceof Job)
 			put(ex.getControlContext().getName(), ((ServiceExertion) ex).getId());
 		else {

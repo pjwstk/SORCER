@@ -20,6 +20,7 @@ Also you might need to adjust the classpath (provider.classpath) for your provid
 	<path id="project.classpath">
 		<pathelement location="${sorcer.lib}/${provider.name}.jar" />
 		<pathelement location="${sorcer.lib}/sorcer-prv.jar" />
+		<pathelement location="${sorcer.lib}/dbp-prv.jar" />
 		<pathelement location="${lib}/boot.jar" />
 		<pathelement location="${sorcer.lib}/sorcer-lib.jar" />
 		<pathelement location="${common.lib}/je-4.1.21.jar" />

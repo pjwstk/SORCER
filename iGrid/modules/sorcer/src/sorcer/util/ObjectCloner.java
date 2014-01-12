@@ -19,7 +19,6 @@ package sorcer.util;
 
 import java.io.IOException;
 import java.rmi.MarshalledObject;
-import java.util.UUID;
 
 import net.jini.id.Uuid;
 import net.jini.id.UuidFactory;
