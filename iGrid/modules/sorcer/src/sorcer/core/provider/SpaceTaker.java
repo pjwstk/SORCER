@@ -436,8 +436,6 @@ public class SpaceTaker extends Thread implements LeaseListener,
 				txnCreated = workerTxnCreated;
 				// leaseManager.setExpiration(txnCreated.lease,
 				// System.currentTimeMillis() + transactionLeaseTimeout);
-				Exception e = new RuntimeException("");
-				
 			}
 		}
 		

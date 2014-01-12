@@ -525,7 +525,7 @@ public class ProviderAccessor extends ServiceAccessor implements
 	 * @return JavaSpace proxy
 	 */
 	public static JavaSpace05 getSpace(String spaceName) {
-		return getSpace(spaceName, Sorcer.getSpaceGroup());
+		return getSpace(spaceName, getSpaceGroup());
 	}
 
 	/**
@@ -547,14 +547,17 @@ public class ProviderAccessor extends ServiceAccessor implements
 		}
 		try {
 			if (javaSpace == null) {
+				// init cache
 //				logger.info("getting Exertion Space name: " 
 //						+ (attrs == null ? null : attrs[0]) + " group: " + sg);
 				javaSpace = (JavaSpace05) getService(null,
 						new Class[] { JavaSpace05.class }, attrs,
 						new String[] { sg });
 			} else {
+				// check if previous is alive
 				javaSpace.readIfExists(new Name("_SORCER_"), null,
 						JavaSpace.NO_WAIT);
+				return javaSpace;
 			}
 		} catch (Exception e) {
 			//e.printStackTrace();
@@ -562,7 +565,15 @@ public class ProviderAccessor extends ServiceAccessor implements
 					new Class[] { JavaSpace05.class }, attrs,
 					new String[] { sg });
 		}
-		return javaSpace;
+		// check if new one is alive
+		try {
+            javaSpace.readIfExists(new Name("_SORCER_"), null,
+                    JavaSpace.NO_WAIT);
+            return javaSpace;
+        } catch (Exception e) {
+            logger.severe("Problem connecting to JavaSpace");
+            return null;
+        }
 	}
 
 	/**
