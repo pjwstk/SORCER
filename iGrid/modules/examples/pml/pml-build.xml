@@ -1,0 +1,65 @@
+<?xml version='1.0' encoding='ISO-8859-1' standalone='yes'?>
+
+<project name="Par-orineted Modeling" default="all" basedir=".">
+	<property name="module.name" value="walkthrough" />
+	<property name="module.run.dir" value="pml" />
+
+	<!-- set global properties -->
+	<import file="../../common-build.xml" />
+	<property name="src" value="./src" />
+	<property name="resources" value="${iGrid.home}/modules/sorcer/resources" />
+
+	<!-- The sources to compile -->
+	<patternset id="ant.java">
+		<include name="sorcer/pml/**/*.java" />
+		<include name="sorcer/model/junit/**/*.java" />
+		<exclude name="**/SAVE/*.java" />
+		<exclude name="**/BAK/*.java" />
+	</patternset>
+
+	<patternset id="ant.classes">
+		<include name="sorcer/model/geometry/**/*.class" />
+		<include name="sorcer/model/junit/**/*.class" />
+	</patternset>
+
+	<fileset dir="${resources}" id="icons">
+		<include name="sorcer.jpg" />
+	</fileset>
+
+	<path id="project.classpath">
+		<pathelement location="${classes}" />
+		<pathelement location="${sorcer.lib}/sorcer-prv.jar" />
+		<pathelement location="${sorcer.lib}/sorcer-parmodeling-lib.jar" />
+		<pathelement location="${support.lib}/junit.jar" />
+		<path refid="jaxp.path" />
+		<path refid="jini.path" />
+		<path refid="rio.path" />
+	</path>
+
+	<target name="all" depends="compile, jars" />
+	<target name="jars" depends="invoker-beans.jar, pml-volume-bean.jar" />
+
+	<target name="invoker-beans.jar" depends="compile">
+		<classdepandjar jarfile="${sorcer.lib}/invoker-beans.jar" files="true" debug="false">
+			<classpath refid="project.classpath" />
+			<in name="sorcer.core.context.model.par" />
+			<in name="sorcer.service" />
+			<in name="sorcer.pml" />
+			<topclass name="sorcer.service.Evaluation" />
+			<topclass name="sorcer.service.Invocation" />
+			<topclass name="sorcer.pml.model.ParModeler" />
+			<fileset refid="icons" />
+		</classdepandjar>
+	</target>
+
+
+	<target name="pml-volume-bean.jar">
+		<jar destfile="${sorcer.lib}/pml-volume-bean.jar" basedir="${classes}" includes="sorcer.pml.invoker.service/**">
+			<manifest>
+				<attribute name="Built-By" value="${user.name}" />
+				<attribute name="Implementation-Vendor" value="SORCERsoft.org" />
+				<attribute name="Main-Class" value="junit.sorcer.core.invoker.service/Volume" />
+			</manifest>
+		</jar>
+	</target>
+</project>

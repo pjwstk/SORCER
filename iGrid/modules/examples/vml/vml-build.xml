@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='ISO-8859-1' standalone='yes'?>
 
-<project name="Walkthrough step 1 - geometry" default="all" basedir=".">
+<project name="Var-orineted Modeling" default="all" basedir=".">
 	<property name="module.name" value="walkthrough" />
 	<property name="module.run.dir" value="geometry" />
 
@@ -29,9 +29,8 @@
 	<path id="project.classpath">
 		<pathelement location="${classes}" />
 		<pathelement location="${sorcer.lib}/sorcer-prv.jar" />
-		<pathelement location="${sorcer.lib}/modeling.jar" />
+		<pathelement location="${sorcer.lib}/vfe-lib.jar" />
 		<pathelement location="${support.lib}/junit.jar" />
-		<path refid="jaxp.path" />
 		<path refid="jini.path" />
 		<path refid="rio.path" />
 	</path>

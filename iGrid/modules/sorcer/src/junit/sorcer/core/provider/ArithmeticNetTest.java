@@ -2,12 +2,10 @@ package junit.sorcer.core.provider;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static sorcer.co.operator.entry;
 import static sorcer.eo.operator.classpath;
 import static sorcer.eo.operator.codebase;
 import static sorcer.eo.operator.configuration;
 import static sorcer.eo.operator.context;
-import static sorcer.eo.operator.cxt;
 import static sorcer.eo.operator.deploy;
 import static sorcer.eo.operator.exert;
 import static sorcer.eo.operator.exertion;
@@ -23,7 +21,6 @@ import static sorcer.eo.operator.maintain;
 import static sorcer.eo.operator.out;
 import static sorcer.eo.operator.output;
 import static sorcer.eo.operator.pipe;
-import static sorcer.eo.operator.put;
 import static sorcer.eo.operator.result;
 import static sorcer.eo.operator.sig;
 import static sorcer.eo.operator.strategy;
@@ -31,9 +28,11 @@ import static sorcer.eo.operator.task;
 import static sorcer.eo.operator.value;
 
 import java.rmi.RMISecurityManager;
+import java.rmi.RemoteException;
 import java.util.List;
 import java.util.logging.Logger;
 
+import org.junit.AfterClass;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -94,10 +93,10 @@ public class ArithmeticNetTest implements SorcerConstants {
 //		Thread.sleep(2000);
 //	}
 	
-//	@AfterClass 
-//	public static void cleanup() throws RemoteException, InterruptedException {
-//		Sorcer.destroyNode(null, Adder.class);
-//	}
+	@AfterClass 
+	public static void cleanup() throws RemoteException, InterruptedException {
+		Sorcer.destroyNode(null, Adder.class);
+	}
 	
 //	@Test
 //	public void getCatalogTest() throws Exception {

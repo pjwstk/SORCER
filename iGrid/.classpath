@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" path="modules/examples/vml-eol/src"/>
+	<classpathentry kind="src" path="modules/examples/pml/src"/>
+	<classpathentry kind="src" path="modules/examples/vml/src"/>
 	<classpathentry kind="src" path="modules/examples/account/sorcer/src"/>
 	<classpathentry kind="src" path="netlets"/>
 	<classpathentry kind="src" path="modules/tools/shell/src"/>
@@ -8,10 +9,7 @@
 	<classpathentry kind="src" path="modules/test/bdb/src"/>
 	<classpathentry kind="src" path="modules/test/greeter/src"/>
 	<classpathentry kind="src" path="modules/test/junit-testing/src"/>
-	<classpathentry kind="src" path="modules/examples/ex11/src"/>
 	<classpathentry kind="src" path="modules/examples/ex4/src"/>
-	<classpathentry kind="src" path="modules/examples/ex10b/src"/>
-	<classpathentry kind="src" path="modules/examples/ex10a/src"/>
 	<classpathentry kind="src" path="modules/examples/ex6/src"/>
 	<classpathentry kind="src" path="modules/test/eval/src"/>
 	<classpathentry kind="src" path="modules/tools/ssb/src"/>

@@ -30,6 +30,7 @@
 	<property name="ex4" value="./ex4" />
 	<property name="ex5" value="./ex5" />
 	<property name="ex6" value="./ex6" />
+	<property name="pml" value="./pml" />
 
 	<!-- Compile the the educational examples -->
 	<target name="build-examples">
@@ -43,6 +44,7 @@
 		<ant antfile="arithmetic-prv-build.xml" dir="${ex6}" target="all" inheritAll="false" />
 		<ant antfile="arithmetic-req-build.xml" dir="${ex6}" target="all" inheritAll="false" />
 		<ant antfile="arithmetic-exertlet-build.xml" dir="${ex6}" target="all" inheritAll="false" />
+		<ant antfile="pml-build.xml" dir="${pml}" target="all" inheritAll="false" />
 	</target>
 
 	<!-- Run JUnit test as specified in local Ant scripts -->
