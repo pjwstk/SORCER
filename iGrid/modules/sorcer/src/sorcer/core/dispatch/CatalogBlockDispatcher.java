@@ -119,8 +119,6 @@ public class CatalogBlockDispatcher extends CatalogExertDispatcher implements
 
 				try {
 					preUpdate(se);
-//					Dispatcher dispatcher = ExertDispatcherFactory.getFactory().createDispatcher(se, provider);
-//					se = (ServiceExertion)dispatcher.getExertion();
 					se = (ServiceExertion) execExertion(se);
 				} catch (Exception ce) {
 					throw new ExertionException(ce);
