@@ -58,7 +58,7 @@ public class ArithmeticSpaceTest implements SorcerConstants {
 						in("arg/x2", 80.0), result("result/${name}")),
 				strategy(Access.PULL, Wait.YES));
 		
-		Block spaceBlock = block(loop(5), spaceTask);
+		Block spaceBlock = block(loop(10), spaceTask);
 		
 		logger.info("block size1" + spaceBlock.size());
 		

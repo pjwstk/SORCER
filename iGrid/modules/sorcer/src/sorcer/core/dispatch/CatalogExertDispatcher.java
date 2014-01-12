@@ -25,14 +25,13 @@ import net.jini.core.lookup.ServiceTemplate;
 import net.jini.core.transaction.TransactionException;
 import sorcer.core.Dispatcher;
 import sorcer.core.SorcerConstants;
-import sorcer.core.context.ServiceContext;
-import sorcer.core.context.model.par.ParModel;
-import sorcer.core.exertion.Jobs;
 import sorcer.core.exertion.NetTask;
 import sorcer.core.provider.Concatenator;
 import sorcer.core.provider.Jobber;
 import sorcer.core.provider.Provider;
 import sorcer.core.provider.ServiceProvider;
+import sorcer.core.provider.Spacer;
+import sorcer.core.provider.exerter.ServiceExerter;
 import sorcer.core.signature.NetSignature;
 import sorcer.service.Accessor;
 import sorcer.service.Block;
@@ -46,6 +45,7 @@ import sorcer.service.Job;
 import sorcer.service.Service;
 import sorcer.service.ServiceExertion;
 import sorcer.service.SignatureException;
+import sorcer.service.Strategy.Access;
 import sorcer.service.Task;
 import sorcer.util.ProviderAccessor;
 import sorcer.util.ServiceAccessor;
@@ -185,7 +185,12 @@ abstract public class CatalogExertDispatcher extends ExertDispatcher
 				NetSignature sig = (NetSignature) task.getProcessSignature();
 				// Catalog lookup or use Lookup Service for the particular
 				// service
-				Service service = Accessor.getService(sig);
+				Service service ;
+				if (task.getControlContext().getAccessType().equals(Access.PULL)) {
+					service = ProviderAccessor.getSpacer();
+				} else {
+					service = Accessor.getService(sig);
+				}
 				if (service == null) {
 					String msg = null;
 					// get the PROCESS Method and grab provider name + interface

@@ -20,6 +20,7 @@ package sorcer.core.dispatch;
 import java.rmi.RemoteException;
 import java.util.Set;
 
+import sorcer.core.Dispatcher;
 import sorcer.core.SorcerConstants;
 import sorcer.core.context.ServiceContext;
 import sorcer.core.context.model.par.ParModel;
@@ -35,6 +36,7 @@ import sorcer.service.Exertion;
 import sorcer.service.ExertionException;
 import sorcer.service.ServiceExertion;
 import sorcer.service.SignatureException;
+import sorcer.service.Strategy.Access;
 import sorcer.service.Task;
 
 /**
@@ -117,8 +119,10 @@ public class CatalogBlockDispatcher extends CatalogExertDispatcher implements
 
 				try {
 					preUpdate(se);
+//					Dispatcher dispatcher = ExertDispatcherFactory.getFactory().createDispatcher(se, provider);
+//					se = (ServiceExertion)dispatcher.getExertion();
 					se = (ServiceExertion) execExertion(se);
-				} catch (ContextException ce) {
+				} catch (Exception ce) {
 					throw new ExertionException(ce);
 				}
 				
